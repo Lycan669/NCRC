@@ -1,3 +1,12 @@
+import { auth, db } from "./firebase-config.js";
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { 
+  doc, setDoc 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 const loginForm = document.getElementById('login-form');
 const signupForm = document.getElementById('signup-form');
 const toggleBtn = document.getElementById('toggle-btn');
@@ -24,16 +33,61 @@ toggleBtn.addEventListener('click', (e) => {
   }
 });
 
-loginForm.addEventListener('submit', (e) => {
+// CONNEXION
+loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = document.getElementById('login-email').value;
-  document.getElementById('login-message').textContent = 
-    `Connexion simulée pour ${email} (backend à connecter)`;
+  const password = document.getElementById('login-password').value;
+  const messageEl = document.getElementById('login-message');
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    messageEl.style.color = '#00ffcc';
+    messageEl.textContent = 'Connexion réussie ! Redirection...';
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1000);
+  } catch (error) {
+    messageEl.style.color = '#ff5c5c';
+    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+      messageEl.textContent = 'Email ou mot de passe incorrect';
+    } else {
+      messageEl.textContent = 'Erreur : ' + error.message;
+    }
+  }
 });
 
-signupForm.addEventListener('submit', (e) => {
+// INSCRIPTION
+signupForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+  const name = document.getElementById('signup-name').value;
   const email = document.getElementById('signup-email').value;
-  document.getElementById('signup-message').textContent = 
-    `Compte créé pour ${email} (backend à connecter)`;
+  const password = document.getElementById('signup-password').value;
+  const messageEl = document.getElementById('signup-message');
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    await setDoc(doc(db, "users", user.uid), {
+      name: name,
+      email: email,
+      createdAt: new Date().toISOString()
+    });
+
+    messageEl.style.color = '#00ffcc';
+    messageEl.textContent = 'Compte créé ! Redirection...';
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1000);
+  } catch (error) {
+    messageEl.style.color = '#ff5c5c';
+    if (error.code === 'auth/email-already-in-use') {
+      messageEl.textContent = 'Cet email est déjà utilisé';
+    } else if (error.code === 'auth/weak-password') {
+      messageEl.textContent = 'Mot de passe trop faible (6 caractères min)';
+    } else {
+      messageEl.textContent = 'Erreur : ' + error.message;
+    }
+  }
 });
