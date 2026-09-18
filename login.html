@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion - NUMIDIA</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    body {
+      background: #0a0e17;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+    }
+    .auth-box {
+      background: rgba(20, 25, 40, 0.9);
+      border: 1px solid #00ffcc33;
+      border-radius: 12px;
+      padding: 40px;
+      width: 380px;
+      box-shadow: 0 0 30px rgba(0, 255, 204, 0.1);
+    }
+    .auth-box h2 {
+      color: #00ffcc;
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+    .auth-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      background: #131824;
+      border: 1px solid #2a3245;
+      border-radius: 6px;
+      color: #fff;
+      box-sizing: border-box;
+    }
+    .auth-box input:focus {
+      outline: none;
+      border-color: #00ffcc;
+    }
+    .auth-box button {
+      width: 100%;
+      padding: 12px;
+      background: #00ffcc;
+      color: #0a0e17;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .auth-box button:hover {
+      background: #00d4aa;
+    }
+    .toggle-link {
+      text-align: center;
+      margin-top: 15px;
+      color: #8892a0;
+      font-size: 14px;
+    }
+    .toggle-link a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+    .message {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #ff5c5c;
+    }
+    .back-home {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #8892a0;
+      text-decoration: none;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-box">
+    <h2 id="form-title">Connexion</h2>
+    
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="Email" required>
+      <input type="password" id="login-password" placeholder="Mot de passe" required>
+      <button type="submit">Se connecter</button>
+      <p class="message" id="login-message"></p>
+    </form>
+
+    <form id="signup-form" style="display:none;">
+      <input type="text" id="signup-name" placeholder="Nom complet" required>
+      <input type="email" id="signup-email" placeholder="Email" required>
+      <input type="password" id="signup-password" placeholder="Mot de passe" required>
+      <button type="submit">S'inscrire</button>
+      <p class="message" id="signup-message"></p>
+    </form>
+
+    <p class="toggle-link">
+      <span id="toggle-text">Pas encore de compte ?</span>
+      <a href="#" id="toggle-btn">S'inscrire</a>
+    </p>
+
+    <a href="index.html" class="back-home">← Retour à l'accueil</a>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
