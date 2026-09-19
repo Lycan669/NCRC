@@ -1,0 +1,88 @@
+# ===================================
+# SÉCURITÉ - JAMAIS À COMMIT
+# ===================================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+*.pem
+*.key
+*.cert
+secrets.js
+secrets.json
+config/secrets.js
+firebase-config.js
+serviceAccountKey.json
+credentials.json
+
+# ===================================
+# NODE.JS / NPM (si tu utilises un backend plus tard)
+# ===================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.bak
+.npm
+
+# ===================================
+# FIREBASE (si tu branches Firebase Auth)
+# ===================================
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebaserc.local
+
+# ===================================
+# SYSTÈME D'EXPLOITATION
+# ===================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ===================================
+# ÉDITEURS DE CODE
+# ===================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.vs/
+
+# ===================================
+# LOGS ET FICHIERS TEMPORAIRES
+# ===================================
+*.log
+logs/
+*.tmp
+*.temp
+*.bak
+*.old
+
+# ===================================
+# FICHIERS DE BUILD (si tu utilises un bundler plus tard)
+# ===================================
+dist/
+build/
+out/
+.cache/
+
+# ===================================
+# DIVERS
+# ===================================
+*.zip
+*.tar.gz
+.env.*.local
