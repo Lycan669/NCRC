@@ -1,50 +1,113 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact - NCRC</title>
-  <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
-
-  <nav class="navbar">
-    <div class="logo">NCRC</div>
-    <ul class="nav-links">
-      <li><a href="../about/about.html" class="nav-link">About</a></li>
-      <li><a href="../skills/skills.html" class="nav-link">Skills</a></li>
-      <li><a href="../tools/tools.html" class="nav-link">Tools</a></li>
-      <li><a href="../projects/projects.html" class="nav-link">Projects</a></li>
-      <li><a href="contact.html" class="nav-link">Contact</a></li>
-      <li><a href="../login/login.html" class="btn-login">Connexion</a></li>
-    </ul>
-  </nav>
-
-  <main class="page-content">
-    <h1>Contact</h1>
-    <p>N'hésite pas à me contacter pour toute question ou collaboration.</p>
-
-    <form class="contact-form" id="contactForm">
-      <label for="name">Nom</label>
-      <input type="text" id="name" name="name" required>
-
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
-
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="6" required></textarea>
-
-      <button type="submit" class="btn-submit">Envoyer</button>
-    </form>
-
-    <div class="contact-info">
-      <p>📧 Email : contact@ncrc.com</p>
-      <p>💼 LinkedIn : linkedin.com/in/tonprofil</p>
-      <p>💻 GitHub : github.com/lycan669</p>
+<!-- SECTION CONTACT - CYBER TERMINAL STYLE -->
+<section id="contact" class="contact-section">
+  <div class="contact-bg-grid"></div>
+  
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">// SECURE_CHANNEL_ESTABLISHED</span>
+      <h2 class="section-title">Contactez le <span class="highlight">SOC</span></h2>
+      <p class="section-subtitle">Toutes les communications sont traitées avec confidentialité</p>
     </div>
 
-    <a href="../index.html" class="back-link">← Retour à l'accueil</a>
-  </main>
+    <div class="contact-wrapper">
+      
+      <!-- Terminal Info Panel -->
+      <div class="terminal-panel">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="terminal-title">ncrc@secure-terminal:~$</span>
+        </div>
+        <div class="terminal-body" id="terminal-output">
+          <p class="terminal-line"><span class="prompt">$</span> whoami</p>
+          <p class="terminal-line output">NCRC — Numidia Cyber Resilience Corporation</p>
+          <p class="terminal-line"><span class="prompt">$</span> status --connection</p>
+          <p class="terminal-line output success">
+            <span class="status-dot"></span> ENCRYPTED CHANNEL ACTIVE
+          </p>
+          <p class="terminal-line"><span class="prompt">$</span> cat contact_info.txt</p>
+          <p class="terminal-line output">
+            📍 Location: North Africa / Remote<br>
+            🔒 Protocol: TLS 1.3<br>
+            ⚡ Response time: < 24h<br>
+            🛡️ Status: <span class="blink-text">ONLINE</span>
+          </p>
+          <p class="terminal-line"><span class="prompt">$</span> <span class="cursor-blink">_</span></p>
+        </div>
+      </div>
 
-</body>
-</html>
+      <!-- Contact Form -->
+      <div class="form-panel">
+        <div class="form-panel-header">
+          <span class="lock-icon">🔐</span>
+          <h3>Formulaire Sécurisé</h3>
+        </div>
+
+        <form 
+          id="ncrc-contact-form"
+          action="https://formspree.io/f/xjykgbvz" 
+          method="POST" 
+          class="cyber-form"
+        >
+          <div class="form-row">
+            <div class="input-group">
+              <input type="text" id="name" name="name" required placeholder=" ">
+              <label for="name">Nom complet *</label>
+              <span class="input-line"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <input type="email" id="email" name="email" required placeholder=" ">
+              <label for="email">Adresse email *</label>
+              <span class="input-line"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <select id="subject" name="subject" required>
+                <option value="" disabled selected></option>
+                <option value="Collaboration">🤝 Collaboration</option>
+                <option value="Opportunité professionnelle">💼 Opportunité professionnelle</option>
+                <option value="Question technique">🔧 Question technique</option>
+                <option value="Signalement incident">🚨 Signalement incident</option>
+                <option value="Autre">📋 Autre</option>
+              </select>
+              <label for="subject" class="select-label">Sujet *</label>
+              <span class="input-line"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <textarea id="message" name="message" rows="5" required placeholder=" "></textarea>
+              <label for="message">Votre message *</label>
+              <span class="input-line"></span>
+            </div>
+          </div>
+
+          <input type="hidden" name="_subject" value="Nouveau message — NCRC Contact">
+          <input type="text" name="_gotcha" style="display:none">
+
+          <button type="submit" class="cyber-submit-btn" id="submit-btn">
+            <span class="btn-text">TRANSMETTRE LE MESSAGE</span>
+            <span class="btn-icon">→</span>
+            <span class="btn-loader"></span>
+          </button>
+
+          <p class="form-security-note">
+            <span class="lock-mini">🔒</span> Chiffré de bout en bout — Vos données ne sont jamais partagées
+          </p>
+
+          <p class="message" id="form-message"></p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>

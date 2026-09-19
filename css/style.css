@@ -1379,3 +1379,429 @@ footer {
   background: #00d4aa;
   transform: translateY(-2px);
 }
+
+/* ============================================
+   CONTACT SECTION - CYBER TERMINAL THEME
+   Premium cybersecurity look (gold/black/blue-night)
+   Reuses :root variables from style.css
+   ============================================ */
+
+/* Page wrapper */
+.page-content {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    text-align: center;
+}
+
+.page-content h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    letter-spacing: 0.15em;
+    color: var(--accent-gold);
+    text-shadow: var(--shadow-gold);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+}
+
+.page-content h1::after {
+    content: "_";
+    display: inline-block;
+    margin-left: 6px;
+    color: var(--accent-gold);
+    animation: terminal-blink 1s steps(2, start) infinite;
+}
+
+.page-content > p {
+    color: var(--text-secondary);
+    font-family: var(--font-heading);
+    margin-bottom: var(--spacing-xl);
+    letter-spacing: 0.05em;
+}
+
+/* ---------- TERMINAL WINDOW ---------- */
+.terminal-window {
+    background: var(--primary-dark);
+    border: 1px solid var(--border-gold);
+    border-radius: 10px;
+    box-shadow: var(--shadow-lg), var(--shadow-gold);
+    overflow: hidden;
+    margin: 0 auto var(--spacing-2xl);
+    text-align: left;
+    position: relative;
+    animation: terminal-boot 0.8s ease-out;
+}
+
+@keyframes terminal-boot {
+    0%   { opacity: 0; transform: translateY(20px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Terminal title bar (macOS-style traffic lights) */
+.terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 10px 14px;
+    background: linear-gradient(180deg, var(--secondary-blue), var(--primary-blue));
+    border-bottom: 1px solid var(--border-gold);
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.terminal-titlebar .traffic-lights {
+    display: flex;
+    gap: 7px;
+}
+
+.terminal-titlebar .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.45);
+    transition: var(--transition);
+}
+
+.terminal-titlebar .dot.red    { background: #ff5f57; }
+.terminal-titlebar .dot.yellow { background: #febc2e; }
+.terminal-titlebar .dot.green  { background: #28c840; }
+
+.terminal-titlebar .dot:hover {
+    filter: brightness(1.15);
+    transform: scale(1.1);
+}
+
+.terminal-titlebar .terminal-title {
+    flex: 1;
+    text-align: center;
+    color: var(--accent-gold);
+    font-weight: bold;
+}
+
+.terminal-titlebar .terminal-user {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+}
+
+/* Terminal body */
+.terminal-body {
+    padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl);
+    background:
+        radial-gradient(circle at 20% 0%, rgba(212, 175, 55, 0.05), transparent 40%),
+        var(--primary-dark);
+    font-family: var(--font-heading);
+}
+
+.terminal-prompt {
+    color: var(--accent-gold);
+    margin-bottom: var(--spacing-lg);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+}
+
+.terminal-prompt .prompt-user   { color: var(--success); }
+.terminal-prompt .prompt-at     { color: var(--text-secondary); }
+.terminal-prompt .prompt-host   { color: var(--accent-gold-light); }
+.terminal-prompt .prompt-path   { color: var(--accent-cyan-light); }
+.terminal-prompt .prompt-symbol { color: var(--accent-gold); margin-right: 8px; }
+
+.terminal-cursor {
+    display: inline-block;
+    width: 9px;
+    height: 1.05em;
+    background: var(--accent-gold);
+    margin-left: 4px;
+    vertical-align: -2px;
+    animation: terminal-blink 1s steps(2, start) infinite;
+    box-shadow: 0 0 8px var(--accent-gold);
+}
+
+@keyframes terminal-blink {
+    to { visibility: hidden; }
+}
+
+/* ---------- CONTACT FORM ---------- */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+}
+
+/* Floating-label field */
+.form-field {
+    position: relative;
+    text-align: left;
+}
+
+.form-field input,
+.form-field textarea {
+    width: 100%;
+    background: rgba(10, 22, 32, 0.85);
+    border: 1px solid var(--border-gold);
+    border-radius: 6px;
+    padding: 18px 14px 12px;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    outline: none;
+    transition: var(--transition);
+    box-shadow: inset 0 0 0 rgba(0, 0, 0, 0);
+    caret-color: var(--accent-gold);
+    resize: vertical;
+}
+
+.form-field textarea {
+    min-height: 140px;
+    line-height: 1.5;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+    color: transparent;
+}
+
+/* Floating label */
+.form-field label {
+    position: absolute;
+    top: 16px;
+    left: 14px;
+    color: var(--text-muted);
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    pointer-events: none;
+    transition: var(--transition);
+    background: transparent;
+    padding: 0 6px;
+}
+
+/* Float the label when input is focused or has content */
+.form-field input:focus + label,
+.form-field textarea:focus + label,
+.form-field input:not(:placeholder-shown) + label,
+.form-field textarea:not(:placeholder-shown) + label {
+    top: -9px;
+    left: 10px;
+    font-size: 0.7rem;
+    color: var(--accent-gold);
+    background: var(--primary-dark);
+    border-radius: 4px;
+}
+
+/* Focus animated golden glow border */
+.form-field input:focus,
+.form-field textarea:focus {
+    border-color: var(--accent-gold);
+    background: rgba(15, 35, 64, 0.9);
+    box-shadow:
+        0 0 0 1px var(--accent-gold),
+        0 0 14px rgba(212, 175, 55, 0.45),
+        inset 0 0 12px rgba(212, 175, 55, 0.08);
+    animation: field-focus-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes field-focus-pulse {
+    0%, 100% { box-shadow:
+        0 0 0 1px var(--accent-gold),
+        0 0 14px rgba(212, 175, 55, 0.45),
+        inset 0 0 12px rgba(212, 175, 55, 0.08); }
+    50%      { box-shadow:
+        0 0 0 1px var(--accent-gold-light),
+        0 0 22px rgba(212, 175, 55, 0.75),
+        inset 0 0 14px rgba(212, 175, 55, 0.12); }
+}
+
+/* ---------- SUBMIT BUTTON ---------- */
+.btn-submit {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: var(--spacing-sm);
+    padding: 14px 28px;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: bold;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--primary-dark);
+    background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
+    border: 1px solid var(--accent-gold);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-gold);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+    align-self: flex-start;
+}
+
+/* Shine effect on hover */
+.btn-submit::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.55) 50%,
+        transparent 100%
+    );
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+}
+
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 24px rgba(212, 175, 55, 0.6), 0 6px 18px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+}
+
+.btn-submit:hover::before {
+    left: 130%;
+}
+
+.btn-submit:active {
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(212, 175, 55, 0.4);
+}
+
+/* Loading state */
+.btn-submit.is-loading {
+    pointer-events: none;
+    color: transparent;
+    background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+    border-color: var(--border-gold);
+    box-shadow: none;
+}
+
+.btn-submit.is-loading::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(212, 175, 55, 0.25);
+    border-top-color: var(--accent-gold);
+    border-radius: 50%;
+    animation: btn-spin 0.8s linear infinite;
+}
+
+@keyframes btn-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------- FORM MESSAGES ---------- */
+.form-message {
+    margin-top: var(--spacing-md);
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-align: left;
+    display: none;
+    animation: message-in 0.35s ease-out;
+}
+
+.form-message.is-visible { display: block; }
+
+.form-message.success {
+    color: var(--success);
+    background: rgba(0, 255, 65, 0.08);
+    border: 1px solid rgba(0, 255, 65, 0.35);
+    box-shadow: 0 0 14px rgba(0, 255, 65, 0.2);
+}
+
+.form-message.error {
+    color: var(--danger);
+    background: rgba(255, 68, 68, 0.08);
+    border: 1px solid rgba(255, 68, 68, 0.35);
+    box-shadow: 0 0 14px rgba(255, 68, 68, 0.2);
+}
+
+.form-message::before {
+    content: "> ";
+    color: var(--accent-gold);
+    font-weight: bold;
+}
+
+@keyframes message-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- CONTACT INFO ---------- */
+.contact-info {
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--card-bg);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.contact-info p {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: var(--spacing-sm) 0;
+    letter-spacing: 0.04em;
+    padding: 6px 0;
+    border-left: 2px solid transparent;
+    padding-left: var(--spacing-sm);
+    transition: var(--transition);
+}
+
+.contact-info p:hover {
+    color: var(--accent-gold-light);
+    border-left-color: var(--accent-gold);
+    padding-left: calc(var(--spacing-sm) + 4px);
+}
+
+.contact-info p::before {
+    content: "$ ";
+    color: var(--accent-gold);
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+/* ---------- BACK LINK ---------- */
+.back-link {
+    display: inline-block;
+    margin-top: var(--spacing-xl);
+    padding: 10px 22px;
+    color: var(--accent-gold);
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--border-gold);
+    border-radius: 6px;
+    background: transparent;
+    transition: var(--transition);
+}
+
+.back-link:hover {
+    color: var(--primary-dark);
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    box-shadow: var(--shadow-gold);
+    transform: translateX(-4px);
+}
