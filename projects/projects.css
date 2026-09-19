@@ -1,0 +1,136 @@
+:root {
+  --gold: #d4af37;
+  --gold-light: #f4d76b;
+  --navy: #0a0e1a;
+  --navy-light: #10182b;
+  --border-glow: rgba(212, 175, 55, 0.3);
+}
+
+.projects-page {
+  background: radial-gradient(circle at top, #0d1224 0%, #05070d 100%);
+  min-height: 100vh;
+  padding: 60px 8%;
+  color: #eee;
+}
+
+.projects-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.projects-header h1 {
+  font-size: 2.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.gold {
+  color: var(--gold);
+  text-shadow: 0 0 15px var(--border-glow);
+}
+
+.projects-header p {
+  color: #9aa4c0;
+  margin-top: 10px;
+  font-size: 1.05rem;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.project-card {
+  background: linear-gradient(145deg, var(--navy-light), #0a0e1a);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 14px;
+  padding: 30px 25px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.project-card::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, var(--gold), transparent 40%);
+  opacity: 0;
+  z-index: -1;
+  border-radius: 14px;
+  transition: opacity 0.4s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--gold);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+}
+
+.project-card:hover::before {
+  opacity: 0.15;
+}
+
+.project-icon {
+  font-size: 2.2rem;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 0 8px var(--border-glow));
+}
+
+.project-card h3 {
+  color: var(--gold-light);
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+}
+
+.project-card p {
+  color: #b8c0d8;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.tags span {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--gold-light);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+}
+
+.project-link {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+
+.project-link:hover {
+  color: var(--gold-light);
+  padding-left: 5px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 50px;
+  color: #9aa4c0;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.back-link:hover {
+  color: var(--gold);
+}
