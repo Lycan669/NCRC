@@ -134,3 +134,20 @@
 .back-link:hover {
   color: var(--gold);
 }
+.featured-card {
+  border: 2px solid #3fb950 !important;
+  position: relative;
+  box-shadow: 0 0 20px rgba(63, 185, 80, 0.3);
+}
+
+.featured-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #3fb950;
+  color: #0a0e14;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 12px;
+}

