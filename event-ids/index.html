@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Event ID Database | NCRC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="../../index.html" class="back-link">← Back to Portfolio</a>
+            <h1>📋 Windows Event ID Database</h1>
+            <p class="subtitle">Search, filter, and explore Windows Security Event IDs with detection strategies</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- SEARCH & FILTER BAR -->
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="🔍 Search by Event ID or keyword (e.g. 4624, logon, powershell)...">
+            
+            <select id="categoryFilter">
+                <option value="all">All Categories</option>
+                <option value="logon">Logon / Authentication</option>
+                <option value="process">Process Creation</option>
+                <option value="powershell">PowerShell</option>
+                <option value="network">Network</option>
+                <option value="account">Account Management</option>
+                <option value="persistence">Persistence</option>
+                <option value="log">Log Management</option>
+                <option value="sysmon">Sysmon</option>
+            </select>
+        </div>
+
+        <div class="stats-bar">
+            <span id="resultCount">0</span> Event IDs found
+        </div>
+
+        <!-- EVENT ID CARDS CONTAINER -->
+        <div id="eventGrid" class="event-grid"></div>
+
+        <div id="noResults" class="no-results" style="display:none;">
+            <p>🔍 No Event ID found. Try another search term.</p>
+        </div>
+
+    </main>
+
+    <!-- MODAL FOR DETAILS -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 <strong>NCRC</strong> - Numidia Cyber Resilience Corporation</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

