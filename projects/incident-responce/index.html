@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incident Response Playbooks - NCRC</title>
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="css/runbooks.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">NCRC</div>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../projects.html" class="nav-link">← Back to Projects</a></li>
+    </ul>
+  </nav>
+
+  <main class="runbooks-container">
+    
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <h1>🔴 Incident Response <span class="gold">Playbooks</span></h1>
+      <p class="subtitle">Real-world SOC scenarios. Step-by-step containment guides.</p>
+      <p class="description">
+        From detection to eradication. Learn how to handle actual incidents like a SOC analyst.
+      </p>
+    </section>
+
+    <!-- QUICK STATS -->
+    <section class="stats-section">
+      <div class="stat-card">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Playbooks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">Detection Rules</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">20+</div>
+        <div class="stat-label">Commands</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Phases per Incident</div>
+      </div>
+    </section>
+
+    <!-- FILTER BUTTONS -->
+    <section class="filters">
+      <button class="filter-btn active" data-filter="all">All Playbooks</button>
+      <button class="filter-btn" data-filter="network">Network Based</button>
+      <button class="filter-btn" data-filter="endpoint">Endpoint Based</button>
+      <button class="filter-btn" data-filter="critical">Critical Priority</button>
+    </section>
+
+    <!-- PLAYBOOKS GRID -->
+    <section class="playbooks-grid">
+
+      <!-- PLAYBOOK 1: RDP BRUTE FORCE -->
+      <div class="playbook-card" data-filter="network endpoint">
+        <div class="header">
+          <span class="severity critical">CRITICAL</span>
+          <span class="category">Network Attack</span>
+        </div>
+        
+        <div class="icon">🔴</div>
+        <h3>RDP Brute Force Attack</h3>
+        
+        <div class="detail">
+          <p class="scenario">
+            <strong>Scenario:</strong> 3 AM alert on 500+ failed RDP logins in 5 minutes from external IP. Your on-call phone buzzes. GO TIME.
+          </p>
+          
+          <div class="quick-facts">
+            <span class="fact">⏱️ Detection Time: 5 min</span>
+            <span class="fact">🎯 Target: RDP Server (Port 3389)</span>
+            <span class="fact">📊 Indicators: Event ID 4625</span>
+            <span class="fact">🚨 Impact: Account Lockout Risk</span>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span>RDP</span>
+          <span>Brute Force</span>
+          <span>Windows Event</span>
+          <span>Network</span>
+        </div>
+
+        <a href="brute-force-rdp.html" class="btn-primary">
+          View Playbook →
+        </a>
+      </div>
+
+      <!-- PLAYBOOK 2: RANSOMWARE DETECTION -->
+      <div class="playbook-card" data-filter="endpoint critical">
+        <div class="header">
+          <span class="severity critical">CRITICAL</span>
+          <span class="category">Endpoint Threat</span>
+        </div>
+        
+        <div class="icon">🔐</div>
+        <h3>Ransomware Detection & Response</h3>
+        
+        <div class="detail">
+          <p class="scenario">
+            <strong>Scenario:</strong> User reports files encrypted with .locked extension. Ransom note on desktop. 15 minutes in, damage spreading to network shares.
+          </p>
+          
+          <div class="quick-facts">
+            <span class="fact">⏱️ Detection Time: <2 min</span>
+            <span class="fact">🎯 Target: File Server & Workstations</span>
+            <span class="fact">📊 Indicators: File Extension Change</span>
+            <span class="fact">🚨 Impact: Data Encryption</span>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span>Ransomware</span>
+          <span>File Activity</span>
+          <span>EDR</span>
+          <span>Endpoint</span>
+        </div>
+
+        <a href="ransomware.html" class="btn-primary">
+          View Playbook →
+        </a>
+      </div>
+
+      <!-- PLAYBOOK 3: LATERAL MOVEMENT -->
+      <div class="playbook-card" data-filter="network endpoint critical">
+        <div class="header">
+          <span class="severity high">HIGH</span>
+          <span class="category">Post-Compromise</span>
+        </div>
+        
+        <div class="icon">🕷️</div>
+        <h3>Lateral Movement Detection</h3>
+        
+        <div class="detail">
+          <p class="scenario">
+            <strong>Scenario:</strong> Compromised workstation detected. Attacker is now moving through the network accessing file shares and attempting privilege escalation.
+          </p>
+          
+          <div class="quick-facts">
+            <span class="fact">⏱️ Detection Time: 10 min</span>
+            <span class="fact">🎯 Target: Domain Network</span>
+            <span class="fact">📊 Indicators: Kerberos Events</span>
+            <span class="fact">🚨 Impact: Domain Compromise Risk</span>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span>Lateral Movement</span>
+          <span>Kerberos</span>
+          <span>Active Directory</span>
+          <span>Domain</span>
+        </div>
+
+        <a href="lateral-movement.html" class="btn-primary">
+          View Playbook →
+        </a>
+      </div>
+
+    </section>
+
+    <!-- HOW TO USE SECTION -->
+    <section class="how-to-use">
+      <h2>How to Use These Playbooks</h2>
+      
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h4>Read the Scenario</h4>
+          <p>Understand the context. This is what you're dealing with in the SOC.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <h4>Follow Detection Phase</h4>
+          <p>Learn how the alert is triggered and what indicators you should see.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <h4>Execute Validation</h4>
+          <p>Copy-paste the commands. Validate if it's a real attack or false positive.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">4</div>
+          <h4>Run Containment</h4>
+          <p>Follow the containment steps to prevent spread and damage.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">5</div>
+          <h4>Eradication</h4>
+          <p>Remove the threat from the environment completely.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">6</div>
+          <h4>Learn Prevention</h4>
+          <p>Understand how to prevent this attack in the future.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INCIDENT PHASES EXPLANATION -->
+    <section class="phases-section">
+      <h2>The 5 Phases of Incident Response</h2>
+      
+      <div class="phases-container">
+        
+        <div class="phase">
+          <div class="phase-icon">🚨</div>
+          <h3>Detection</h3>
+          <p>Alert is triggered by SIEM/EDR. Something suspicious detected. This is when you get the notification.</p>
+          <div class="timeline">Minute 0-5</div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-icon">🔍</div>
+          <h3>Validation</h3>
+          <p>Is this a real threat or false positive? Run validation commands to confirm the attack is happening.</p>
+          <div class="timeline">Minute 5-15</div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-icon">🛑</div>
+          <h3>Containment</h3>
+          <p>Stop the attack from spreading. Disconnect compromised systems, revoke credentials, block IPs.</p>
+          <div class="timeline">Minute 15-30</div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-icon">🧹</div>
+          <h3>Eradication</h3>
+          <p>Remove the threat completely. Delete malware, patch vulnerabilities, reset passwords.</p>
+          <div class="timeline">Hour 1-4</div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-icon">🔐</div>
+          <h3>Recovery</h3>
+          <p>Restore systems to normal. Monitor for reinfection. Implement preventive measures.</p>
+          <div class="timeline">Hour 4+</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MITRE ATT&CK COVERAGE -->
+    <section class="mitre-coverage">
+      <h2>MITRE ATT&CK Coverage</h2>
+      <p class="subtitle">Each playbook covers specific tactics and techniques from the MITRE framework.</p>
+      
+      <div class="mitre-tactics">
+        <div class="tactic highlighted">
+          <span class="tactic-name">🎯 Initial Access</span>
+          <span class="coverage">Covered by RDP Brute Force</span>
+        </div>
+        
+        <div class="tactic highlighted">
+          <span class="tactic-name">💾 Execution</span>
+          <span class="coverage">Covered by Ransomware</span>
+        </div>
+        
+        <div class="tactic highlighted">
+          <span class="tactic-name">🔄 Persistence</span>
+          <span class="coverage">Covered by Lateral Movement</span>
+        </div>
+        
+        <div class="tactic">
+          <span class="tactic-name">⬆️ Privilege Escalation</span>
+          <span class="coverage">Lateral Movement, Ransomware</span>
+        </div>
+        
+        <div class="tactic highlighted">
+          <span class="tactic-name">🕷️ Lateral Movement</span>
+          <span class="coverage">Dedicated Playbook</span>
+        </div>
+        
+        <div class="tactic">
+          <span class="tactic-name">📡 Command & Control</span>
+          <span class="coverage">Coming Soon</span>
+        </div>
+        
+        <div class="tactic highlighted">
+          <span class="tactic-name">📤 Exfiltration</span>
+          <span class="coverage">Lateral Movement</span>
+        </div>
+        
+        <div class="tactic">
+          <span class="tactic-name">💥 Impact</span>
+          <span class="coverage">Ransomware, Lateral Movement</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEY METRICS -->
+    <section class="key-metrics">
+      <h2>Key Metrics You'll Learn</h2>
+      
+      <div class="metrics-grid">
+        <div class="metric">
+          <div class="metric-icon">⏱️</div>
+          <h4>Mean Time to Detect (MTTD)</h4>
+          <p>How quickly should you spot the attack?</p>
+        </div>
+        
+        <div class="metric">
+          <div class="metric-icon">🔧</div>
+          <h4>Mean Time to Respond (MTTR)</h4>
+          <p>How fast can you take action?</p>
+        </div>
+        
+        <div class="metric">
+          <div class="metric-icon">📊</div>
+          <h4>Indicator of Compromise (IoC)</h4>
+          <p>What specific data points prove the attack?</p>
+        </div>
+        
+        <div class="metric">
+          <div class="metric-icon">🎯</div>
+          <h4>Attack Vector</h4>
+          <p>How did the attacker get in?</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+      <h2>Ready to Handle Real Incidents?</h2>
+      <p>Pick a playbook and learn how SOC analysts respond to attacks in the real world.</p>
+      <a href="brute-force-rdp.html" class="btn-primary btn-large">
+        Start with RDP Brute Force →
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 NCRC Incident Response Lab. Educational purposes only.</p>
+  </footer>
+
+  <script src="js/runbooks.js"></script>
+
+</body>
+</html>

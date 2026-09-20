@@ -1,0 +1,816 @@
+/* ============================================
+   INCIDENT RESPONSE PLAYBOOKS - MAIN STYLES
+   ============================================ */
+
+/* VARIABLES */
+:root {
+  --primary: #667eea;
+  --secondary: #764ba2;
+  --danger: #ff6b6b;
+  --warning: #ffd93d;
+  --success: #6bcf7f;
+  --dark: #0f1419;
+  --darker: #0a0e12;
+  --light: #f5f5f5;
+  --border: #1a1f2e;
+  --gold: #f39c12;
+  --text: #e0e0e0;
+}
+
+/* RESET & BASE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, var(--darker) 0%, #1a1f2e 100%);
+  color: var(--text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 60px;
+  animation: slideInDown 0.8s ease-out;
+}
+
+.hero h1 {
+  font-size: 3.5em;
+  font-weight: 700;
+  margin-bottom: 15px;
+  background: linear-gradient(135deg, #667eea, #f39c12);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero h1 .gold {
+  color: var(--gold);
+}
+
+.hero .subtitle {
+  font-size: 1.3em;
+  color: #a0a0a0;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.hero .description {
+  font-size: 1em;
+  color: #888;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* ============================================
+   STATS SECTION
+   ============================================ */
+
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 60px;
+  padding: 0 20px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  border: 1px solid var(--border);
+  padding: 30px 20px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%);
+  transform: translateY(-5px);
+}
+
+.stat-number {
+  font-size: 2.5em;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  font-size: 0.95em;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ============================================
+   FILTER BUTTONS
+   ============================================ */
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+  padding: 0 20px;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95em;
+  font-weight: 500;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* ============================================
+   PLAYBOOKS GRID
+   ============================================ */
+
+.playbooks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 80px;
+  padding: 0 20px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.playbook-card {
+  background: linear-gradient(135deg, rgba(15, 20, 25, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 30px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.playbook-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--gold));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.playbook-card:hover {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(15, 20, 25, 0.95) 0%, rgba(26, 31, 46, 0.95) 100%);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+}
+
+.playbook-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Header with severity and category */
+.playbook-card .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.severity {
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 0.85em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.severity.critical {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.5);
+}
+
+.severity.high {
+  background: rgba(255, 217, 61, 0.2);
+  color: #ffd93d;
+  border: 1px solid rgba(255, 217, 61, 0.5);
+}
+
+.category {
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 0.85em;
+  font-weight: 500;
+  background: rgba(102, 126, 234, 0.2);
+  color: var(--primary);
+  border: 1px solid rgba(102, 126, 234, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Icon */
+.playbook-card .icon {
+  font-size: 3em;
+  margin: 10px 0 20px 0;
+  text-align: center;
+}
+
+/* Title */
+.playbook-card h3 {
+  font-size: 1.6em;
+  margin-bottom: 15px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Detail section */
+.playbook-card .detail {
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.playbook-card .scenario {
+  background: rgba(102, 126, 234, 0.08);
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 3px solid var(--primary);
+  margin-bottom: 15px;
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+.playbook-card .scenario strong {
+  color: var(--gold);
+}
+
+/* Quick facts */
+.quick-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quick-facts .fact {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  color: #a0a0a0;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.quick-facts .fact:last-child {
+  border-bottom: none;
+}
+
+/* Tags */
+.playbook-card .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.playbook-card .tags span {
+  background: rgba(102, 126, 234, 0.15);
+  color: var(--primary);
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.85em;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+/* Button */
+.btn-primary {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.95em;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-large {
+  padding: 16px 32px;
+  font-size: 1.1em;
+}
+
+/* ============================================
+   HOW TO USE SECTION
+   ============================================ */
+
+.how-to-use {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 60px 40px;
+  margin-bottom: 80px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.how-to-use h2 {
+  font-size: 2.2em;
+  margin-bottom: 50px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.step {
+  background: rgba(15, 20, 25, 0.6);
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.step:hover {
+  border-color: var(--primary);
+  transform: translateY(-5px);
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border-radius: 50%;
+  font-size: 1.8em;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.step h4 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.step p {
+  font-size: 0.95em;
+  color: #a0a0a0;
+  line-height: 1.6;
+}
+
+/* ============================================
+   PHASES SECTION
+   ============================================ */
+
+.phases-section {
+  margin-bottom: 80px;
+  padding: 0 20px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.phases-section h2 {
+  font-size: 2.2em;
+  margin-bottom: 50px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.phases-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+  position: relative;
+}
+
+.phases-container::before {
+  content: '';
+  position: absolute;
+  top: 80px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  z-index: 0;
+}
+
+.phase {
+  background: linear-gradient(135deg, rgba(15, 20, 25, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.phase:hover {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(15, 20, 25, 0.95) 0%, rgba(26, 31, 46, 0.95) 100%);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+}
+
+.phase-icon {
+  font-size: 3em;
+  margin-bottom: 15px;
+}
+
+.phase h3 {
+  font-size: 1.4em;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.phase p {
+  font-size: 0.95em;
+  color: #a0a0a0;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.timeline {
+  display: inline-block;
+  padding: 8px 16px;
+  background: rgba(102, 126, 234, 0.2);
+  border: 1px solid rgba(102, 126, 234, 0.5);
+  border-radius: 20px;
+  font-size: 0.85em;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ============================================
+   MITRE ATT&CK COVERAGE
+   ============================================ */
+
+.mitre-coverage {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+  border: 1px solid var(--border);
+  padding: 60px 40px;
+  border-radius: 12px;
+  margin-bottom: 80px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mitre-coverage h2 {
+  font-size: 2.2em;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.mitre-coverage .subtitle {
+  text-align: center;
+  color: #a0a0a0;
+  margin-bottom: 40px;
+  font-size: 1em;
+}
+
+.mitre-tactics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.tactic {
+  background: rgba(15, 20, 25, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.tactic:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+
+.tactic.highlighted {
+  background: rgba(102, 126, 234, 0.15);
+  border-color: var(--primary);
+}
+
+.tactic.highlighted:hover {
+  background: rgba(102, 126, 234, 0.25);
+}
+
+.tactic-name {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #ffffff;
+  font-size: 0.95em;
+}
+
+.coverage {
+  display: block;
+  font-size: 0.85em;
+  color: #888;
+}
+
+.tactic.highlighted .coverage {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* ============================================
+   KEY METRICS SECTION
+   ============================================ */
+
+.key-metrics {
+  padding: 0 20px;
+  margin-bottom: 80px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.key-metrics h2 {
+  font-size: 2.2em;
+  margin-bottom: 50px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.metric {
+  background: linear-gradient(135deg, rgba(15, 20, 25, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%);
+  border: 1px solid var(--border);
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.metric:hover {
+  border-color: var(--primary);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+}
+
+.metric-icon {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+}
+
+.metric h4 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.metric p {
+  font-size: 0.95em;
+  color: #a0a0a0;
+  line-height: 1.6;
+}
+
+/* ============================================
+   CTA SECTION
+   ============================================ */
+
+.cta-section {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 60px 40px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 80px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-section h2 {
+  font-size: 2.2em;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.cta-section p {
+  font-size: 1.1em;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 30px;
+}
+
+.cta-section .btn-primary {
+  background: white;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.cta-section .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+.footer {
+  text-align: center;
+  padding: 40px 20px;
+  border-top: 1px solid var(--border);
+  color: #666;
+  font-size: 0.95em;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2em;
+  }
+
+  .hero .subtitle {
+    font-size: 1.1em;
+  }
+
+  .playbooks-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .stats-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phases-container {
+    grid-template-columns: 1fr;
+  }
+
+  .phases-container::before {
+    display: none;
+  }
+
+  .how-to-use {
+    padding: 40px 20px;
+  }
+
+  .mitre-coverage {
+    padding: 40px 20px;
+  }
+
+  .cta-section {
+    padding: 40px 20px;
+  }
+
+  .cta-section h2 {
+    font-size: 1.8em;
+  }
+
+  .filters {
+    padding: 0 10px;
+  }
+
+  .filter-btn {
+    padding: 8px 15px;
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 40px 15px;
+  }
+
+  .hero h1 {
+    font-size: 1.8em;
+  }
+
+  .stats-section {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .playbook-card {
+    padding: 20px;
+  }
+
+  .playbook-card h3 {
+    font-size: 1.3em;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mitre-tactics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   CONTAINER WIDTH
+   ============================================ */
+
+.runbooks-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}

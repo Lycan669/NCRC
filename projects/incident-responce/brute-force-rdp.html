@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RDP Brute Force Attack - Incident Response Playbook</title>
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="css/playbook.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">NCRC</div>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="index.html" class="nav-link">← Back to Playbooks</a></li>
+    </ul>
+  </nav>
+
+  <main class="playbook-container">
+
+    <!-- HERO SECTION -->
+    <section class="playbook-hero">
+      <div class="hero-content">
+        <span class="breadcrumb">Incident Response / Network Based Attack</span>
+        <h1>🔴 RDP Brute Force Attack</h1>
+        <p class="tagline">Real-world incident response guide for detecting and containing RDP brute force attacks.</p>
+        
+        <div class="severity-badge critical">
+          <span class="badge-icon">⚠️</span>
+          <span class="badge-text">CRITICAL SEVERITY</span>
+        </div>
+      </div>
+      
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="label">MTTD</span>
+          <span class="value">15-30 min</span>
+        </div>
+        <div class="stat">
+          <span class="label">MTTR</span>
+          <span class="value">1-2 hours</span>
+        </div>
+        <div class="stat">
+          <span class="label">Risk Level</span>
+          <span class="value">CRITICAL</span>
+        </div>
+        <div class="stat">
+          <span class="label">Detection Type</span>
+          <span class="value">Log Based</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK SUMMARY -->
+    <section class="quick-summary">
+      <div class="summary-card">
+        <h3>📋 Executive Summary</h3>
+        <p>
+          RDP brute force attacks are one of the most common attack vectors targeting Windows environments. 
+          Attackers systematically attempt to guess credentials using automated tools, often targeting RDP port 3389. 
+          Once successful, they gain remote access and can move laterally within your network, deploy ransomware, or exfiltrate data.
+        </p>
+      </div>
+
+      <div class="summary-card highlight">
+        <h3>🎯 Attack Overview</h3>
+        <div class="overview-grid">
+          <div class="overview-item">
+            <span class="icon">🌐</span>
+            <span class="label">Primary Target</span>
+            <span class="value">Windows RDP (Port 3389)</span>
+          </div>
+          <div class="overview-item">
+            <span class="icon">⏱️</span>
+            <span class="label">Attack Duration</span>
+            <span class="value">Hours to Days</span>
+          </div>
+          <div class="overview-item">
+            <span class="icon">🛡️</span>
+            <span class="label">Impact Level</span>
+            <span class="value">System Compromise</span>
+          </div>
+          <div class="overview-item">
+            <span class="icon">👤</span>
+            <span class="label">Success Indicator</span>
+            <span class="value">Successful Login</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DETECTION SECTION -->
+    <section class="playbook-section detection-section">
+      <h2>🔍 Phase 1: Detection</h2>
+      <p class="section-intro">Identify RDP brute force attempts before successful compromise.</p>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="spl">SPL (Splunk)</button>
+        <button class="tab-btn" data-tab="kql">KQL (Azure)</button>
+        <button class="tab-btn" data-tab="sigma">SIGMA</button>
+        <button class="tab-btn" data-tab="commands">Linux Commands</button>
+      </div>
+
+      <!-- SPL TAB -->
+      <div class="tab-content active" id="spl">
+        <h4>Splunk Query - Detect Failed RDP Attempts</h4>
+        
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-name">Failed RDP Login Attempts (4625)</span>
+            <span class="rule-lang">SPL</span>
+          </div>
+          
+          <div class="code-block">
+            <pre><code>sourcetype="WinEventLog:Security" EventCode=4625 
+  [DestinationPort=3389 OR dest_port=3389]
+| stats count as failed_attempts by src_ip, dest
+| where failed_attempts > 5
+| table src_ip, dest, failed_attempts
+| sort - failed_attempts</code></pre>
+          </div>
+
+          <div class="explanation">
+            <h5>🔎 What This Does:</h5>
+            <ul>
+              <li>Searches Windows Security Event Log (EventCode 4625 = failed login)</li>
+              <li>Filters for RDP traffic (port 3389)</li>
+              <li>Groups by source IP and destination</li>
+              <li>Alerts if > 5 failed attempts from same IP</li>
+              <li>Sorts by highest attempt count</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-name">Brute Force Detection (Time-based)</span>
+            <span class="rule-lang">SPL Advanced</span>
+          </div>
+          
+          <div class="code-block">
+            <pre><code>sourcetype="WinEventLog:Security" EventCode=4625
+  (DestinationPort=3389 OR dest_port=3389)
+| bucket _time span=5m
+| stats count as attempts by src_ip, _time
+| where attempts > 10
+| eval time_window="5min"
+| eval risk_score = attempts * 2
+| where risk_score > 20
+| table src_ip, _time, attempts, risk_score, time_window</code></pre>
+          </div>
+
+          <div class="explanation">
+            <h5>🔎 Advanced Detection:</h5>
+            <ul>
+              <li>Buckets events into 5-minute windows</li>
+              <li>Detects 10+ failures per IP in 5 minutes</li>
+              <li>Calculates risk score</li>
+              <li>Triggers alert when risk > 20</li>
+              <li>Perfect for automated response</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-name">Successful Login After Failed Attempts</span>
+            <span class="rule-lang">SPL Correlation</span>
+          </div>
+          
+          <div class="code-block">
+            <pre><code>sourcetype="WinEventLog:Security" 
+  (EventCode=4625 OR EventCode=4624)
+  DestinationPort=3389
+| stats 
+    count(eval(EventCode=4625)) as failed_logins,
+    count(eval(EventCode=4624)) as successful_logins,
+    values(user) as users
+    by src_ip, dest
+| where failed_logins > 10 AND successful_logins >= 1
+| table src_ip, dest, failed_logins, successful_logins, users
+| eval severity="CRITICAL"</code></pre>
+          </div>
+
+          <div class="explanation">
+            <h5>🎯 Critical Indicator:</h5>
+            <ul>
+              <li>Correlates failed AND successful logins</li>
+              <li>Shows attacker broke through</li>
+              <li>Immediate incident escalation needed</li>
+              <li>Marks as CRITICAL severity</li>
+              <li>Shows compromised user accounts</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- KQL TAB -->
+      <div class="tab-content" id="kql">
+        <h4>KQL Query - Azure Sentinel Detection</h4>
+        
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-name">RDP Brute Force Detection</span>
+            <span class="rule-lang">KQL</span>
+          </div>
+          
+          <div class="code-block">
+            <pre><code>SecurityEvent
+| where EventID == 4625
+| where LogonType == 10  // RDP/RemoteInteractive
+| summarize 
+    FailedAttempts = count(),
+    FirstAttempt = min(TimeGenerated),
+    LastAttempt = max(TimeGenerated)
+    by SourceIpAddr, Computer, Account
+| where FailedAttempts > 15
+| extend 
+    Duration = LastAttempt - FirstAttempt,
+    AttacksPerMinute = (FailedAttempts / (Duration / 1m))
+| where AttacksPerMinute > 3
+| project SourceIpAddr, Computer, Account, FailedAttempts, AttacksPerMinute</code></pre>
+          </div>
+
+          <div class="explanation">
+            <h5>🔎 Azure Sentinel Logic:</h5>
+            <ul>
+              <li>Monitors SecurityEvent table</li>
+              <li>Filters for failed logins (4625)</li>
+              <li>Identifies RDP sessions (LogonType=10)</li>
+              <li>Calculates attacks per minute</li>
+              <li>Alerts on high velocity attacks</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-name">Suspicious RDP Logon Success</span>
+            <span class="rule-lang">KQL</span>
+          </div>
+          
+          <div class="code-block">
+            <pre><code>SecurityEvent
+| where EventID == 4624
+| where LogonType == 10
+| join kind=innerunique (
+    SecurityEvent
+    | where EventID == 4625
+    | where LogonType == 10
+    | summarize FailedAttempts = count() by SourceIpAddr
+) on SourceIpAddr
+| where FailedAttempts > 10
+| extend 
+    Severity = "HIGH",
+    ThreatLevel = "COMPROMISED"
+| project TimeGenerated, SourceIpAddr, Account, Computer, FailedAttempts, Severity</code></pre>
+          </div>
+
+          <div class="explanation">
+            <h5>🎯 Correlation Query:</h5>
+            <ul>
+              <li>Joins failed attempts with successful login</li>
+              <li>Shows brute force success</li>
+              <li>Marks account as potentially compromised</li>
+              <li>High priority incident</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGMA TAB -->
+      <div class="tab-content" id="sigma">
+        <h4>SIGMA Rule - Detection as Code</h4>
+        
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-name">RDP Brute Force - SIGMA Format</span>
+            <span class="rule-lang">SIGMA YAML</span>
+          </div>
+          
+          <div class="code-block">
+            <pre><code>title: RDP Brute Force Attack Detection
+id: rdp-brute-force-001
+description: Detects multiple failed RDP login attempts from single IP
+status: experimental
+author: NCRC Security Team
+date: 2026/09/20
+
+logsource:
+  product: windows
+  service: security
+  definition: Windows Security Event Log
+
+detection:
+  selection:
+    EventID: 4625
+    LogonType: 10
+    DestinationPort: 3389
+  
+  timeframe: 5m
+  condition: selection | count(SourceIp) by SourceIp > 10
+
+falsepositives:
+  - Legitimate password managers
+  - User testing authentication
+  - Misconfigured applications
+
+level: high</code></pre>
+          </div>
+
+          <div class="explanation">
+            <h5>📋 SIGMA Rule Details:</h5>
+            <ul>
+              <li>Portable detection rule format</li>
+              <li>Works across multiple SIEM platforms</li>
+              <li>Detects 10+ failed attempts per IP in 5 minutes</li>
+              <li>Includes false positive mitigations</li>
+              <li>Can be auto-converted to SPL, KQL, etc.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMMANDS TAB -->
+      <div class="tab-content" id="commands">
+        <h4>🐧 Linux Commands for Log Analysis</h4>
+        
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-name">Parse Windows Event Logs on Linux</span>
+            <span class="rule-lang">Bash</span>
+          </div>
+          
+          <div class="code-block">
+            <pre><code># Extract failed RDP attempts from Windows Security log
+grep -i "failed\|4625" /path/to/security.evtx | \
+  grep -i "3389\|rdp" | \
+  awk '{print $NF}' | \
+  sort | uniq -c | sort -rn
+
+# Count failed login attempts per IP (from Syslog)
+cat /var/log/auth.log | \
+  grep "Failed password" | \
+  awk '{print $(NF-3)}' | \
+  sort | uniq -c | \
+  awk '$1 > 5 {print $2, $1 " attempts"}'
+
+# Real-time RDP monitoring with tail
+tail -f /var/log/auth.log | \
+  grep --line-buffered "Failed password" | \
+  grep --line-buffered "port 3389"</code></pre>
+          </div>
+
+          <div class="explanation">
+            <h5>📊 Log Analysis Commands:</h5>
+            <ul>
+              <li>Extract failed login events</li>
+              <li>Count attempts per IP address</li>
+              <li>Filter RDP-specific traffic</li>
+              <li>Real-time monitoring capability</li>
+              <li>Useful for correlation analysis</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-header">
+            <span class="rule-name">Network Traffic Analysis</span>
+            <span class="rule-lang">Bash + tcpdump</span>
+          </div>
+          
+          <div class="code-block">
+            <pre><code># Capture RDP traffic on port 3389
+sudo tcpdump -i any -n port 3389 -w rdp_traffic.pcap
+
+# Analyze captured packets
+tcpdump -r rdp_traffic.pcap | \
+  grep "Flags\|RST\|SYN" | \
+  awk '{print $3}' | \
+  cut -d'.' -f1-4 | \
+  sort | uniq -c | sort -rn
+
+# Check for brute force pattern (multiple retransmissions)
+tcpdump -r rdp_traffic.pcap -n | \
+  grep "retransmission" | \
+  wc -l</code></pre>
+          </div>
+
+          <div class="explanation">
+            <h5>🌐 Network Detection:</h5>
+            <ul>
+              <li>Captures RDP protocol traffic</li>
+              <li>Analyzes connection patterns</li>
+              <li>Detects rapid reconnect attempts</li>
+              <li>Network-level evidence</li>
+              <li>Complements log-based detection</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- INVESTIGATION SECTION -->
+    <section class="playbook-section investigation-section">
+      <h2>🔬 Phase 2: Investigation & Analysis</h2>
+      <p class="section-intro">Deep dive into the attack to understand scope and impact.</p>
+
+      <div class="investigation-grid">
+        <div class="investigation-card">
+          <div class="card-icon">📊</div>
+          <h4>1. Identify Attack Source</h4>
+          <div class="card-content">
+            <p><strong>Objective:</strong> Determine attacker IP and origin</p>
+            <div class="code-block">
+              <pre><code># Check for brute force source IPs
+netstat -an | grep 3389 | grep ESTABLISHED
+ss -tan | grep :3389
+
+# Analyze source IP geolocation
+whois [SOURCE_IP]
+geoiplookup [SOURCE_IP]</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="investigation-card">
+          <div class="card-icon">🎯</div>
+          <h4>2. Identify Target Accounts</h4>
+          <div class="card-content">
+            <p><strong>Objective:</strong> Which accounts were targeted?</p>
+            <div class="code-block">
+              <pre><code># List failed login attempts per user
+grep EventCode=4625 security.log | \
+  grep 3389 | \
+  awk '{print $USERNAME}' | \
+  sort | uniq -c | sort -rn
+
+# Check for successful breach
+grep EventCode=4624 security.log | \
+  grep 3389 | awk '{print $USERNAME}'</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="investigation-card">
+          <div class="card-icon">⏱️</div>
+          <h4>3. Timeline Analysis</h4>
+          <div class="card-content">
+            <p><strong>Objective:</strong> When did attack occur?</p>
+            <div class="code-block">
+              <pre><code># Extract timestamps of failed attempts
+grep EventCode=4625 security.log | \
+  grep 3389 | \
+  awk '{print $1, $2}' | \
+  sort | uniq -c | sort -k3
+
+# Find first and last attempt
+head -n 1 events.log  # First attempt
+tail -n 1 events.log  # Last attempt</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="investigation-card">
+          <div class="card-icon">🚀</div>
+          <h4>4. Post-Compromise Activity</h4>
+          <div class="card-content">
+            <p><strong>Objective:</strong> What happened after login?</p>
+            <div class="code-block">
+              <pre><code># Check for lateral movement (4624 logins)
+grep EventCode=4624 security.log | \
+  grep "[COMPROMISED_USER]" | \
+  awk '{print $SOURCE_IP}' | sort | uniq
+
+# Check for logon type after successful RDP
+grep -A 5 "EventCode=4624" security.log | \
+  grep LogonType</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="investigation-card">
+          <div class="card-icon">🛠️</div>
+          <h4>5. Privilege Escalation Check</h4>
+          <div class="card-content">
+            <p><strong>Objective:</strong> Did they escalate privileges?</p>
+            <div class="code-block">
+              <pre><code># Check for privilege escalation attempts
+grep -i "privilege\|admin\|4688" security.log | \
+  grep "[COMPROMISED_USER]"
+
+# Look for UAC bypass attempts
+grep "User Account Control" security.log | \
+  grep -i "denied\|blocked"</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="investigation-card">
+          <div class="card-icon">🔍</div>
+          <h4>6. Persistence Mechanisms</h4>
+          <div class="card-content">
+            <p><strong>Objective:</strong> Did they install backdoors?</p>
+            <div class="code-block">
+              <pre><code># Check for suspicious scheduled tasks
+tasklist /svc | grep -i "suspicious"
+
+# Look for new user accounts
+net user | grep -v "Administrator\|Guest"
+
+# Check for SSH keys or backdoors
+ls -la ~/.ssh/
+find /root -name "authorized_keys"</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTAINMENT SECTION -->
+    <section class="playbook-section containment-section">
+      <h2>🔐 Phase 3: Containment & Isolation</h2>
+      <p class="section-intro">Stop the attack and prevent further damage.</p>
+
+      <div class="containment-steps">
+        
+        <div class="step-card immediate">
+          <span class="step-badge">IMMEDIATE</span>
+          <h4>Step 1: Block Attacker IP</h4>
+          <div class="step-content">
+            <p>Prevent continued attack attempts</p>
+            <div class="code-block">
+              <pre><code># Windows Firewall
+netsh advfirewall firewall add rule \
+  name="Block RDP Brute Force" \
+  dir=in action=block remoteip=[ATTACKER_IP] \
+  protocol=tcp localport=3389
+
+# Linux iptables
+sudo iptables -A INPUT -s [ATTACKER_IP] -j DROP
+sudo iptables-save > /etc/iptables/rules.v4
+
+# Cloud (AWS Security Group)
+aws ec2 revoke-security-group-ingress \
+  --group-id sg-xxxxx \
+  --protocol tcp --port 3389 \
+  --cidr [ATTACKER_IP]/32</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card immediate">
+          <span class="step-badge">IMMEDIATE</span>
+          <h4>Step 2: Disable Compromised Account</h4>
+          <div class="step-content">
+            <p>Prevent attacker from using stolen credentials</p>
+            <div class="code-block">
+              <pre><code># Disable user account immediately
+net user [USERNAME] /active:no
+
+# Force password reset
+net user [USERNAME] *
+
+# Revoke RDP access
+net localgroup "Remote Desktop Users" [USERNAME] /delete
+
+# Check Active Directory (if on domain)
+Get-ADUser -Identity [USERNAME] | Disable-ADAccount</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card immediate">
+          <span class="step-badge">IMMEDIATE</span>
+          <h4>Step 3: Kill Active Sessions</h4>
+          <div class="step-content">
+            <p>Terminate attacker's remote session</p>
+            <div class="code-block">
+              <pre><code># List all RDP sessions
+query session
+
+# Kill specific session
+logoff [SESSION_ID]
+
+# Disconnect all sessions for user
+query session | grep [USERNAME] | \
+  awk '{print $2}' | xargs -I {} logoff {}
+
+# Force disconnect from PowerShell
+Get-PSSession | Stop-PSSession</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <span class="step-badge">URGENT</span>
+          <h4>Step 4: Isolate Affected Server</h4>
+          <div class="step-content">
+            <p>Network segmentation to prevent lateral movement</p>
+            <div class="code-block">
+              <pre><code># Disable network interfaces temporarily
+sudo ifconfig eth0 down
+
+# Or use VLAN isolation (if infrastructure allows)
+# Alternatively, snapshot VM state BEFORE isolation
+# for forensic analysis
+
+# Document current state for investigation
+systemctl status --no-pager > /tmp/system_state.txt
+netstat -tan > /tmp/network_state.txt</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <span class="step-badge">URGENT</span>
+          <h4>Step 5: Change RDP Port (Temporary)</h4>
+          <div class="step-content">
+            <p>Make target less attractive while maintaining access</p>
+            <div class="code-block">
+              <pre><code># Registry modification (Windows)
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" \
+  /v PortNumber /t REG_DWORD /d 13389 /f
+
+# Restart RDP service
+net stop TermService
+net start TermService
+
+# Update firewall rules
+netsh advfirewall firewall add rule \
+  name="RDP Alternative Port" dir=in action=allow \
+  protocol=tcp localport=13389</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <span class="step-badge">URGENT</span>
+          <h4>Step 6: Enable Account Lockout</h4>
+          <div class="step-content">
+            <p>Prevent future brute force attacks</p>
+            <div class="code-block">
+              <pre><code># Set account lockout policy
+net accounts /lockoutthreshold:5 /lockoutduration:30 /lockoutwindow:5
+
+# Or via Group Policy
+gpresult /h policy_report.html
+
+# For Active Directory
+Set-ADAccountLockoutPolicy -Identity "AD:\CN=Default Password Policy" \
+  -LockoutThreshold 5 -LockoutDuration 00:30:00</code></pre>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ERADICATION SECTION -->
+    <section class="playbook-section eradication-section">
+      <h2>🧹 Phase 4: Eradication</h2>
+      <p class="section-intro">Remove all traces of the attack and attacker access.</p>
+
+      <div class="eradication-grid">
+        <div class="eradication-item">
+          <h4>🔍 Scan for Backdoors</h4>
+          <div class="code-block">
+            <pre><code># Search for suspicious processes
+Get-Process | where {$_.Path -notmatch "System32|Program Files"}
+
+# Check for hidden user accounts
+net user | findstr /i "hidden"
+wmic useraccount get name,disabled,status
+
+# Look for startup items
+Get-CimInstance Win32_StartupCommand | 
+  Select-Object Name, Command</code></pre>
+          </div>
+        </div>
+
+        <div class="eradication-item">
+          <h4>🗂️ Clean Logs</h4>
+          <div class="code-block">
+            <pre><code># Backup logs FIRST for investigation
+cp /var/log/auth.log /evidence/auth.log.backup
+
+# Clear failed login attempts (careful!)
+wevtutil cl Security
+
+# Clear RDP specific logs
+logman stop "RDP" -ets
+wevtutil cl Microsoft-Windows-TerminalServices-LocalSessionManager/Operational</code></pre>
+          </div>
+        </div>
+
+        <div class="eradication-item">
+          <h4>🛡️ Remove Persistence</h4>
+          <div class="code-block">
+            <pre><code># Delete scheduled tasks
+taskkill /IM [SUSPICIOUS_TASK.EXE] /F
+schtasks /delete /tn "[SUSPICIOUS_TASK]" /f
+
+# Remove startup entries
+reg delete "HKLM\Software\Microsoft\Windows\Run" \
+  /v [SUSPICIOUS_KEY] /f
+
+# Check and remove SSH keys
+rm -f ~/.ssh/authorized_keys
+rm -f /root/.ssh/authorized_keys</code></pre>
+          </div>
+        </div>
+
+        <div class="eradication-item">
+          <h4>🔄 Patch & Update</h4>
+          <div class="code-block">
+            <pre><code># Windows Update
+wuauclt.exe /updatenow
+Get-WindowsUpdate -Install -AcceptAll -AutoReboot
+
+# Linux Updates
+apt update && apt upgrade -y
+yum update -y
+
+# Check for RDP vulnerability patches
+systeminfo | findstr /C:"OS Version"</code></pre>
+          </div>
+        </div>
+
+        <div class="eradication-item">
+          <h4>🔐 Reset Credentials</h4>
+          <div class="code-block">
+            <pre><code># Reset all potentially compromised passwords
+# Force password expiration
+net user [USERNAME] /expires:today
+
+# Reset service account passwords
+Get-ADUser -Filter {ServicePrincipalName -ne "$null"} | 
+  Set-ADAccountPassword -NewPassword (Read-Host "New Password")</code></pre>
+          </div>
+        </div>
+
+        <div class="eradication-item">
+          <h4>✅ Verification</h4>
+          <div class="code-block">
+            <pre><code># Verify RDP is clean
+Get-Service TermService | select Status
+netstat -an | grep 3389
+
+# Check for attacker artifacts
+Get-ChildItem -Path C:\ -Attributes Hidden -Recurse
+find / -name ".*" -type f 2>/dev/null</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECOVERY SECTION -->
+    <section class="playbook-section recovery-section">
+      <h2>💪 Phase 5: Recovery & Hardening</h2>
+      <p class="section-intro">Restore systems to normal and prevent recurrence.</p>
+
+      <div class="recovery-cards">
+        <div class="recovery-card">
+          <span class="recovery-icon">🖥️</span>
+          <h4>System Hardening</h4>
+          <ul>
+            <li>✓ Enable Network Level Authentication (NLA)</li>
+            <li>✓ Restrict RDP access by IP whitelist</li>
+            <li>✓ Implement RDP Gateway</li>
+            <li>✓ Enable RDP encryption</li>
+            <li>✓ Disable RDP on unnecessary systems</li>
+          </ul>
+          <div class="code-block">
+            <pre><code># Enable NLA
+Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' \
+  -Name SecurityLayer -Value 2
+
+# RDP Firewall rule (whitelist IPs only)
+netsh advfirewall firewall add rule \
+  name="RDP Access" dir=in action=allow \
+  protocol=tcp localport=3389 \
+  remoteip="[ALLOWED_IP_1],[ALLOWED_IP_2]"</code></pre>
+          </div>
+        </div>
+
+        <div class="recovery-card">
+          <span class="recovery-icon">🔒</span>
+          <h4>Authentication Hardening</h4>
+          <ul>
+            <li>✓ Implement Multi-Factor Authentication (MFA)</li>
+            <li>✓ Enforce complex password requirements</li>
+            <li>✓ Use passwordless authentication</li>
+            <li>✓ Monitor for credential stuffing</li>
+            <li>✓ Regular password audits</li>
+          </ul>
+          <div class="code-block">
+            <pre><code># Implement complex password policy
+net accounts /minpwlen:15 /maxpwage:30 /minpwage:1
+
+# Enable MFA on RDP (via Azure AD or Cisco Duo)
+# Install MFA client software
+# Configure for mandatory authentication</code></pre>
+          </div>
+        </div>
+
+        <div class="recovery-card">
+          <span class="recovery-icon">👁️</span>
+          <h4>Monitoring & Detection</h4>
+          <ul>
+            <li>✓ Deploy SIEM rules (Splunk/Sentinel)</li>
+            <li>✓ Enable RDP event logging</li>
+            <li>✓ Real-time alerting on failed attempts</li>
+            <li>✓ Threat intelligence feeds</li>
+            <li>✓ Regular log reviews</li>
+          </ul>
+          <div class="code-block">
+            <pre><code># Enable RDP logging
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" \
+  /v EventLoggingEnabled /t REG_DWORD /d 1 /f
+
+# Configure SIEM forwarding
+# Connect to Splunk/Azure Sentinel
+# Enable Windows Event Forwarding (WEF)</code></pre>
+          </div>
+        </div>
+
+        <div class="recovery-card">
+          <span class="recovery-icon">📋</span>
+          <h4>Process Improvements</h4>
+          <ul>
+            <li>✓ Document lessons learned</li>
+            <li>✓ Update incident response playbook</li>
+            <li>✓ Conduct post-incident review</li>
+            <li>✓ Training for SOC team</li>
+            <li>✓ Simulate future attacks (tabletop)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- INDICATORS OF COMPROMISE -->
+    <section class="playbook-section ioc-section">
+      <h2>🎯 Indicators of Compromise (IoCs)</h2>
+      <p class="section-intro">Evidence that confirms RDP brute force attack occurred.</p>
+
+      <div class="ioc-grid">
+        <div class="ioc-card log-based">
+          <h4>📋 Log-Based IoCs</h4>
+          <ul class="ioc-list">
+            <li><span class="ioc-label">Event ID:</span> 4625 (Failed Login)</li>
+            <li><span class="ioc-label">Event ID:</span> 4624 (Successful Login)</li>
+            <li><span class="ioc-label">LogonType:</span> 10 (RDP)</li>
+            <li><span class="ioc-label">Port:</span> 3389 (RDP Default)</li>
+            <li><span class="ioc-label">Source:</span> Unusual geography</li>
+            <li><span class="ioc-label">Timeframe:</span> Off-hours login</li>
+          </ul>
+        </div>
+
+        <div class="ioc-card network-based">
+          <h4>🌐 Network-Based IoCs</h4>
+          <ul class="ioc-list">
+            <li><span class="ioc-label">Source IP:</span> Attacker IP address</li>
+            <li><span class="ioc-label">Destination Port:</span> 3389</li>
+            <li><span class="ioc-label">Traffic Pattern:</span> Rapid connections</li>
+            <li><span class="ioc-label">Geolocation:</span> Non-business region</li>
+            <li><span class="ioc-label">Protocol:</span> RDP/TLS</li>
+            <li><span class="ioc-label">Bandwidth:</span> Unusual data transfer</li>
+          </ul>
+        </div>
+
+        <div class="ioc-card system-based">
+          <h4>💻 System-Based IoCs</h4>
+          <ul class="ioc-list">
+            <li><span class="ioc-label">New User Accounts:</span> Suspicious accounts</li>
+            <li><span class="ioc-label">Scheduled Tasks:</span> Hidden/suspicious tasks</li>
+            <li><span class="ioc-label">Registry Changes:</span> Persistence mechanisms</li>
+            <li><span class="ioc-label">File Artifacts:</span> Attacker tools</li>
+            <li><span class="ioc-label">Process Behavior:</span> Unusual execution</li>
+            <li><span class="ioc-label">Network Connections:</span> C2 callbacks</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ATTACK TIMELINE -->
+    <section class="playbook-section timeline-section">
+      <h2>⏰ Typical Attack Timeline</h2>
+      <p class="section-intro">How RDP brute force attacks typically unfold.</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker">0 min</div>
+          <div class="timeline-content">
+            <h5>Attack Initiation</h5>
+            <p>Attacker runs automated tool (RDP brute force) against target</p>
+            <span class="indicator">🔴 100+ connection attempts</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">15 min</div>
+          <div class="timeline-content">
+            <h5>Detection Opportunity</h5>
+            <p>SIEM/SOC should detect high failed login volume</p>
+            <span class="indicator">🟡 Critical alert triggered</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">30 min</div>
+          <div class="timeline-content">
+            <h5>Successful Breach</h5>
+            <p>Weak password guessed or credential spray succeeds</p>
+            <span class="indicator">🔴 EventID 4624 + 4625 together</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">45 min</div>
+          <div class="timeline-content">
+            <h5>Post-Compromise Activity</h5>
+            <p>Attacker establishes persistence, moves laterally</p>
+            <span class="indicator">🔴 New processes, network activity</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">2+ hours</div>
+          <div class="timeline-content">
+            <h5>Impact</h5>
+            <p>Data exfiltration, ransomware deployment, or lateral movement</p>
+            <span class="indicator">🔴 CRITICAL - Major incident</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK REFERENCE CHECKLIST -->
+    <section class="playbook-section checklist-section">
+      <h2>✅ Incident Response Checklist</h2>
+      <p class="section-intro">Quick reference for responding to RDP brute force attack.</p>
+
+      <div class="checklist">
+        <div class="checklist-group">
+          <h4>🚨 First 15 Minutes (CRITICAL)</h4>
+          <label><input type="checkbox"> Confirm the alert is valid (not false positive)</label>
+          <label><input type="checkbox"> Document incident start time</label>
+          <label><input type="checkbox"> Identify source IP and target system</label>
+          <label><input type="checkbox"> Check if attack was successful (4624 event)</label>
+          <label><input type="checkbox"> If successful: IMMEDIATELY isolate system</label>
+          <label><input type="checkbox"> Block attacker IP at firewall</label>
+        </div>
+
+        <div class="checklist-group">
+          <h4>⚠️ 15-60 Minutes (URGENT)</h4>
+          <label><input type="checkbox"> Identify all targeted user accounts</label>
+          <label><input type="checkbox"> Reset passwords for compromised accounts</label>
+          <label><input type="checkbox"> Kill active RDP sessions</label>
+          <label><input type="checkbox"> Check for lateral movement</label>
+          <label><input type="checkbox"> Preserve evidence/logs</label>
+          <label><input type="checkbox"> Enable enhanced monitoring</label>
+        </div>
+
+        <div class="checklist-group">
+          <h4>📋 60+ Minutes (CONTAINMENT)</h4>
+          <label><input type="checkbox"> Full forensic investigation</label>
+          <label><input type="checkbox"> Check for persistence mechanisms</label>
+          <label><input type="checkbox"> Scan for malware</label>
+          <label><input type="checkbox"> Review all system changes</label>
+          <label><input type="checkbox"> Patch vulnerabilities</label>
+          <label><input type="checkbox"> Re-enable systems with hardening</label>
+        </div>
+
+        <div class="checklist-group">
+          <h4>🔒 Post-Incident (PREVENTION)</h4>
+          <label><input type="checkbox"> Implement MFA on RDP</label>
+          <label><input type="checkbox"> Restrict RDP to VPN only</label>
+          <label><input type="checkbox"> Deploy RDP Gateway</label>
+          <label><input type="checkbox"> Enable enhanced logging</label>
+          <label><input type="checkbox"> Update SIEM rules</label>
+          <label><input type="checkbox"> Conduct team training</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- MITRE ATT&CK MAPPING -->
+    <section class="playbook-section mitre-section">
+      <h2>🎯 MITRE ATT&CK Framework Mapping</h2>
+      <p class="section-intro">How this attack maps to MITRE ATT&CK tactics and techniques.</p>
+
+      <div class="mitre-grid">
+        <div class="mitre-card">
+          <span class="mitre-tactic">RECONNAISSANCE</span>
+          <span class="mitre-technique">T1592 - Gather Victim Host Information</span>
+        </div>
+        <div class="mitre-card">
+          <span class="mitre-tactic">RESOURCE DEVELOPMENT</span>
+          <span class="mitre-technique">T1583 - Acquire Infrastructure</span>
+        </div>
+        <div class="mitre-card highlight">
+          <span class="mitre-tactic">INITIAL ACCESS</span>
+          <span class="mitre-technique">T1199 - Trusted Relationship</span>
+          <span class="mitre-technique">T1200 - Hardware Additions</span>
+        </div>
+        <div class="mitre-card highlight">
+          <span class="mitre-tactic">EXECUTION</span>
+          <span class="mitre-technique">T1648 - Serverless Execution</span>
+        </div>
+        <div class="mitre-card">
+          <span class="mitre-tactic">PERSISTENCE</span>
+          <span class="mitre-technique">T1098 - Account Manipulation</span>
+          <span class="mitre-technique">T1197 - BITS Jobs</span>
+        </div>
+        <div class="mitre-card">
+          <span class="mitre-tactic">DEFENSE EVASION</span>
+          <span class="mitre-technique">T1564 - Hide Artifacts</span>
+        </div>
+        <div class="mitre-card">
+          <span class="mitre-tactic">CREDENTIAL ACCESS</span>
+          <span class="mitre-technique">T1110 - Brute Force</span>
+        </div>
+        <div class="mitre-card highlight">
+          <span class="mitre-tactic">DISCOVERY</span>
+          <span class="mitre-technique">T1526 - Cloud Service Discovery</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-final">
+      <h2>Need More Help?</h2>
+      <p>Return to the Playbook Library to explore other incident types.</p>
+      <a href="index.html" class="btn-primary btn-large">← Back to Playbooks</a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 NCRC Incident Response Lab. Educational purposes only.</p>
+  </footer>
+
+  <script src="js/playbook.js"></script>
+
+</body>
+</html>
