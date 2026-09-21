@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Management System - SOC Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🛡️ CASE MANAGEMENT SYSTEM</h1>
+                <p class="subtitle">SOC Incident & Investigation Management Platform</p>
+            </div>
+        </header>
+
+        <!-- NAV -->
+        <nav class="nav-bar">
+            <a href="index.html" class="nav-item active">📋 Dashboard</a>
+            <a href="create-case.html" class="nav-item">➕ Create Case</a>
+            <a href="../playbooks/index.html" class="nav-item">📖 Playbooks</a>
+        </nav>
+
+        <!-- STATS SECTION -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number" id="total-cases">0</div>
+                <div class="stat-label">Total Cases</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number active-count" id="active-cases">0</div>
+                <div class="stat-label">Active Cases</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number critical-count" id="critical-cases">0</div>
+                <div class="stat-label">Critical Severity</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="closed-cases">0</div>
+                <div class="stat-label">Closed Cases</div>
+            </div>
+        </section>
+
+        <!-- FILTERS -->
+        <section class="filters-section">
+            <input 
+                type="text" 
+                id="search-input" 
+                class="search-box" 
+                placeholder="🔍 Search by Case ID or Title..."
+            >
+            <select id="status-filter" class="filter-select">
+                <option value="">All Status</option>
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="ESCALATED">ESCALATED</option>
+                <option value="CLOSED">CLOSED</option>
+            </select>
+            <select id="severity-filter" class="filter-select">
+                <option value="">All Severity</option>
+                <option value="CRITICAL">CRITICAL</option>
+                <option value="HIGH">HIGH</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="LOW">LOW</option>
+            </select>
+        </section>
+
+        <!-- CASES TABLE -->
+        <section class="cases-section">
+            <h2>📊 Recent Cases</h2>
+            <div class="cases-container" id="cases-container">
+                <!-- Les cases vont se charger ici -->
+            </div>
+        </section>
+
+        <!-- EMPTY STATE -->
+        <div id="empty-state" class="empty-state" style="display:none;">
+            <h3>No cases found</h3>
+            <p>Create your first case to get started</p>
+            <a href="create-case.html" class="btn-primary">Create Case</a>
+        </div>
+    </div>
+
+    <script>
+        // DATA PAR DÉFAUT
+        const defaultCases = [
+            {
+                caseId: "INC-2026-09-20-001",
+                title: "RDP Brute Force Attack",
+                type: "RDP Brute Force",
+                severity: "CRITICAL",
+                status: "CLOSED",
+                created: "2026-09-20 19:07",
+                closed: "2026-09-20 20:15",
+                sourceIp: "192.168.1.100",
+                targetUser: "admin",
+                checklist: {
+                    detection: true,
+                    investigation: true,
+                    containment: true,
+                    recovery: true
+                },
+                findings: {
+                    successful_logins: false,
+                    systems_affected: 1,
+                    threat_level: "CONTAINED"
+                },
+                evidence: ["rdp-logs-20260920.zip", "ioc-extracted.json", "timeline.csv"],
+                playbook: "rdp-brute-force"
+            },
+            {
+                caseId: "INC-2026-09-19-003",
+                title: "Malware Detection - Emotet",
+                type: "Malware Detection",
+                severity: "CRITICAL",
+                status: "CLOSED",
+                created: "2026-09-19 14:22",
+                closed: "2026-09-19 16:45",
+                sourceIp: "10.0.1.50",
+                targetUser: "jdoe",
+                checklist: {
+                    detection: true,
+                    investigation: true,
+                    containment: true,
+                    recovery: true
+                },
+                findings: {
+                    successful_logins: false,
+                    systems_affected: 1,
+                    threat_level: "NEUTRALIZED"
+                },
+                evidence: ["malware-hash.txt", "pcap-dump.bin"],
+                playbook: "malware-detection"
+            },
+            {
+                caseId: "INC-2026-09-18-005",
+                title: "SQL Injection Attempt",
+                type: "Web Attack",
+                severity: "HIGH",
+                status: "CLOSED",
+                created: "2026-09-18 11:30",
+                closed: "2026-09-18 12:20",
+                sourceIp: "203.0.113.45",
+                targetUser: "webapp_user",
+                checklist: {
+                    detection: true,
+                    investigation: true,
+                    containment: true,
+                    recovery: false
+                },
+                findings: {
+                    successful_logins: false,
+                    systems_affected: 1,
+                    threat_level: "BLOCKED"
+                },
+                evidence: ["sql-logs.json"],
+                playbook: "sql-injection"
+            },
+            {
+                caseId: "INC-2026-09-21-002",
+                title: "Suspicious Powershell Activity",
+                type: "Process Anomaly",
+                severity: "HIGH",
+                status: "ACTIVE",
+                created: "2026-09-21 08:15",
+                sourceIp: "10.0.2.75",
+                targetUser: "unknown",
+                checklist: {
+                    detection: true,
+                    investigation: true,
+                    containment: false,
+                    recovery: false
+                },
+                findings: {
+                    successful_logins: null,
+                    systems_affected: 1,
+                    threat_level: "INVESTIGATING"
+                },
+                evidence: ["process-logs.evtx"],
+                playbook: "process-anomaly"
+            },
+            {
+                caseId: "INC-2026-09-17-007",
+                title: "Phishing Campaign Detection",
+                type: "Phishing",
+                severity: "MEDIUM",
+                status: "CLOSED",
+                created: "2026-09-17 09:45",
+                closed: "2026-09-17 10:30",
+                sourceIp: "external",
+                targetUser: "multiple",
+                checklist: {
+                    detection: true,
+                    investigation: true,
+                    containment: true,
+                    recovery: true
+                },
+                findings: {
+                    successful_logins: false,
+                    systems_affected: 12,
+                    threat_level: "CONTAINED"
+                },
+                evidence: ["email-headers.txt", "phishing-urls.json"],
+                playbook: "phishing"
+            }
+        ];
+
+        // Charger les cases par défaut au premier chargement
+        if (!localStorage.getItem('cases')) {
+            localStorage.setItem('cases', JSON.stringify(defaultCases));
+        }
+
+        // Charger et afficher les cases
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCases();
+            setupFilters();
+        });
+
+        function loadCases() {
+            let cases = JSON.parse(localStorage.getItem('cases')) || defaultCases;
+            displayCases(cases);
+            updateStats(cases);
+        }
+
+        function displayCases(cases) {
+            const container = document.getElementById('cases-container');
+            const emptyState = document.getElementById('empty-state');
+
+            if (cases.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'grid';
+            emptyState.style.display = 'none';
+            container.innerHTML = '';
+
+            cases.forEach(c => {
+                const caseCard = createCaseCard(c);
+                container.appendChild(caseCard);
+            });
+        }
+
+        function createCaseCard(caseData) {
+            const card = document.createElement('div');
+            card.className = `case-card severity-${caseData.severity.toLowerCase()}`;
+            
+            const statusColor = caseData.status === 'CLOSED' ? '#27ae60' : 
+                               caseData.status === 'ESCALATED' ? '#e74c3c' : '#3498db';
+
+            card.innerHTML = `
+                <div class="case-header">
+                    <div>
+                        <h3>${caseData.caseId}</h3>
+                        <p class="case-title">${caseData.title}</p>
+                    </div>
+                    <span class="status-badge" style="background-color: ${statusColor};">
+                        ${caseData.status}
+                    </span>
+                </div>
+                
+                <div class="case-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Type:</span>
+                        <span>${caseData.type}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Severity:</span>
+                        <span class="severity-${caseData.severity.toLowerCase()}">${caseData.severity}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Created:</span>
+                        <span>${caseData.created}</span>
+                    </div>
+                </div>
+
+                <div class="case-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${getProgressPercentage(caseData)}%"></div>
+                    </div>
+                    <span class="progress-text">${getProgressPercentage(caseData)}% Complete</span>
+                </div>
+
+                <div class="case-actions">
+                    <a href="case-details.html?id=${caseData.caseId}" class="btn-view">
+                        View Case →
+                    </a>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function getProgressPercentage(caseData) {
+            const checklist = caseData.checklist || {};
+            const total = Object.keys(checklist).length;
+            if (total === 0) return 0;
+            const completed = Object.values(checklist).filter(v => v).length;
+            return Math.round((completed / total) * 100);
+        }
+
+        function updateStats(cases) {
+            document.getElementById('total-cases').textContent = cases.length;
+            document.getElementById('active-cases').textContent = 
+                cases.filter(c => c.status === 'ACTIVE').length;
+            document.getElementById('critical-cases').textContent = 
+                cases.filter(c => c.severity === 'CRITICAL').length;
+            document.getElementById('closed-cases').textContent = 
+                cases.filter(c => c.status === 'CLOSED').length;
+        }
+
+        function setupFilters() {
+            document.getElementById('search-input').addEventListener('input', applyFilters);
+            document.getElementById('status-filter').addEventListener('change', applyFilters);
+            document.getElementById('severity-filter').addEventListener('change', applyFilters);
+        }
+
+        function applyFilters() {
+            let cases = JSON.parse(localStorage.getItem('cases')) || defaultCases;
+            
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const status = document.getElementById('status-filter').value;
+            const severity = document.getElementById('severity-filter').value;
+
+            cases = cases.filter(c => {
+                return (c.caseId.toLowerCase().includes(search) || 
+                        c.title.toLowerCase().includes(search)) &&
+                       (!status || c.status === status) &&
+                       (!severity || c.severity === severity);
+            });
+
+            displayCases(cases);
+        }
+    </script>
+</body>
+</html>
