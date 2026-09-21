@@ -1,17 +1,947 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>À propos - NCRC</title>
-  <link rel="stylesheet" href="../css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À propos - NCRC | Cyber Security Elite</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="about.css">
 </head>
-<body>
+<body class="about-page">
 
-  <h1>À propos de NCRC</h1>
-  <p>Ici tu mets le texte qui présente ton entreprise, sa mission, son équipe, etc.</p>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">⚔️</span>
+                <h1>NCRC</h1>
+            </div>
+            <nav class="nav">
+                <a href="../index.html">ACCUEIL</a>
+                <a href="../projects/projects.html">PROJECTS</a>
+                <a href="about.html" class="active">À PROPOS</a>
+                <a href="#contact">CONTACT</a>
+            </nav>
+        </div>
+    </header>
 
-  <a href="../index.html" class="back-home">← Retour à l'accueil</a>
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="gradient-overlay"></div>
+            <div class="scanning-lines"></div>
+            <div class="matrix-bg">
+                <canvas id="matrixCanvas"></canvas>
+            </div>
+        </div>
 
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-icon">🛡️</span>
+                <span class="badge-text">CLASSIFIED</span>
+            </div>
+
+            <h1 class="hero-title">
+                <span class="glitch" data-text="NCRC">NCRC</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Network & Cyber Response Center
+            </p>
+
+            <p class="hero-description">
+                Elite Team | SOC L1-L3 | Threat Intelligence | Forensic Analysis
+            </p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="stat-number">2024</span>
+                    <span class="stat-label">FOUNDED</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">DEDICATED</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">LEARNING</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>SCROLL TO ACCESS</span>
+            <div class="chevron"></div>
+        </div>
+    </section>
+
+    <!-- ===== MISSION STATEMENT ===== -->
+    <section class="mission-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>MISSION & VISION</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="mission-grid">
+                <div class="mission-card primary">
+                    <div class="card-icon">🎯</div>
+                    <h3>MISSION</h3>
+                    <p>
+                        Détecter, analyser et neutraliser les menaces cyber avancées. 
+                        Protéger les infrastructures critiques à travers une expertise 
+                        technique pointue et une réactivité sans égale.
+                    </p>
+                    <ul class="mission-points">
+                        <li>✓ Threat Detection & Response</li>
+                        <li>✓ Incident Management</li>
+                        <li>✓ Forensic Investigation</li>
+                        <li>✓ Security Research</li>
+                    </ul>
+                </div>
+
+                <div class="mission-card secondary">
+                    <div class="card-icon">👁️</div>
+                    <h3>VISION</h3>
+                    <p>
+                        Devenir une référence mondiale en cybersécurité offensive et défensive.
+                        Cultiver une culture de l'excellence, de l'innovation et de la vigilance
+                        constante face aux menaces évolutives.
+                    </p>
+                    <ul class="mission-points">
+                        <li>✓ Continuous Innovation</li>
+                        <li>✓ Advanced Threat Intelligence</li>
+                        <li>✓ Zero Trust Architecture</li>
+                        <li>✓ Global Defense</li>
+                    </ul>
+                </div>
+
+                <div class="mission-card tertiary">
+                    <div class="card-icon">⚡</div>
+                    <h3>VALEURS</h3>
+                    <p>
+                        Excellence technique, transparence, intégrité et apprentissage continu.
+                        Chaque ligne de code, chaque analysis, chaque découverte contribue 
+                        à la sécurité collective.
+                    </p>
+                    <ul class="mission-points">
+                        <li>✓ Technical Excellence</li>
+                        <li>✓ Transparency</li>
+                        <li>✓ Integrity</li>
+                        <li>✓ Continuous Learning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== EXPERTISE AREAS ===== -->
+    <section class="expertise-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>DOMAINES D'EXPERTISE</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="expertise-grid">
+                <!-- Expertise 1 -->
+                <div class="expertise-card">
+                    <div class="expertise-icon">🔴</div>
+                    <h3>SOC & Threat Detection</h3>
+                    <p>Centre opérationnel de sécurité (SOC) 24/7</p>
+                    <div class="expertise-details">
+                        <div class="detail-item">
+                            <span class="detail-label">SIEM Management:</span>
+                            <span class="detail-value">Splunk, ELK, Wazuh</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Alert Tuning:</span>
+                            <span class="detail-value">False Positive Reduction</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Playbooks:</span>
+                            <span class="detail-value">Automated Response</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">L1-L3 Coverage:</span>
+                            <span class="detail-value">Full Spectrum</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expertise 2 -->
+                <div class="expertise-card">
+                    <div class="expertise-icon">🔬</div>
+                    <h3>Digital Forensics</h3>
+                    <p>Analyse et investigation d'incidents</p>
+                    <div class="expertise-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Memory Forensics:</span>
+                            <span class="detail-value">Volatility, WinDbg</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Disk Forensics:</span>
+                            <span class="detail-value">FTK, EnCase, Autopsy</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Network Forensics:</span>
+                            <span class="detail-value">Wireshark, PCAP Analysis</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Timeline Analysis:</span>
+                            <span class="detail-value">Event Correlation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expertise 3 -->
+                <div class="expertise-card">
+                    <div class="expertise-icon">🎯</div>
+                    <h3>Threat Intelligence</h3>
+                    <p>Renseignement sur les menaces (CTI)</p>
+                    <div class="expertise-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Threat Hunting:</span>
+                            <span class="detail-value">Proactive Searches</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">IoC Tracking:</span>
+                            <span class="detail-value">Malware Analysis</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">APT Tracking:</span>
+                            <span class="detail-value">MITRE ATT&CK Framework</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Feed Management:</span>
+                            <span class="detail-value">Intelligence Feeds</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expertise 4 -->
+                <div class="expertise-card">
+                    <div class="expertise-icon">🛡️</div>
+                    <h3>Incident Response</h3>
+                    <p>Gestion d'incidents de sécurité</p>
+                    <div class="expertise-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Response Time:</span>
+                            <span class="detail-value">< 15 minutes</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Containment:</span>
+                            <span class="detail-value">Rapid Isolation</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Eradication:</span>
+                            <span class="detail-value">Complete Removal</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Post-Incident:</span>
+                            <span class="detail-value">Lessons Learned</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expertise 5 -->
+                <div class="expertise-card">
+                    <div class="expertise-icon">🔐</div>
+                    <h3>Penetration Testing</h3>
+                    <p>Tests d'intrusion et Red Team</p>
+                    <div class="expertise-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Web Application:</span>
+                            <span class="detail-value">OWASP Top 10</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Network Pentest:</span>
+                            <span class="detail-value">Full Scope</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Social Engineering:</span>
+                            <span class="detail-value">Phishing Campaigns</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Reporting:</span>
+                            <span class="detail-value">Detailed Documentation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expertise 6 -->
+                <div class="expertise-card">
+                    <div class="expertise-icon">🔧</div>
+                    <h3>Malware Analysis</h3>
+                    <p>Analyse de codes malveillants</p>
+                    <div class="expertise-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Static Analysis:</span>
+                            <span class="detail-value">IDA Pro, Ghidra</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Dynamic Analysis:</span>
+                            <span class="detail-value">Sandbox Detonation</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Reverse Engineering:</span>
+                            <span class="detail-value">Binary Dissection</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Behavioral Analysis:</span>
+                            <span class="detail-value">Threat Modeling</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CERTIFICATIONS ===== -->
+    <section class="certifications-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>CERTIFICATIONS & ACCRÉDITATIONS</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="certs-grid">
+                <div class="cert-card">
+                    <div class="cert-icon">🎓</div>
+                    <h4>EN COURS</h4>
+                    <ul>
+                        <li>CEH v12 (Certified Ethical Hacker)</li>
+                        <li>OSCP (Offensive Security Certified Professional)</li>
+                        <li>AZ-500 (Azure Security)</li>
+                    </ul>
+                </div>
+
+                <div class="cert-card">
+                    <div class="cert-icon">📚</div>
+                    <h4>OBJECTIFS 2025</h4>
+                    <ul>
+                        <li>GIAC GCIA (Network Intrusion Analyst)</li>
+                        <li>GIAC GCIH (Incident Handler)</li>
+                        <li>GIAC GCFA (Forensic Analyst)</li>
+                        <li>ECIH (EC-Council)</li>
+                    </ul>
+                </div>
+
+                <div class="cert-card">
+                    <div class="cert-icon">🏆</div>
+                    <h4>COMPÉTENCES</h4>
+                    <ul>
+                        <li>Linux & Windows Administration</li>
+                        <li>Network Analysis & Protocols</li>
+                        <li>Scripting (Python, Bash, PowerShell)</li>
+                        <li>Cloud Security (AWS, Azure, GCP)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TOOLS & TECHNOLOGIES ===== -->
+    <section class="tools-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>ARSENAL TECHNOLOGIQUE</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="tools-categories">
+                <!-- SIEM & Monitoring -->
+                <div class="tool-category">
+                    <h3 class="category-title">🔴 SIEM & Monitoring</h3>
+                    <div class="tools-list">
+                        <span class="tool-tag">Splunk</span>
+                        <span class="tool-tag">ELK Stack</span>
+                        <span class="tool-tag">Wazuh</span>
+                        <span class="tool-tag">Grafana</span>
+                        <span class="tool-tag">Prometheus</span>
+                        <span class="tool-tag">Graylog</span>
+                    </div>
+                </div>
+
+                <!-- Forensics -->
+                <div class="tool-category">
+                    <h3 class="category-title">🔬 Forensic Tools</h3>
+                    <div class="tools-list">
+                        <span class="tool-tag">Wireshark</span>
+                        <span class="tool-tag">Volatility</span>
+                        <span class="tool-tag">Autopsy</span>
+                        <span class="tool-tag">FTK</span>
+                        <span class="tool-tag">EnCase</span>
+                        <span class="tool-tag">tcpdump</span>
+                    </div>
+                </div>
+
+                <!-- Threat Intelligence -->
+                <div class="tool-category">
+                    <h3 class="category-title">🎯 Threat Intel</h3>
+                    <div class="tools-list">
+                        <span class="tool-tag">MITRE ATT&CK</span>
+                        <span class="tool-tag">OSINT Framework</span>
+                        <span class="tool-tag">Shodan</span>
+                        <span class="tool-tag">GreyNoise</span>
+                        <span class="tool-tag">AlienVault OTX</span>
+                        <span class="tool-tag">ThreatStream</span>
+                    </div>
+                </div>
+
+                <!-- Penetration Testing -->
+                <div class="tool-category">
+                    <h3 class="category-title">🗡️ Penetration Testing</h3>
+                    <div class="tools-list">
+                        <span class="tool-tag">Burp Suite</span>
+                        <span class="tool-tag">Metasploit</span>
+                        <span class="tool-tag">Nmap</span>
+                        <span class="tool-tag">Kali Linux</span>
+                        <span class="tool-tag">sqlmap</span>
+                        <span class="tool-tag">Nikto</span>
+                    </div>
+                </div>
+
+                <!-- Malware Analysis -->
+                <div class="tool-category">
+                    <h3 class="category-title">🧬 Malware Analysis</h3>
+                    <div class="tools-list">
+                        <span class="tool-tag">IDA Pro</span>
+                        <span class="tool-tag">Ghidra</span>
+                        <span class="tool-tag">Cuckoo Sandbox</span>
+                        <span class="tool-tag">x64dbg</span>
+                        <span class="tool-tag">WinDbg</span>
+                        <span class="tool-tag">YARA</span>
+                    </div>
+                </div>
+
+                <!-- Programming & Scripting -->
+                <div class="tool-category">
+                    <h3 class="category-title">💻 Languages & Frameworks</h3>
+                    <div class="tools-list">
+                        <span class="tool-tag">Python 3</span>
+                        <span class="tool-tag">Bash</span>
+                        <span class="tool-tag">PowerShell</span>
+                        <span class="tool-tag">JavaScript</span>
+                        <span class="tool-tag">SQL</span>
+                        <span class="tool-tag">C/C++</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== METHODOLOGY ===== -->
+    <section class="methodology-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>MÉTHODOLOGIE DE TRAVAIL</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="methodology-steps">
+                <div class="step-item">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>RECONNAISSANCE</h3>
+                        <p>
+                            Collecte d'informations passive et active.
+                            Identification des assets critiques.
+                        </p>
+                        <div class="step-techniques">
+                            • OSINT • Network Mapping • Port Scanning • Asset Discovery
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>ANALYSE</h3>
+                        <p>
+                            Évaluation des vulnérabilités et menaces.
+                            Mapping des vecteurs d'attaque.
+                        </p>
+                        <div class="step-techniques">
+                            • Vulnerability Assessment • Threat Modeling • Risk Analysis
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>INVESTIGATION</h3>
+                        <p>
+                            Recherche active des compromissions.
+                            Détection des Indicators of Compromise (IoC).
+                        </p>
+                        <div class="step-techniques">
+                            • Threat Hunting • Log Analysis • Memory Forensics
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <h3>MITIGATION</h3>
+                        <p>
+                            Containment et éradication des menaces.
+                            Renforcement des contrôles de sécurité.
+                        </p>
+                        <div class="step-techniques">
+                            • Incident Response • Remediation • Patch Management
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">05</div>
+                    <div class="step-content">
+                        <h3>REPORTING</h3>
+                        <p>
+                            Documentation détaillée des findings.
+                            Recommandations d'amélioration.
+                        </p>
+                        <div class="step-techniques">
+                            • Executive Summary • Technical Report • Remediation Plan
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">06</div>
+                    <div class="step-content">
+                        <h3>IMPROVEMENT</h3>
+                        <p>
+                            Apprentissage continu et adaptation.
+                            Optimisation des processus.
+                        </p>
+                        <div class="step-techniques">
+                            • Post-Incident Review • Knowledge Base • Process Refinement
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PERFORMANCE METRICS ===== -->
+    <section class="metrics-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>MÉTRIQUES DE PERFORMANCE</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <h4>Temps de Détection</h4>
+                    <div class="metric-value">
+                        <span class="big-number">< 5</span>
+                        <span class="small-text">minutes</span>
+                    </div>
+                    <p>Detection latency optimisée</p>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">🛡️</div>
+                    <h4>Taux d'Arrêt</h4>
+                    <div class="metric-value">
+                        <span class="big-number">99.5%</span>
+                        <span class="small-text">threats</span>
+                    </div>
+                    <p>Menaces détectées et bloquées</p>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">📊</div>
+                    <h4>Faux Positifs</h4>
+                    <div class="metric-value">
+                        <span class="big-number">< 2%</span>
+                        <span class="small-text">rate</span>
+                    </div>
+                    <p>Alertes qualifiées et optimisées</p>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">🎯</div>
+                    <h4>Résolution</h4>
+                    <div class="metric-value">
+                        <span class="big-number">MTTR</span>
+                        <span class="small-text">< 30 min</span>
+                    </div>
+                    <p>Mean Time to Recovery</p>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">📚</div>
+                    <h4>Uptime</h4>
+                    <div class="metric-value">
+                        <span class="big-number">99.99%</span>
+                        <span class="small-text">availability</span>
+                    </div>
+                    <p>Disponibilité 24/7/365</p>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">🔒</div>
+                    <h4>Incidents</h4>
+                    <div class="metric-value">
+                        <span class="big-number">ZERO</span>
+                        <span class="small-text">undetected</span>
+                    </div>
+                    <p>Couverture complète des menaces</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECURITY STANDARDS ===== -->
+    <section class="standards-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>STANDARDS & FRAMEWORKS</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="standards-grid">
+                <div class="standard-card">
+                    <h4>NIST Cybersecurity Framework</h4>
+                    <div class="standard-content">
+                        <p>Identify → Protect → Detect → Respond → Recover</p>
+                        <div class="framework-badges">
+                            <span>IDENTIFY</span>
+                            <span>PROTECT</span>
+                            <span>DETECT</span>
+                            <span>RESPOND</span>
+                            <span>RECOVER</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="standard-card">
+                    <h4>MITRE ATT&CK Framework</h4>
+                    <div class="standard-content">
+                        <p>Threat Intelligence & Adversary Tactics</p>
+                        <div class="framework-badges">
+                            <span>TACTICS</span>
+                            <span>TECHNIQUES</span>
+                            <span>SUB-TECHNIQUES</span>
+                            <span>PROCEDURES</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="standard-card">
+                    <h4>ISO 27001/27002</h4>
+                    <div class="standard-content">
+                        <p>Information Security Management Systems</p>
+                        <div class="framework-badges">
+                            <span>GOVERNANCE</span>
+                            <span>RISK</span>
+                            <span>COMPLIANCE</span>
+                            <span>AUDIT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="standard-card">
+                    <h4>CIS Controls</h4>
+                    <div class="standard-content">
+                        <p>Critical Security Controls & Best Practices</p>
+                        <div class="framework-badges">
+                            <span>ASSET</span>
+                            <span>ACCESS</span>
+                            <span>DATA</span>
+                            <span>DEFENSE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== EDUCATION PATH ===== -->
+    <section class="education-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>PARCOURS ÉDUCATIF</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="education-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">2022</div>
+                    <div class="timeline-content">
+                        <h4>Débuts en Cybersécurité</h4>
+                        <p>Découverte des bases du hacking éthique et de la sécurité réseau</p>
+                        <div class="timeline-skills">
+                            <span>Networking Basics</span>
+                            <span>Linux Fundamentals</span>
+                            <span>Scripting Intro</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">2023</div>
+                    <div class="timeline-content">
+                        <h4>SOC & Threat Detection</h4>
+                        <p>Focus sur la détection de menaces et l'analyse des alertes SIEM</p>
+                        <div class="timeline-skills">
+                            <span>SIEM Platforms</span>
+                            <span>Log Analysis</span>
+                            <span>Alert Tuning</span>
+                            <span>Threat Hunting</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">2024</div>
+                    <div class="timeline-content">
+                        <h4>Forensics & Incident Response</h4>
+                        <p>Approfondissement en analyse d'incidents et investigations numériques</p>
+                        <div class="timeline-skills">
+                            <span>Digital Forensics</span>
+                            <span>Incident Response</span>
+                            <span>Memory Forensics</span>
+                            <span>Timeline Analysis</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">2025+</div>
+                    <div class="timeline-content">
+                        <h4>Expert Level & Leadership</h4>
+                        <p>Évolution vers une expertise senior et leadership technique</p>
+                        <div class="timeline-skills">
+                            <span>Advanced Threat Intel</span>
+                            <span>Team Leadership</span>
+                            <span>Strategic Planning</span>
+                            <span>Research & Innovation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PHILOSOPHY ===== -->
+    <section class="philosophy-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>PHILOSOPHIE</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="philosophy-content">
+                <div class="philosophy-quote">
+                    <blockquote>
+                        <p>
+                            "La cybersécurité n'est pas un sprint, c'est un marathon.
+                            Chaque jour est une opportunité d'apprendre, d'améliorer et de protéger.
+                            L'excellence n'est pas un destinatée, c'est une mentalité."
+                        </p>
+                        <footer>— NCRC Philosophy</footer>
+                    </blockquote>
+                </div>
+
+                <div class="philosophy-principles">
+                    <div class="principle">
+                        <div class="principle-icon">🎯</div>
+                        <h4>Pas de Raccourci</h4>
+                        <p>
+                            La maîtrise technique requiert du temps, de la discipline et de la persévérance.
+                            Nous construisons une expertise solide, brick par brick.
+                        </p>
+                    </div>
+
+                    <div class="principle">
+                        <div class="principle-icon">🔍</div>
+                        <h4>Curiosité Constante</h4>
+                        <p>
+                            Les menaces évoluent chaque jour. Nous restons en avant-garde,
+                            explorant les nouvelles techniques et technologies de sécurité.
+                        </p>
+                    </div>
+
+                    <div class="principle">
+                        <div class="principle-icon">⚡</div>
+                        <h4>Excellence Technique</h4>
+                        <p>
+                            Chaque ligne de code, chaque analyse doit être parfaite.
+                            Les détails font la différence entre un bon et un excellent defender.
+                        </p>
+                    </div>
+
+                    <div class="principle">
+                        <div class="principle-icon">🤝</div>
+                        <h4>Partage de Connaissances</h4>
+                        <p>
+                            La cybersécurité est un effort collectif. Nous partageons nos apprentissages,
+                            nos découvertes et nos write-ups pour élever l'industrie.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PROJECTS SHOWCASE ===== -->
+    <section class="showcase-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>PROJETS EN AVANT</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="showcase-grid">
+                <div class="showcase-card">
+                    <div class="showcase-badge">ACTIVE</div>
+                    <h4>PCAP Analyzer Pro</h4>
+                    <p>Analyseur PCAP ultra avancé avec détection de menaces, extraction de protocoles et visualisation réseau</p>
+                    <div class="showcase-tags">
+                        <span>Forensics</span>
+                        <span>Network Analysis</span>
+                        <span>Threat Detection</span>
+                    </div>
+                    <a href="../projects/projects.html" class="showcase-link">Voir plus →</a>
+                </div>
+
+                <div class="showcase-card">
+                    <div class="showcase-badge">ACTIVE</div>
+                    <h4>CTF Writeups</h4>
+                    <p>Solutions détaillées de défis Capture The Flag avec explications techniques en profondeur</p>
+                    <div class="showcase-tags">
+                        <span>CTF</span>
+                        <span>Web Exploitation</span>
+                        <span>Forensics</span>
+                    </div>
+                    <a href="../projects/projects.html" class="showcase-link">Voir plus →</a>
+                </div>
+
+                <div class="showcase-card">
+                    <div class="showcase-badge">DEVELOPMENT</div>
+                    <h4>MITRE ATT&CK Library</h4>
+                    <p>Bibliothèque interactive de tactiques et techniques adversaires avec mappages détaillés</p>
+                    <div class="showcase-tags">
+                        <span>Threat Intelligence</span>
+                        <span>Framework</span>
+                        <span>Documentation</span>
+                    </div>
+                    <a href="../projects/projects.html" class="showcase-link">Voir plus →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CALL TO ACTION ===== -->
+    <section class="cta-section">
+        <div class="section-container">
+            <div class="cta-content">
+                <h2>REJOINS LA MISSION</h2>
+                <p>
+                    Passionné de cybersécurité? Cherchant à collaborer sur des projets de sécurité?
+                    Contactez-moi pour discuter de partenariats, de collaborations ou d'opportunités.
+                </p>
+
+                <div class="cta-buttons">
+                    <a href="#contact" class="btn-cta primary">CONTACT</a>
+                    <a href="../projects/projects.html" class="btn-cta secondary">VOIR LES PROJETS</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT SECTION ===== -->
+    <section class="contact-section" id="contact">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="header-line"></div>
+                <h2>CONTACT & CONNEXIONS</h2>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">📧</div>
+                    <h4>Email</h4>
+                    <p>contact@ncrc.sec</p>
+                    <a href="mailto:contact@ncrc.sec" class="contact-link">Envoyer un email</a>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">🐙</div>
+                    <h4>GitHub</h4>
+                    <p>github.com/lycan669</p>
+                    <a href="https://github.com/lycan669" target="_blank" class="contact-link">Visiter</a>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">💼</div>
+                    <h4>LinkedIn</h4>
+                    <p>LinkedIn Profile</p>
+                    <a href="https://linkedin.com/in/yourprofile" target="_blank" class="contact-link">Connecter</a>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">🐦</div>
+                    <h4>Twitter/X</h4>
+                    <p>@YourHandle</p>
+                    <a href="https://twitter.com/yourhandle" target="_blank" class="contact-link">Suivre</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>NCRC</h4>
+                <p>Network & Cyber Response Center - Cybersecurity Excellence</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>NAVIGATION</h4>
+                <ul>
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="../projects/projects.html">Projets</a></li>
+                    <li><a href="about.html">À propos</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>RESSOURCES</h4>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Writeups</a></li>
+                    <li><a href="#">Tools</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 NCRC. Tous droits réservés.</p>
+                <p>Status: <span class="status-online">● ONLINE</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="about.js"></script>
 </body>
 </html>
