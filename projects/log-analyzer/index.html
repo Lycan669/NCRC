@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC L1 - Log Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🔍 LOG ANALYZER</h1>
+                <p class="subtitle">Analyse automatisée des logs de sécurité</p>
+            </div>
+        </header>
+
+        <!-- MAIN SECTION -->
+        <main class="main-content">
+            
+            <!-- LEFT PANEL: UPLOAD & OPTIONS -->
+            <section class="left-panel">
+                <div class="card">
+                    <h2>📁 Importer les logs</h2>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>Drag & drop vos logs ici</p>
+                        <p class="small">ou cliquez pour sélectionner</p>
+                    </div>
+                    
+                    <input type="file" id="fileInput" hidden accept=".log,.txt">
+                    
+                    <!-- FORMAT SELECTION -->
+                    <div class="format-selector">
+                        <label>Format du log:</label>
+                        <select id="logFormat">
+                            <option value="apache">Apache/Nginx</option>
+                            <option value="windows">Windows Event Log</option>
+                            <option value="syslog">Syslog</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+
+                    <!-- ANALYZE BUTTON -->
+                    <button id="analyzeBtn" class="btn btn-primary" disabled>
+                        ⚡ Analyser
+                    </button>
+                </div>
+
+                <!-- STATS CARD -->
+                <div class="card stats-card" id="statsCard" style="display: none;">
+                    <h3>📊 Statistiques</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Lignes totales:</span>
+                        <span class="stat-value" id="totalLines">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Entrées suspectes:</span>
+                        <span class="stat-value suspicious" id="suspiciousCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">IPs uniques:</span>
+                        <span class="stat-value" id="uniqueIPs">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Durée d'analyse:</span>
+                        <span class="stat-value" id="duration">0ms</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: RESULTS -->
+            <section class="right-panel">
+                
+                <!-- THREAT OVERVIEW -->
+                <div class="card threat-overview" id="threatOverview" style="display: none;">
+                    <h2>🚨 Résumé des menaces</h2>
+                    
+                    <div class="threat-grid">
+                        <div class="threat-box critical">
+                            <div class="threat-count" id="criticalCount">0</div>
+                            <div class="threat-label">Critiques</div>
+                        </div>
+                        <div class="threat-box high">
+                            <div class="threat-count" id="highCount">0</div>
+                            <div class="threat-label">Hauts risques</div>
+                        </div>
+                        <div class="threat-box medium">
+                            <div class="threat-count" id="mediumCount">0</div>
+                            <div class="threat-label">Moyens risques</div>
+                        </div>
+                        <div class="threat-box low">
+                            <div class="threat-count" id="lowCount">0</div>
+                            <div class="threat-label">Bas risques</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FILTER & SEARCH -->
+                <div class="card" id="filterCard" style="display: none;">
+                    <h3>🔎 Filtrer</h3>
+                    <div class="filter-group">
+                        <input type="text" id="searchInput" placeholder="Chercher une IP, domaine, path..." class="input">
+                        
+                        <div class="severity-filter">
+                            <label>Sévérité:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" class="severity-filter-cb" value="critical" checked> Critique</label>
+                                <label><input type="checkbox" class="severity-filter-cb" value="high" checked> Haut</label>
+                                <label><input type="checkbox" class="severity-filter-cb" value="medium" checked> Moyen</label>
+                                <label><input type="checkbox" class="severity-filter-cb" value="low"> Bas</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESULTS TABLE -->
+                <div class="card" id="resultsCard" style="display: none;">
+                    <h3>📋 Entrées suspectes</h3>
+                    <div class="table-wrapper">
+                        <table id="resultsTable">
+                            <thead>
+                                <tr>
+                                    <th>Sévérité</th>
+                                    <th>IP</th>
+                                    <th>Type d'attaque</th>
+                                    <th>Détails</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- EXPORT BUTTONS -->
+                <div class="card export-card" id="exportCard" style="display: none;">
+                    <h3>📥 Exporter</h3>
+                    <div class="button-group">
+                        <button id="exportCSV" class="btn btn-secondary">
+                            📊 Exporter en CSV
+                        </button>
+                        <button id="exportJSON" class="btn btn-secondary">
+                            📄 Exporter en JSON
+                        </button>
+                        <button id="exportPDF" class="btn btn-secondary">
+                            📃 Exporter en PDF
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- LOADING SPINNER -->
+    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+        <p>Analyse en cours...</p>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="utils.js"></script>
+    <script src="logParser.js"></script>
+    <script src="threatDetector.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
