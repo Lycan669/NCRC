@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CompTIA Security+ SY0-701 Study Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f172a; --panel:#111c33; --ink:#e2e8f0; --muted:#94a3b8;
+    --accent:#38bdf8; --accent2:#a78bfa; --good:#10b981; --bad:#ef4444;
+    --warn:#f59e0b; --line:#1e293b; --chip:#1e293b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  header{padding:24px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#0b1228,#15224a)}
+  header h1{margin:0 0 6px;font-size:26px;letter-spacing:.3px}
+  header .sub{color:var(--muted);font-size:13px}
+  main{max-width:1200px;margin:0 auto;padding:18px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 18px}
+  .tab{padding:8px 14px;border-radius:999px;background:var(--chip);color:var(--ink);
+       border:1px solid var(--line);cursor:pointer;font-size:14px}
+  .tab.active{background:var(--accent);color:#04111f;border-color:var(--accent);font-weight:600}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+         padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  label.field{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:4px}
+  input[type=text],input[type=search],textarea,select{
+    background:#0b1530;color:var(--ink);border:1px solid var(--line);border-radius:8px;
+    padding:8px 10px;font-size:14px;font-family:inherit
+  }
+  textarea{min-height:90px;resize:vertical}
+  button{background:var(--accent);color:#04111f;border:0;border-radius:8px;
+         padding:8px 14px;font-weight:600;cursor:pointer;font-size:13px}
+  button.secondary{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  button.danger{background:var(--bad);color:#fff}
+  .q{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#0c1830}
+  .q h3{margin:0 0 8px;font-size:16px}
+  .q .meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+  .opts{display:grid;gap:6px;margin-top:6px}
+  .opt{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#0a142a;cursor:pointer}
+  .opt.sel{border-color:var(--accent);background:#0d2547}
+  .opt.correct{border-color:var(--good);background:#0c2a23}
+  .opt.wrong{border-color:var(--bad);background:#3a0d10}
+  .explain{margin-top:10px;padding:10px;background:#0a142a;border-left:3px solid var(--accent2);
+           border-radius:6px;font-size:14px;color:#dbeafe}
+  .trap{margin-top:6px;padding:8px;background:#2a1d05;border-left:3px solid var(--warn);
+        border-radius:6px;font-size:13px;color:#fde68a}
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--chip);
+         font-size:11px;color:var(--muted);margin-right:6px}
+  .domain-1{color:#60a5fa}.domain-2{color:#f87171}.domain-3{color:#34d399}
+  .domain-4{color:#fbbf24}.domain-5{color:#a78bfa}
+  .score-card{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px}
+  .score-card .cell{padding:10px;background:#0a142a;border:1px solid var(--line);border-radius:8px;text-align:center}
+  .score-card .cell .v{font-size:22px;font-weight:700}
+  .score-card .cell .l{font-size:12px;color:var(--muted)}
+  .hide{display:none}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.grid-2{grid-template-columns:1fr}}
+  /* Print */
+  @media print{
+    body{background:#fff;color:#000}
+    header,.tabs,button,label.field,input,select,textarea,.no-print{display:none !important}
+    .panel,.q{background:#fff;color:#000;border:1px solid #999;box-shadow:none}
+    .q{page-break-inside:avoid}
+    .explain,.trap{background:#f4f4f4;color:#111;border-left-color:#444}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>CompTIA Security+ SY0-701 — Study Tracker</h1>
+  <div class="sub">Question stems and options in English • Explanations and traps in French • Domain-2 heavy</div>
+</header>
+
+<main>
+  <nav class="tabs no-print" id="tabs">
+    <button class="tab active" data-view="browse">Browse &amp; Revise</button>
+    <button class="tab" data-view="quiz">Quiz Mode</button>
+    <button class="tab" data-view="add">Add Question</button>
+    <button class="tab" data-view="history">Score History</button>
+    <button class="tab" data-view="data">Data (Export / Import)</button>
+  </nav>
+
+  <!-- ============ BROWSE / REVISION VIEW ============ -->
+  <section id="view-browse" class="panel">
+    <div class="row">
+      <label class="field" style="flex:1;min-width:240px">
+        <span>Live search</span>
+        <input id="search" type="search" placeholder="Search stems, options, explanations…">
+      </label>
+      <label class="field">
+        <span>Difficulty</span>
+        <select id="difficulty">
+          <option value="">All</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <span class="badge">Domains (multi-select):</span>
+      <label><input type="checkbox" class="dfilt" value="1" checked> D1 12%</label>
+      <label><input type="checkbox" class="dfilt" value="2" checked> D2 22%</label>
+      <label><input type="checkbox" class="dfilt" value="3" checked> D3 18%</label>
+      <label><input type="checkbox" class="dfilt" value="4" checked> D4 28%</label>
+      <label><input type="checkbox" class="dfilt" value="5" checked> D5 20%</label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="revBtn" class="secondary">Revision mode (reveal answers)</button>
+      <span id="revState" class="badge">OFF</span>
+    </div>
+    <div id="qlist"></div>
+  </section>
+
+  <!-- ============ QUIZ VIEW ============ -->
+  <section id="view-quiz" class="panel hide">
+    <div class="row">
+      <label class="field">
+        <span>Quiz size</span>
+        <select id="quizSize">
+          <option>10</option><option selected>20</option><option>30</option><option>50</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Domains (multi-select)</span>
+        <select id="quizDomains" multiple size="5" style="min-width:120px">
+          <option value="1" selected>D1 — General Security Concepts (12%)</option>
+          <option value="2" selected>D2 — Threats, Vulnerabilities &amp; Mitigations (22%)</option>
+          <option value="3" selected>D3 — Security Architecture (18%)</option>
+          <option value="4" selected>D4 — Security Operations (28%)</option>
+          <option value="5" selected>D5 — Security Program Management &amp; Oversight (20%)</option>
+        </select>
+      </label>
+      <button id="quizStart">Start Quiz</button>
+    </div>
+    <div id="quizArea"></div>
+  </section>
+
+  <!-- ============ ADD QUESTION VIEW ============ -->
+  <section id="view-add" class="panel hide">
+    <h2 style="margin-top:0">Add a new question</h2>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 10px">
+      Saved in your browser (localStorage). English stems/options, French explanations preferred.
+    </p>
+    <div class="grid-2">
+      <label class="field">Domain
+        <select id="addDomain">
+          <option value="1">1 — General Security Concepts (12%)</option>
+          <option value="2" selected>2 — Threats, Vulnerabilities &amp; Mitigations (22%)</option>
+          <option value="3">3 — Security Architecture (18%)</option>
+          <option value="4">4 — Security Operations (28%)</option>
+          <option value="5">5 — Security Program Management &amp; Oversight (20%)</option>
+        </select>
+      </label>
+      <label class="field">Difficulty
+        <select id="addDiff">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+    </div>
+    <label class="field" style="margin-top:8px">Stem (English)
+      <textarea id="addStem"></textarea>
+    </label>
+    <div class="grid-2" style="margin-top:8px">
+      <label class="field">Option A <input id="addO0" type="text"></label>
+      <label class="field">Option B <input id="addO1" type="text"></label>
+      <label class="field">Option C <input id="addO2" type="text"></label>
+      <label class="field">Option D <input id="addO3" type="text"></label>
+    </div>
+    <label class="field" style="margin-top:8px">Correct index (0-3)
+      <input id="addCorrect" type="text" value="0">
+    </label>
+    <label class="field" style="margin-top:8px">Explanation (French)
+      <textarea id="addExplain"></textarea>
+    </label>
+    <label class="field" style="margin-top:8px">Trap (French) — common wrong reasoning
+      <textarea id="addTrap"></textarea>
+    </label>
+    <div class="row" style="margin-top:10px">
+      <button id="addSave">Save to localStorage</button>
+      <span id="addStatus" class="badge"></span>
+    </div>
+  </section>
+
+  <!-- ============ HISTORY VIEW ============ -->
+  <section id="view-history" class="panel hide">
+    <h2 style="margin-top:0">Score history</h2>
+    <div id="historyList"></div>
+  </section>
+
+  <!-- ============ DATA VIEW ============ -->
+  <section id="view-data" class="panel hide">
+    <h2 style="margin-top:0">Data</h2>
+    <div class="row">
+      <button id="exportBtn">Export JSON (questions + history)</button>
+      <label class="field">
+        <span>Import JSON</span>
+        <input id="importFile" type="file" accept="application/json">
+      </label>
+      <span id="dataStatus" class="badge"></span>
+    </div>
+    <p style="color:var(--muted);font-size:13px;margin-top:10px">
+      Exports include every built-in question, your localStorage additions, and your score history.
+    </p>
+  </section>
+
+</main>
+
+<!-- ====== Question bank (71 questions) ====== -->
+<script>
+// Question bank for SY0-701 — stems/options English, explanations French
+const QUESTIONS = [
+  // ===== DOMAIN 1: General Security Concepts (12% — 8 questions) =====
+  {d:1,e:"easy",s:"Which security principle ensures that data is not altered in transit?",o:["Integrity","Confidentiality","Availability","Non-repudiation"],c:0,t:["Availability","Confidentiality","Non-repudiation"],x:"L'intégrité garantit que les données ne sont pas modifiées de manière non autorisée pendant le stockage ou le transit.",r:"Souvent confondue avec la confidentialité — la CIA triad est ici distincte."},
+  {d:1,e:"easy",s:"Which concept refers to proving that a user performed an action?",o:["Non-repudiation","Authentication","Authorization","Accountability"],c:0,t:["Accountability","Authentication","Authorization"],x:"La non-répudiation empêche un utilisateur de nier avoir effectué une action, généralement via des signatures ou des journaux.",r:"Penser 'ne peut pas refuser' — à ne pas confondre avec l'authentification."},
+  {d:1,e:"medium",s:"A defense-in-depth strategy primarily relies on which concept?",o:["Layered controls","Single strong control","Outsourced SOC","Encryption only"],c:0,t:["Encryption only","Single strong control","Outsourced SOC"],x:"La défense en profondeur empile plusieurs couches de contrôles pour qu'aucune défaillance unique ne compromette le système.",r:"Trompe les candidats qui pensent qu'un seul contrôle suffit."},
+  {d:1,e:"medium",s:"Which CIA pillar ensures systems remain accessible when needed?",o:["Availability","Integrity","Confidentiality","Authenticity"],c:0,t:["Integrity","Confidentiality","Authenticity"],x:"La disponibilité garantit que les systèmes et les données sont accessibles aux utilisateurs autorisés en temps voulu.",r:"Souvent oubliée dans la triade CIA — c'est l'un des trois piliers."},
+  {d:1,e:"easy",s:"Hashing provides which security property?",o:["Integrity","Confidentiality","Availability","Authentication"],c:0,t:["Confidentiality","Availability","Authentication"],x:"Les fonctions de hachage produisent une empreinte qui permet de vérifier l'intégrité d'un fichier ou d'un message.",r:"Le hachage n'est PAS du chiffrement — il ne fournit pas la confidentialité."},
+  {d:1,e:"hard",s:"Which authentication factor is BEST described as 'something you are'?",o:["Biometric","Password","Smart card","TOTP token"],c:0,t:["Password","Smart card","TOTP token"],x:"Les facteurs biométriques (empreinte, visage, iris) correspondent à la catégorie 'quelque chose que vous êtes'.",r:"TOTP et smart card sont 'quelque chose que vous avez' — pas 'ce que vous êtes'."},
+  {d:1,e:"medium",s:"Which term describes giving the MINIMUM access required for a task?",o:["Least privilege","Need to know","Separation of duties","Defense in depth"],c:0,t:["Need to know","Separation of duties","Defense in depth"],x:"Le principe du moindre privilège limite l'accès d'un utilisateur au strict minimum nécessaire à son rôle.",r:"Souvent confondu avec 'need to know' — qui est plus strict (par ressource)."},
+  {d:1,e:"hard",s:"Zero Trust architecture is built on which foundational assumption?",o:["No implicit trust based on network location","Trust internal networks fully","VPN guarantees security","MAC filtering is enough"],c:0,t:["Trust internal networks fully","VPN guarantees security","MAC filtering is enough"],x:"Zero Trust suppose qu'aucune confiance implicite n'est accordée en fonction de l'emplacement réseau ou du périmètre.",r:"L'erreur classique : croire qu'un VPN d'entreprise suffit."},
+
+  // ===== DOMAIN 2: Threats, Vulnerabilities & Mitigations (22% — 16 questions) =====
+  {d:2,e:"easy",s:"An attacker calls an employee pretending to be the IT department to obtain a password. What is this attack?",o:["Social engineering","Brute force","SQL injection","Cross-site scripting"],c:0,t:["Brute force","SQL injection","Cross-site scripting"],x:"L'ingénierie sociale manipule des personnes pour qu'elles divulguent des informations ou effectuent des actions.",r:"Pas technique — purement humain."},
+  {d:2,e:"medium",s:"Which malware encrypts user data and demands payment for the decryption key?",o:["Ransomware","Trojan","Spyware","Adware"],c:0,t:["Trojan","Spyware","Adware"],x:"Le ransomware chiffre les fichiers de la victime et exige une rançon pour fournir la clé de déchiffrement.",r:"Un cheval de Troie ne chiffre généralement pas — il ouvre une porte dérobée."},
+  {d:2,e:"medium",s:"Which attack injects malicious scripts into a trusted website to target other users?",o:["Cross-site scripting (XSS)","SQL injection","Buffer overflow","Directory traversal"],c:0,t:["SQL injection","Buffer overflow","Directory traversal"],x:"Le XSS injecte du code (souvent JavaScript) dans une page vue par d'autres utilisateurs.",r:"SQLi cible la base de données — XSS cible les autres utilisateurs du navigateur."},
+  {d:2,e:"hard",s:"A buffer overflow vulnerability is BEST mitigated by which technique?",o:["Address Space Layout Randomization (ASLR)","Disabling the firewall","Increasing password length","Using HTTP"],c:0,t:["Disabling the firewall","Increasing password length","Using HTTP"],x:"L'ASLR randomise les emplacements mémoire rendant l'exploitation d'un débordement nettement plus difficile.",r:"Trompe les candidats qui pensent qu'un pare-feu applicatif résoudra tout."},
+  {d:2,e:"easy",s:"Which attack floods a server with traffic to make it unavailable?",o:["Denial of Service (DoS)","Man-in-the-middle","Phishing","Replay"],c:0,t:["Man-in-the-middle","Phishing","Replay"],x:"Une attaque par déni de service submerge un système de trafic pour empêcher les utilisateurs légitimes d'y accéder.",r:"À ne pas confondre avec DDoS qui utilise plusieurs sources distribuées."},
+  {d:2,e:"medium",s:"Phishing emails that target a specific executive are called what?",o:["Spear phishing","Whaling","Vishing","Smishing"],c:0,t:["Vishing","Smishing","Whaling"],x:"Le spear phishing cible des individus ou organisations spécifiques. 'Whaling' cible les dirigeants.",r:"Whaling cible spécifiquement les hauts dirigeants — spear phishing est plus général."},
+  {d:2,e:"hard",s:"Which technique allows an attacker to intercept traffic between two parties without their knowledge?",o:["Man-in-the-middle","Side channel","Brute force","Rainbow table"],c:0,t:["Side channel","Brute force","Rainbow table"],x:"L'attaque de l'homme du milieu s'intercepte silencieusement entre deux parties qui croient communiquer directement.",r:"Side channel analyse les fuites physiques (alimentation, timing) — pas le trafic réseau."},
+  {d:2,e:"medium",s:"Which password attack tries every possible character combination?",o:["Brute force","Dictionary","Rainbow table","Credential stuffing"],c:0,t:["Dictionary","Rainbow table","Credential stuffing"],x:"La force brute essaie systématiquement toutes les combinaisons possibles — très lent mais exhaustif.",r:"Le dictionnaire utilise une liste de mots courants — beaucoup plus rapide mais moins complet."},
+  {d:2,e:"hard",s:"A TOCTOU vulnerability is exploited by doing what?",o:["Changing a resource between check and use","Buffer overflow in memory","SQL injection","Phishing"],c:0,t:["Buffer overflow in memory","SQL injection","Phishing"],x:"Time-Of-Check to Time-Of-Use exploite la fenêtre entre la vérification d'une ressource et son utilisation.",r:"Erreur classique : confondre avec un simple race condition générique."},
+  {d:2,e:"medium",s:"Which vulnerability allows execution of arbitrary code due to improper input handling?",o:["Injection","Cross-site request forgery","Open redirect","Clickjacking"],c:0,t:["Cross-site request forgery","Open redirect","Clickjacking"],x:"Les failles d'injection (SQL, commande, LDAP) permettent d'exécuter du code ou des commandes non autorisés.",r:"CSRF force l'utilisateur à effectuer une action — il n'injecte pas de code."},
+  {d:2,e:"easy",s:"Which term refers to software flaws that can be exploited?",o:["Vulnerability","Threat","Risk","Asset"],c:0,t:["Threat","Risk","Asset"],x:"Une vulnérabilité est une faiblesse dans un système qui peut être exploitée par une menace.",r:"La menace est l'agent — la vulnérabilité est la faiblesse exploitée."},
+  {d:2,e:"medium",s:"A threat actor leaves a USB stick in a parking lot hoping an employee plugs it in. What is this technique?",o:["Social engineering / baiting","Tailgating","Shoulder surfing","Phishing"],c:0,t:["Tailgating","Shoulder surfing","Phishing"],x:"Le baiting attire une victime avec un appât (USB, cadeau) pour la compromettre ensuite.",r:"Le tailgating suit physiquement quelqu'un — sans objet."},
+  {d:2,e:"hard",s:"Which attack exploits the reuse of cryptographic nonces in WPA2?",o:["KRACK","Heartbleed","POODLE","BEAST"],c:0,t:["Heartbleed","POODLE","BEAST"],x:"KRACK (Key Reinstallation Attack) force la réutilisation de nonces dans le handshake WPA2.",r:"Heartbleed lit la mémoire via une extension TLS — pas WPA2."},
+  {d:2,e:"medium",s:"Which type of malware records keystrokes and sends them to an attacker?",o:["Keylogger","Ransomware","Rootkit","Bootkit"],c:0,t:["Rootkit","Bootkit","Ransomware"],x:"Un keylogger capture les frappes au clavier pour voler identifiants, mots de passe et données sensibles.",r:"Un rootkit cache la présence d'un malware — il ne capture pas forcément les frappes."},
+  {d:2,e:"hard",s:"Which cryptographic weakness allowed creation of precomputed hash tables?",o:["Lack of salt on passwords","Weak RSA keys","Improper key escrow","Reused IVs"],c:0,t:["Weak RSA keys","Improper key escrow","Reused IVs"],x:"Sans sel, des mots de passe identiques produisent le même hachage, permettant des tables arc-en-ciel.",r:"Le sel n'est PAS nécessaire au chiffrement RSA — il sert au hachage de mots de passe."},
+  {d:2,e:"medium",s:"Which technique encrypts only the most sensitive parts of a database column?",o:["Column-level encryption","Full disk encryption","Transparent encryption","TLS only"],c:0,t:["Full disk encryption","Transparent encryption","TLS only"],x:"Le chiffrement au niveau de la colonne protège des champs spécifiques (ex.: numéro de carte) au sein d'une table.",r:"Le chiffrement complet du disque protège le volume — pas un champ ciblé."},
+
+  // ===== DOMAIN 3: Security Architecture (18% — 13 questions) =====
+  {d:3,e:"easy",s:"Which network device forwards traffic based on MAC addresses?",o:["Switch","Router","Hub","Firewall"],c:0,t:["Router","Hub","Firewall"],x:"Un commutateur (switch) utilise les adresses MAC pour transmettre les trames au bon port.",r:"Le routeur utilise les adresses IP — couche 3."},
+  {d:3,e:"medium",s:"Which cloud service model provides virtualized hardware resources only?",o:["IaaS","PaaS","SaaS","FaaS"],c:0,t:["PaaS","SaaS","FaaS"],x:"L'IaaS (Infrastructure as a Service) offre des ressources virtualisées : serveurs, stockage, réseau.",r:"SaaS fournit des applications complètes — PaaS fournit une plateforme de développement."},
+  {d:3,e:"medium",s:"Which zone is used to host publicly accessible web servers?",o:["DMZ","Internal LAN","Guest network","Management VLAN"],c:0,t:["Internal LAN","Guest network","Management VLAN"],x:"Une DMZ héberge des services exposés à Internet, isolés du réseau interne.",r:"Le réseau interne héberge les postes et serveurs internes — non exposés."},
+  {d:3,e:"hard",s:"Which authentication protocol uses tickets issued by a Key Distribution Center?",o:["Kerberos","LDAP","RADIUS","OAuth"],c:0,t:["RADIUS","LDAP","OAuth"],x:"Kerberos utilise un KDC pour émettre des tickets (TGT, TGS) permettant l'authentification mutuelle.",r:"RADIUS est AAA mais ne gère pas de tickets Kerberos."},
+  {d:3,e:"easy",s:"Which device filters traffic between networks using a set of rules?",o:["Firewall","Hub","Repeater","Bridge"],c:0,t:["Hub","Repeater","Bridge"],x:"Un pare-feu applique des règles pour autoriser ou refuser le trafic entre zones réseau.",r:"Un hub ne fait que répéter le trafic — il ne le filtre pas."},
+  {d:3,e:"medium",s:"Which protocol is used to securely manage network devices via command line?",o:["SSH","Telnet","FTP","HTTP"],c:0,t:["Telnet","FTP","HTTP"],x:"SSH (Secure Shell) chiffre la session d'administration à distance, contrairement à Telnet.",r:"Telnet envoie tout en clair — facile à intercepter."},
+  {d:3,e:"hard",s:"Which technology virtualizes an entire OS, including the kernel?",o:["Hardware virtualization (Type 1/2)","Container","Sandbox","Jail"],c:0,t:["Container","Sandbox","Jail"],x:"L'hyperviseur virtualise le matériel complet et permet à plusieurs OS invités de tourner indépendamment.",r:"Un conteneur partage le noyau hôte — pas une virtualisation complète."},
+  {d:3,e:"medium",s:"Which concept uses multiple physical servers to act as a single logical system?",o:["Clustering","RAID","Load balancing only","Mirroring"],c:0,t:["RAID","Load balancing only","Mirroring"],x:"Le clustering combine plusieurs nœuds pour offrir haute disponibilité et équilibrage de charge.",r:"RAID concerne le stockage redondant — pas la disponibilité applicative."},
+  {d:3,e:"easy",s:"Which wireless security protocol is CURRENTLY the strongest in widespread use?",o:["WPA3","WEP","WPA","WPA2-Enterprise"],c:0,t:["WEP","WPA","WPA2-Enterprise"],x:"WPA3 utilise SAE (Simultaneous Authentication of Equals) et offre une protection supérieure contre les attaques par dictionnaire.",r:"WEP est totalement obsolète et crackable en minutes."},
+  {d:3,e:"hard",s:"Which architecture segregates networks into functional zones with controlled flows?",o:["Network segmentation","Flat network","Hub-and-spoke","VLAN hopping"],c:0,t:["Flat network","Hub-and-spoke","VLAN hopping"],x:"La segmentation réseau divise le réseau en zones (VLAN, sous-réseaux) avec des règles de flux stricts.",r:"Le réseau plat permet à toute communication d'atteindre n'importe quelle zone — dangereux."},
+  {d:3,e:"medium",s:"Which protocol provides centralized authentication, authorization, and accounting?",o:["RADIUS / TACACS+","NTP","DNS","SNMP"],c:0,t:["NTP","DNS","SNMP"],x:"RADIUS et TACACS+ offrent les services AAA pour l'accès réseau et l'administration des équipements.",r:"SNMP gère la supervision — pas l'AAA."},
+  {d:3,e:"hard",s:"Which deployment model combines on-premises and cloud with orchestration between them?",o:["Hybrid cloud","Public cloud only","Private cloud only","Community cloud"],c:0,t:["Public cloud only","Private cloud only","Community cloud"],x:"Le cloud hybride combine cloud public et privé, permettant la portabilité et l'orchestration des charges.",r:"Le cloud public n'inclut pas d'environnement local — c'est hybride qui le fait."},
+  {d:3,e:"medium",s:"Which security control type BEST describes a firewall rule blocking traffic?",o:["Technical control","Administrative control","Physical control","Detective control"],c:0,t:["Administrative control","Physical control","Detective control"],x:"Les contrôles techniques (pare-feu, ACL, chiffrement) sont mis en œuvre via la technologie.",r:"Les contrôles administratifs sont des politiques/procédures — pas du matériel/logiciel."},
+
+  // ===== DOMAIN 4: Security Operations (28% — 20 questions) =====
+  {d:4,e:"easy",s:"Which log entry indicates a successful user logon on Windows?",o:["Event ID 4624","Event ID 4625","Event ID 4648","Event ID 1102"],c:0,t:["Event ID 4625","Event ID 4648","Event ID 1102"],x:"L'Event ID 4624 est généré pour chaque ouverture de session réussie sur un système Windows.",r:"4625 correspond à un échec de connexion — utile pour détecter les brute force."},
+  {d:4,e:"medium",s:"Which SIEM function BEST supports detecting a brute-force attack?",o:["Correlation rules across multiple log sources","Single-event alerts only","Manual review only","Backup verification"],c:0,t:["Single-event alerts only","Manual review only","Backup verification"],x:"La corrélation croise plusieurs événements (4625 répétés, source IP, comptes ciblés) pour détecter un pattern d'attaque.",r:"Une alerte sur un seul 4625 génère trop de bruit — il faut corréler."},
+  {d:4,e:"hard",s:"Which technique allows running untrusted code in an isolated environment to observe its behavior?",o:["Sandboxing","Code signing","Whitelisting","Blacklisting"],c:0,t:["Code signing","Whitelisting","Blacklisting"],x:"Le sandboxing exécute le code dans un environnement confiné pour analyser son comportement en toute sécurité.",r:"Le code signing vérifie l'intégrité du code — il ne l'exécute pas."},
+  {d:4,e:"medium",s:"Which metric measures how quickly a security team responds to an incident?",o:["Mean Time to Respond (MTTR)","Mean Time Between Failures","Recovery Point Objective","Service Level Agreement"],c:0,t:["Mean Time Between Failures","Recovery Point Objective","Service Level Agreement"],x:"Le MTTR mesure le temps moyen de réponse/résolution après la détection d'un incident.",r:"MTBF mesure la fiabilité — pas la réponse aux incidents."},
+  {d:4,e:"easy",s:"Which backup type copies only files changed since the last full backup?",o:["Incremental","Differential","Full","Snapshot"],c:0,t:["Differential","Full","Snapshot"],x:"Un incrémental ne copie que les changements depuis la dernière sauvegarde (full ou incrémentale).",r:"Le différentiel copie tout depuis le dernier full — taille cumule à chaque cycle."},
+  {d:4,e:"medium",s:"Which protocol securely transfers files over a network?",o:["SFTP","Telnet","TFTP","HTTP"],c:0,t:["Telnet","TFTP","HTTP"],x:"SFTP (SSH File Transfer Protocol) chiffre le canal de transfert de fichiers.",r:"TFTP envoie en clair et sans authentification — non sécurisé."},
+  {d:4,e:"hard",s:"Which type of malware modifies the system's boot process to gain persistence?",o:["Bootkit","Spyware","Adware","Worm"],c:0,t:["Spyware","Adware","Worm"],x:"Un bootkit infecte le MBR/UEFI pour s'exécuter avant l'OS et maintenir sa persistance.",r:"Un rootkit peut cacher des processus, mais le bootkit cible spécifiquement le démarrage."},
+  {d:4,e:"medium",s:"Which forensic principle preserves the original evidence without alteration?",o:["Chain of custody","Order of volatility","Live forensics","Root cause analysis"],c:0,t:["Live forensics","Root cause analysis","Order of volatility"],x:"La chaîne de custody documente la possession continue des preuves pour garantir leur intégrité juridique.",r:"L'ordre de volatilité dicte l'ordre d'acquisition — c'est différent."},
+  {d:4,e:"easy",s:"Which security tool inspects packets up to the application layer?",o:["Deep Packet Inspection (DPI)","Hub","Repeater","Media converter"],c:0,t:["Hub","Repeater","Media converter"],x:"L'inspection approfondie des paquets analyse le contenu (couche 7) pour détecter des menaces avancées.",r:"Un hub ne fait que répéter les bits — aucune analyse."},
+  {d:4,e:"hard",s:"Which detection method monitors program behavior at runtime to flag malicious activity?",o:["Behavioral / heuristic analysis","Signature-based only","Blacklist check","CRC check"],c:0,t:["Signature-based only","Blacklist check","CRC check"],x:"L'analyse comportementale observe les actions (modifications registre, appels réseau) pour repérer des malwares inconnus.",r:"La détection par signature échoue face aux malwares polymorphes ou zero-day."},
+  {d:4,e:"medium",s:"Which concept involves practicing incident response steps in advance?",o:["Tabletop exercise","Penetration testing","Red team engagement","Audit"],c:0,t:["Penetration testing","Red team engagement","Audit"],x:"Un exercice sur table simule un scénario pour entraîner l'équipe à réagir sans toucher aux systèmes.",r:"Le pentest est technique — il vise les systèmes, pas la coordination humaine."},
+  {d:4,e:"easy",s:"Which term describes restoring systems and data after a disruption?",o:["Disaster recovery","Incident response","Patch management","Hardening"],c:0,t:["Incident response","Patch management","Hardening"],x:"La reprise après sinistre (DR) couvre la restauration des opérations après un incident majeur.",r:"L'IR gère la phase active — DR se concentre sur la reprise des activités."},
+  {d:4,e:"medium",s:"Which type of control is intended to DETECT a security incident that has occurred?",o:["Detective","Preventive","Corrective","Deterrent"],c:0,t:["Preventive","Corrective","Deterrent"],x:"Les contrôles de détection (logs, IDS, caméras) identifient les incidents en cours ou passés.",r:"Un pare-feu est préventif — il vise à empêcher l'incident avant qu'il ne survienne."},
+  {d:4,e:"hard",s:"Which IDS/IPS mode drops malicious traffic inline?",o:["Inline / IPS mode","Passive / IDS mode","Tap mode","Span mode"],c:0,t:["Passive / IDS mode","Tap mode","Span mode"],x:"Le mode inline (IPS) s'insère dans le flux et peut bloquer activement le trafic malveillant.",r:"Le mode IDS passif observe sans bloquer — il ne fait qu'alerter."},
+  {d:4,e:"medium",s:"Which log source is most useful for detecting lateral movement on Windows?",o:["Windows Security log (4624, 4673, 4688)","DHCP log only","DNS debug log only","Print server log"],c:0,t:["DHCP log only","DNS debug log only","Print server log"],x:"Les événements de sécurité Windows (logons, accès, processus) révèlent les mouvements latéraux d'un attaquant.",r:"Les logs DHCP seuls n'indiquent pas les actions sur l'hôte."},
+  {d:4,e:"hard",s:"Which technique uses deception to mislead attackers within a network?",o:["Honeypot","Firewall","NAT","Subnetting"],c:0,t:["Firewall","NAT","Subnetting"],x:"Un honeypot est un faux système conçu pour attirer et étudier les attaquants.",r:"Un NAT traduit des adresses — il ne trompe pas l'attaquant."},
+  {d:4,e:"medium",s:"Which backup strategy stores copies off-site for disaster resilience?",o:["3-2-1 rule","RAID 0","Single disk","No backup"],c:0,t:["RAID 0","Single disk","No backup"],x:"La règle 3-2-1 : 3 copies, 2 supports, 1 hors site — base de la résilience.",r:"RAID 0 n'offre AUCUNE redondance — un disque perdu = données perdues."},
+  {d:4,e:"easy",s:"Which protocol provides secure email retrieval?",o:["POP3S / IMAPS","SMTP","Telnet","FTP"],c:0,t:["SMTP","Telnet","FTP"],x:"POP3S et IMAPS chiffrent la récupération des e-mails via TLS.",r:"SMTP standard (sans STARTTLS) envoie en clair — intercepteurs en clair possible."},
+  {d:4,e:"hard",s:"Which endpoint detection capability monitors process behavior via kernel hooks?",o:["EDR (Endpoint Detection & Response)","Basic antivirus only","Disk defragmenter","File backup"],c:0,t:["Basic antivirus only","Disk defragmenter","File backup"],x:"L'EDR utilise des hooks noyau et télémétrie continue pour détecter des comportements suspects sur l'endpoint.",r:"Un antivirus classique se base principalement sur les signatures — il manque de contexte comportemental."},
+  {d:4,e:"medium",s:"Which concept means testing recovery procedures without disrupting production?",o:["Disaster recovery test in isolated environment","Live production cutover","Phishing simulation","Red team test"],c:0,t:["Live production cutover","Phishing simulation","Red team test"],x:"Tester le DR dans un environnement isolé vérifie les procédures sans risque pour la production.",r:"Un basculement en production est trop risqué pour un simple test."},
+
+  // ===== DOMAIN 5: Security Program Management & Oversight (20% — 14 questions) =====
+  {d:5,e:"easy",s:"Which document describes the rules and expected behavior of employees regarding security?",o:["Acceptable Use Policy (AUP)","SLA","MOU","NDA"],c:0,t:["SLA","MOU","NDA"],x:"L'AUP définit l'usage acceptable des ressources informatiques par les employés.",r:"Un NDA protège la confidentialité — il ne régit pas l'usage des systèmes."},
+  {d:5,e:"medium",s:"Which risk treatment involves accepting the risk without mitigation?",o:["Risk acceptance","Risk mitigation","Risk transference","Risk avoidance"],c:0,t:["Risk mitigation","Risk transference","Risk avoidance"],x:"L'acceptation du risque reconnaît un risque résiduel et accepte ses conséquences potentielles.",r:"Le transfert (ex.: assurance) déplace le risque — l'acceptation le garde."},
+  {d:5,e:"medium",s:"Which framework is widely used for cybersecurity risk management?",o:["NIST CSF","OSI model","TCP/IP","COBIT only"],c:0,t:["OSI model","TCP/IP","COBIT only"],x:"Le NIST Cybersecurity Framework (Identify, Protect, Detect, Respond, Recover) structure la gestion du risque cyber.",r:"OSI décrit le réseau — pas la gestion du risque."},
+  {d:5,e:"hard",s:"Which contract element specifies measurable performance targets for a vendor?",o:["Service Level Agreement (SLA)","NDA","AUP","MOU"],c:0,t:["NDA","AUP","MOU"],x:"Un SLA définit des niveaux de service mesurables (disponibilité, RTO, RPO) entre client et fournisseur.",r:"Une MOU décrit des intentions de partenariat — pas des engagements mesurables."},
+  {d:5,e:"medium",s:"Which type of assessment simulates an attacker's actions to find vulnerabilities?",o:["Penetration test","Vulnerability scan","Compliance audit","Risk assessment"],c:0,t:["Vulnerability scan","Compliance audit","Risk assessment"],x:"Un test d'intrusion imite un attaquant réel pour identifier et exploiter les faiblesses.",r:"Un scan de vulnérabilités est automatisé — il n'exploite pas activement les failles."},
+  {d:5,e:"easy",s:"Which principle states that data should be classified by sensitivity?",o:["Data classification","Data minimization","Data sovereignty","Data residency"],c:0,t:["Data minimization","Data sovereignty","Data residency"],x:"La classification des données attribue des niveaux (public, interne, confidentiel, secret) pour piloter les contrôles.",r:"La minimisation collecte le strict nécessaire — c'est différent."},
+  {d:5,e:"hard",s:"Which audit type evaluates controls against a specific regulation (e.g., PCI-DSS)?",o:["Compliance audit","Operational audit","Financial audit","Performance audit"],c:0,t:["Operational audit","Financial audit","Performance audit"],x:"Un audit de conformité vérifie l'adhésion à une norme ou réglementation spécifique (PCI-DSS, HIPAA, RGPD).",r:"Un audit opérationnel évalue l'efficacité des processus internes — pas la conformité."},
+  {d:5,e:"medium",s:"Which role is ultimately accountable for an organization's security posture?",o:["Senior management / CISO","Help desk technician","End user","Intern"],c:0,t:["Help desk technician","End user","Intern"],x:"La haute direction (ou le CISO) porte la responsabilité ultime de la posture de sécurité de l'organisation.",r:"L'utilisateur respecte la politique — mais la gouvernance revient au management."},
+  {d:5,e:"medium",s:"Which document defines how long evidence of activity must be retained?",o:["Data retention policy","Privacy policy","AUP","MOU"],c:0,t:["Privacy policy","AUP","MOU"],x:"La politique de rétention précise la durée de conservation des différents types de données et journaux.",r:"La politique de confidentialité traite du traitement des données personnelles."},
+  {d:5,e:"hard",s:"Which governance control ensures separation of conflicting duties?",o:["Separation of duties","Job rotation","Mandatory vacations","Least privilege"],c:0,t:["Job rotation","Mandatory vacations","Least privilege"],x:"La séparation des tâches empêche qu'une seule personne contrôle un processus critique de bout en bout.",r:"Le moindre privilège limite les accès — c'est complémentaire mais distinct."},
+  {d:5,e:"medium",s:"Which regulation protects personal data of EU citizens?",o:["GDPR","HIPAA","PCI-DSS","SOX"],c:0,t:["HIPAA","PCI-DSS","SOX"],x:"Le RGPD (GDPR) encadre le traitement des données personnelles des résidents de l'Union européenne.",r:"HIPAA cible la santé aux USA — PCI-DSS cible les paiements par carte."},
+  {d:5,e:"easy",s:"Which metric tracks the number of security incidents over time?",o:["Incident rate","MTTR only","RPO","MTBF"],c:0,t:["MTTR only","RPO","MTBF"],x:"Le taux d'incidents mesure la fréquence des événements de sécurité sur une période donnée.",r:"MTTR mesure le temps de réponse — pas la fréquence."},
+  {d:5,e:"medium",s:"Which process ensures only authorized changes are made to production systems?",o:["Change management","Patch management only","Asset inventory","Vulnerability scan"],c:0,t:["Patch management only","Asset inventory","Vulnerability scan"],x:"La gestion des changements impose approbation, tests et documentation avant tout déploiement en production.",r:"La gestion des correctifs traite uniquement des patches — la change management est plus large."},
+  {d:5,e:"hard",s:"Which standard provides a risk management framework for U.S. federal agencies?",o:["NIST RMF (SP 800-37)","ISO 27001 only","COBIT only","PCI-DSS"],c:0,t:["ISO 27001 only","COBIT only","PCI-DSS"],x:"Le NIST RMF (Risk Management Framework) guide les agences fédérales US dans la catégorisation, sélection et mise en œuvre de contrôles.",r:"ISO 27001 est international — le NIST RMF cible spécifiquement les agences fédérales US."}
+];
+</script>
+
+<!-- ====== Application logic ====== -->
+<script>
+"use strict";
+
+const DOMAINS = {
+  1: { name: "General Security Concepts", weight: 12 },
+  2: { name: "Threats, Vulnerabilities & Mitigations", weight: 22 },
+  3: { name: "Security Architecture", weight: 18 },
+  4: { name: "Security Operations", weight: 28 },
+  5: { name: "Security Program Management & Oversight", weight: 20 }
+};
+
+const LS_KEY_Q   = "sy0701_questions_user";
+const LS_KEY_HIS = "sy0701_history";
+
+let revisionMode = false;
+let quizState = null;
+
+// ---- Helpers ----
+function getUserQuestions(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY_Q) || "[]"); }
+  catch(e){ return []; }
+}
+function saveUserQuestions(arr){
+  localStorage.setItem(LS_KEY_Q, JSON.stringify(arr));
+}
+function getHistory(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY_HIS) || "[]"); }
+  catch(e){ return []; }
+}
+function pushHistory(entry){
+  const h = getHistory();
+  h.unshift(entry);
+  localStorage.setItem(LS_KEY_HIS, JSON.stringify(h.slice(0, 50)));
+}
+function allQuestions(){
+  return QUESTIONS.concat(getUserQuestions());
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// ---- Tabs ----
+document.getElementById("tabs").addEventListener("click", e => {
+  const t = e.target.closest(".tab");
+  if(!t) return;
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  t.classList.add("active");
+  document.querySelectorAll("section[id^=view-]").forEach(s => s.classList.add("hide"));
+  document.getElementById("view-" + t.dataset.view).classList.remove("hide");
+  if(t.dataset.view === "history") renderHistory();
+});
+
+// ---- Browse / filters ----
+function filteredQuestions(){
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const diff = document.getElementById("difficulty").value;
+  const allowed = Array.from(document.querySelectorAll(".dfilt:checked")).map(c => +c.value);
+  return allQuestions().filter(it => {
+    if(!allowed.includes(it.d)) return false;
+    if(diff && it.e !== diff) return false;
+    if(q){
+      const blob = (it.s + " " + it.o.join(" ") + " " + it.x + " " + (it.r||"")).toLowerCase();
+      if(!blob.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function renderBrowse(){
+  const list = filteredQuestions();
+  const root = document.getElementById("qlist");
+  if(list.length === 0){
+    root.innerHTML = '<p style="color:var(--muted)">No questions match your filters.</p>';
+    return;
+  }
+  root.innerHTML = '<p style="color:var(--muted);margin:4px 0 10px">' + list.length + ' question(s)</p>' +
+    list.map((it,idx) => renderCard(it, idx, "b")).join("");
+}
+
+function renderCard(it, idx, mode){
+  // mode: 'b' browse, 'q' quiz
+  const d = DOMAINS[it.d] || {name:"?"};
+  const meta = '<span class="badge">D' + it.d + ' — ' + d.name + ' (' + (d.weight||0) + '%)</span>' +
+               '<span class="badge">' + (it.e||"medium") + '</span>';
+  const optsHtml = it.o.map((o,i) =>
+    '<div class="opt" data-idx="' + idx + '" data-opt="' + i + '">' +
+      String.fromCharCode(65+i) + '. ' + escapeHtml(o) +
+    '</div>'
+  ).join("");
+
+  const explainHtml = (mode === "b" && revisionMode) || (mode === "q" && quizState && quizState.reveal)
+    ? '<div class="explain"><b>Explanation :</b> ' + escapeHtml(it.x) + '</div>' +
+      (it.r ? '<div class="trap"><b>Piège :</b> ' + escapeHtml(it.r) + '</div>' : '')
+    : '';
+
+  return '<div class="q" data-mode="' + mode + '" data-idx="' + idx + '">' +
+    '<h3>Q' + (idx+1) + '. ' + escapeHtml(it.s) + '</h3>' +
+    '<div class="meta">' + meta + '</div>' +
+    '<div class="opts">' + optsHtml + '</div>' +
+    explainHtml +
+  '</div>';
+}
+
+function escapeHtml(s){
+  return String(s||"").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+// Browse option clicks
+document.getElementById("qlist").addEventListener("click", e => {
+  const opt = e.target.closest(".opt");
+  if(!opt) return;
+  const card = opt.closest(".q");
+  if(card.dataset.mode !== "b") return;
+  const idx = +card.dataset.idx;
+  const list = filteredQuestions();
+  const it = list[idx];
+  if(!it) return;
+  if(!revisionMode) return; // only reveal in revision mode
+  card.querySelectorAll(".opt").forEach(o => o.classList.remove("sel","correct","wrong"));
+  opt.classList.add("sel");
+  if(+opt.dataset.opt === it.c){ opt.classList.add("correct"); }
+  else{
+    opt.classList.add("wrong");
+    const good = card.querySelector('.opt[data-opt="' + it.c + '"]');
+    if(good) good.classList.add("correct");
+  }
+  // append explanation
+  if(!card.querySelector(".explain")){
+    const div = document.createElement("div");
+    div.innerHTML = '<div class="explain"><b>Explanation :</b> ' + escapeHtml(it.x) + '</div>' +
+      (it.r ? '<div class="trap"><b>Piège :</b> ' + escapeHtml(it.r) + '</div>' : '');
+    card.appendChild(div);
+  }
+});
+
+["search","difficulty"].forEach(id =>
+  document.getElementById(id).addEventListener("input", renderBrowse));
+document.querySelectorAll(".dfilt").forEach(c => c.addEventListener("change", renderBrowse));
+
+document.getElementById("revBtn").addEventListener("click", () => {
+  revisionMode = !revisionMode;
+  document.getElementById("revState").textContent = revisionMode ? "ON" : "OFF";
+  renderBrowse();
+});
+
+// ---- Quiz ----
+document.getElementById("quizStart").addEventListener("click", () => {
+  const size = +document.getElementById("quizSize").value;
+  const allowed = Array.from(document.getElementById("quizDomains").selectedOptions).map(o => +o.value);
+  const pool = allQuestions().filter(q => allowed.includes(q.d));
+  const picked = shuffle(pool).slice(0, Math.min(size, pool.length));
+  quizState = { pool: picked, answers: {}, reveal: false, startedAt: Date.now() };
+  renderQuiz();
+});
+
+function renderQuiz(){
+  const root = document.getElementById("quizArea");
+  if(!quizState){
+    root.innerHTML = '<p style="color:var(--muted)">Configure your quiz and click Start.</p>';
+    return;
+  }
+  const cards = quizState.pool.map((it,i) => renderCard(it, i, "q")).join("");
+  root.innerHTML =
+    '<div class="row" style="margin-top:10px">' +
+      '<button id="quizSubmit" class="secondary">Submit &amp; score</button>' +
+      '<button id="quizReset" class="secondary">Reset</button>' +
+      '<span class="badge">' + quizState.pool.length + ' questions</span>' +
+    '</div>' +
+    '<div id="quizCards">' + cards + '</div>' +
+    '<div id="quizScore"></div>';
+}
+
+document.addEventListener("click", e => {
+  if(!quizState) return;
+  const opt = e.target.closest("#view-quiz .opt");
+  if(!opt) return;
+  const card = opt.closest(".q");
+  const idx = +card.dataset.idx;
+  const iopt = +opt.dataset.opt;
+  card.querySelectorAll(".opt").forEach(o => o.classList.remove("sel"));
+  opt.classList.add("sel");
+  quizState.answers[idx] = iopt;
+});
+
+document.addEventListener("click", e => {
+  if(e.target && e.target.id === "quizSubmit"){
+    if(!quizState) return;
+    let correct = 0;
+    const perDomain = {};
+    quizState.pool.forEach((it,i) => {
+      perDomain[it.d] = perDomain[it.d] || {c:0,t:0};
+      perDomain[it.d].t++;
+      if(quizState.answers[i] === it.c){
+        correct++; perDomain[it.d].c++;
+      }
+    });
+    quizState.reveal = true;
+    // Render reveal state
+    const cards = quizState.pool.map((it,i) => {
+      const html = renderCard(it, i, "q");
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      const cardEl = div.firstElementChild;
+      const user = quizState.answers[i];
+      cardEl.querySelectorAll(".opt").forEach(o => {
+        const oi = +o.dataset.opt;
+        if(oi === it.c) o.classList.add("correct");
+        if(oi === user && user !== it.c) o.classList.add("wrong");
+      });
+      return cardEl.outerHTML;
+    }).join("");
+    document.getElementById("quizCards").innerHTML = cards;
+
+    const perCard = Object.keys(perDomain).sort().map(d => {
+      const x = perDomain[d];
+      const nm = (DOMAINS[d]||{name:"?"}).name;
+      const pct = x.t ? Math.round(100*x.c/x.t) : 0;
+      return '<div class="cell"><div class="l">D'+d+' — '+escapeHtml(nm)+'</div>' +
+             '<div class="v">'+x.c+'/'+x.t+' ('+pct+'%)</div></div>';
+    }).join("");
+    const totalPct = quizState.pool.length ? Math.round(100*correct/quizState.pool.length) : 0;
+    document.getElementById("quizScore").innerHTML =
+      '<h3>Score : '+correct+' / '+quizState.pool.length+' ('+totalPct+'%)</h3>' +
+      '<div class="score-card">'+perCard+'</div>';
+
+    pushHistory({
+      at: new Date().toISOString(),
+      total: quizState.pool.length,
+      correct: correct,
+      pct: totalPct,
+      perDomain: perDomain
+    });
+  }
+  if(e.target && e.target.id === "quizReset"){
+    quizState = null;
+    renderQuiz();
+  }
+});
+
+// ---- Add Question ----
+document.getElementById("addSave").addEventListener("click", () => {
+  const q = {
+    d: +document.getElementById("addDomain").value,
+    e: document.getElementById("addDiff").value,
+    s: document.getElementById("addStem").value.trim(),
+    o: [
+      document.getElementById("addO0").value.trim(),
+      document.getElementById("addO1").value.trim(),
+      document.getElementById("addO2").value.trim(),
+      document.getElementById("addO3").value.trim()
+    ],
+    c: +document.getElementById("addCorrect").value,
+    x: document.getElementById("addExplain").value.trim(),
+    r: document.getElementById("addTrap").value.trim()
+  };
+  const errs = [];
+  if(!q.s) errs.push("stem required");
+  if(q.o.some(o=>!o)) errs.push("4 options required");
+  if(!(q.c>=0 && q.c<=3)) errs.push("correctIndex must be 0-3");
+  if(!q.x) errs.push("explanation required");
+  if(errs.length){
+    document.getElementById("addStatus").textContent = "ERROR: " + errs.join(", ");
+    return;
+  }
+  const arr = getUserQuestions();
+  arr.push(q);
+  saveUserQuestions(arr);
+  document.getElementById("addStatus").textContent = "Saved (#" + arr.length + ")";
+  // clear non-required
+  ["addStem","addO0","addO1","addO2","addO3","addExplain","addTrap"].forEach(id =>
+    document.getElementById(id).value = "");
+});
+
+// ---- History ----
+function renderHistory(){
+  const root = document.getElementById("historyList");
+  const h = getHistory();
+  if(h.length === 0){ root.innerHTML = '<p style="color:var(--muted)">No history yet.</p>'; return; }
+  root.innerHTML = h.map(entry => {
+    const dt = new Date(entry.at).toLocaleString();
+    const pd = Object.entries(entry.perDomain||{}).map(([d,v]) =>
+      'D'+d+': '+v.c+'/'+v.t
+    ).join(" • ");
+    return '<div class="panel" style="margin-top:8px"><b>'+dt+'</b> — ' +
+           entry.correct+'/'+entry.total+' ('+entry.pct+'%)<br>' +
+           '<span style="color:var(--muted);font-size:13px">'+pd+'</span></div>';
+  }).join("");
+}
+
+// ---- Export / Import ----
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    builtIn: QUESTIONS,
+    user: getUserQuestions(),
+    history: getHistory()
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "sy0-701-tracker-export.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById("dataStatus").textContent = "Exported.";
+});
+document.getElementById("importFile").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const fr = new FileReader();
+  fr.onload = () => {
+    try{
+      const data = JSON.parse(fr.result);
+      if(data.user && Array.isArray(data.user)) saveUserQuestions(data.user);
+      if(data.history && Array.isArray(data.history)) localStorage.setItem(LS_KEY_HIS, JSON.stringify(data.history));
+      document.getElementById("dataStatus").textContent = "Imported.";
+      renderBrowse();
+    }catch(err){
+      document.getElementById("dataStatus").textContent = "Import failed: " + err.message;
+    }
+  };
+  fr.readAsText(file);
+});
+
+// ---- Init ----
+renderBrowse();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
