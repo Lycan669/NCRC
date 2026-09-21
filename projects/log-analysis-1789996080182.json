@@ -1,0 +1,36 @@
+[
+  {
+    "line": 3,
+    "ip": "192.168.1.100",
+    "timestamp": "21/Sep/2026:10:15:32",
+    "method": "GET",
+    "path": "/shell.php",
+    "protocol": "HTTP/1.1",
+    "statusCode": 404,
+    "bytes": 890,
+    "referer": "-",
+    "userAgent": "curl/7.68",
+    "rawLine": "192.168.1.100 - - [21/Sep/2026:10:15:32] \"GET /shell.php HTTP/1.1\" 404 890 \"-\" \"curl/7.68\"\r",
+    "threats": [],
+    "severity": "low",
+    "score": 5
+  },
+  {
+    "line": 4,
+    "ip": "203.0.113.50",
+    "timestamp": "21/Sep/2026:10:15:33",
+    "method": "GET",
+    "path": "/shell.php",
+    "protocol": "HTTP/1.1",
+    "statusCode": 200,
+    "bytes": 2345,
+    "referer": "-",
+    "userAgent": "Python-Requests",
+    "rawLine": "203.0.113.50 - - [21/Sep/2026:10:15:33] \"GET /shell.php HTTP/1.1\" 200 2345 \"-\" \"Python-Requests\"\r",
+    "threats": [
+      "Suspicious User-Agent"
+    ],
+    "severity": "low",
+    "score": 10
+  }
+]
