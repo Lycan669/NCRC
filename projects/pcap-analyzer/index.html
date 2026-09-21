@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCAP Analyzer - Network Forensics</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🔍 PCAP ANALYZER</h1>
+                <p class="subtitle">Analyse complète de captures réseau — Statistiques, Menaces, Flux, Protocols</p>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            
+            <!-- LEFT PANEL: UPLOAD -->
+            <section class="left-panel">
+                <div class="card">
+                    <h2>📁 Importer PCAP</h2>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p><strong>Drag & drop PCAP ici</strong></p>
+                        <p class="small-text">ou</p>
+                        <input type="file" id="fileInput" accept=".pcap,.pcapng" hidden>
+                        <button class="btn-secondary" id="browseBtn">Parcourir</button>
+                    </div>
+
+                    <div id="fileInfo" class="file-info" style="display: none;">
+                        <p>✅ <span id="fileName"></span></p>
+                        <p class="file-size"><span id="fileSize"></span></p>
+                    </div>
+
+                    <button id="analyzeBtn" class="btn-primary" disabled>🚀 Analyser PCAP</button>
+
+                    <div class="card-divider"></div>
+
+                    <h3>⚙️ Options</h3>
+                    <div class="options-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="deepInspection" checked>
+                            Deep Packet Inspection
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="geoIP" checked>
+                            Géolocalisation IP
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="threatIntel" checked>
+                            Threat Intelligence
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="anomalyDetection" checked>
+                            Détection d'anomalies
+                        </label>
+                    </div>
+
+                    <button id="exportBtn" class="btn-secondary" disabled style="margin-top: 15px;">
+                        📥 Exporter Rapport
+                    </button>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: RESULTS -->
+            <section class="right-panel">
+                
+                <!-- LOADING -->
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Analyse en cours...</p>
+                </div>
+
+                <!-- TABS -->
+                <div class="tabs-container" id="tabsContainer" style="display: none;">
+                    <div class="tabs-buttons">
+                        <button class="tab-btn active" data-tab="overview">📊 Overview</button>
+                        <button class="tab-btn" data-tab="statistics">📈 Statistiques</button>
+                        <button class="tab-btn" data-tab="protocols">🔌 Protocoles</button>
+                        <button class="tab-btn" data-tab="flows">🌊 Flux</button>
+                        <button class="tab-btn" data-tab="threats">⚠️ Menaces</button>
+                        <button class="tab-btn" data-tab="ips">🌐 IPs</button>
+                        <button class="tab-btn" data-tab="ports">🔓 Ports</button>
+                    </div>
+
+                    <!-- TAB 1: OVERVIEW -->
+                    <div class="tab-content active" id="overview">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">📦</div>
+                                <div class="stat-info">
+                                    <p class="stat-label">Total Packets</p>
+                                    <p class="stat-value" id="totalPackets">0</p>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon">📊</div>
+                                <div class="stat-info">
+                                    <p class="stat-label">Total Data</p>
+                                    <p class="stat-value" id="totalData">0 MB</p>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon">⏱️</div>
+                                <div class="stat-info">
+                                    <p class="stat-label">Duration</p>
+                                    <p class="stat-value" id="duration">0s</p>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon">🔴</div>
+                                <div class="stat-info">
+                                    <p class="stat-label">Anomalies</p>
+                                    <p class="stat-value" id="anomalyCount">0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Traffic Over Time</h3>
+                            <canvas id="timelineChart"></canvas>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Top Protocols</h3>
+                            <canvas id="protocolChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: STATISTIQUES -->
+                    <div class="tab-content" id="statistics">
+                        <div class="stats-detailed">
+                            <div class="stat-detail-card">
+                                <h4>📥 Inbound Traffic</h4>
+                                <p class="stat-number" id="inboundTraffic">0 MB</p>
+                                <p class="stat-percent" id="inboundPercent">0%</p>
+                            </div>
+
+                            <div class="stat-detail-card">
+                                <h4>📤 Outbound Traffic</h4>
+                                <p class="stat-number" id="outboundTraffic">0 MB</p>
+                                <p class="stat-percent" id="outboundPercent">0%</p>
+                            </div>
+
+                            <div class="stat-detail-card">
+                                <h4>🔗 Total Flows</h4>
+                                <p class="stat-number" id="totalFlows">0</p>
+                                <p class="stat-percent">Conversations</p>
+                            </div>
+
+                            <div class="stat-detail-card">
+                                <h4>⚡ Avg Packet Size</h4>
+                                <p class="stat-number" id="avgPacketSize">0 bytes</p>
+                                <p class="stat-percent" id="maxPacketSize">Max: 0 bytes</p>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Packet Size Distribution</h3>
+                            <canvas id="sizeChart"></canvas>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Traffic Direction</h3>
+                            <canvas id="directionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: PROTOCOLES -->
+                    <div class="tab-content" id="protocols">
+                        <div class="protocol-table">
+                            <h3>Protocol Breakdown</h3>
+                            <table id="protocolTable">
+                                <thead>
+                                    <tr>
+                                        <th>Protocol</th>
+                                        <th>Packets</th>
+                                        <th>Data</th>
+                                        <th>%</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="protocolBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Protocol Distribution</h3>
+                            <canvas id="protocolDistChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: FLUX -->
+                    <div class="tab-content" id="flows">
+                        <div class="flows-container">
+                            <h3>Top Flows (Conversations)</h3>
+                            <div class="search-box">
+                                <input type="text" id="flowSearch" placeholder="🔍 Rechercher flow...">
+                            </div>
+                            <div id="flowsList" class="flows-list">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: MENACES -->
+                    <div class="tab-content" id="threats">
+                        <div class="threats-container">
+                            <h3>🚨 Detected Threats & Anomalies</h3>
+                            <div id="threatsList" class="threats-list">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 6: IPS -->
+                    <div class="tab-content" id="ips">
+                        <div class="ips-container">
+                            <h3>Top Source IPs</h3>
+                            <div id="sourceIPsList" class="ips-list">
+                            </div>
+                        </div>
+
+                        <div class="ips-container">
+                            <h3>Top Destination IPs</h3>
+                            <div id="destIPsList" class="ips-list">
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>IP Communication Map</h3>
+                            <canvas id="ipMapChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- TAB 7: PORTS -->
+                    <div class="tab-content" id="ports">
+                        <div class="ports-container">
+                            <h3>Top Source Ports</h3>
+                            <div id="srcPortsList" class="ports-list">
+                            </div>
+                        </div>
+
+                        <div class="ports-container">
+                            <h3>Top Destination Ports</h3>
+                            <div id="dstPortsList" class="ports-list">
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Port Activity</h3>
+                            <canvas id="portChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMPTY STATE -->
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">📂</div>
+                    <h3>Aucun fichier chargé</h3>
+                    <p>Importe un fichier PCAP pour commencer l'analyse</p>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="utils.js"></script>
+    <script src="pcapParser.js"></script>
+    <script src="statsCalculator.js"></script>
+    <script src="threatAnalyzer.js"></script>
+    <script src="visualization.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
