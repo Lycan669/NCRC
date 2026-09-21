@@ -1,0 +1,266 @@
+/**
+ * Créer un fichier PCAP d'exemple pour tester
+ * Sauvegarde ce code dans: projects/pcap-analyzer/sample.pcap.js
+ */
+
+// Fonction pour générer des packets d'exemple
+function generateSamplePCAP() {
+    const packets = [
+        // ============ NORMAL TRAFFIC ============
+        {
+            number: 1,
+            timestamp: 1695312000,
+            srcIP: "192.168.1.100",
+            dstIP: "8.8.8.8",
+            srcPort: 54321,
+            dstPort: 53,
+            protocol: "DNS",
+            size: 64,
+            flags: "SYN",
+            payload: "Query: google.com"
+        },
+        {
+            number: 2,
+            timestamp: 1695312001,
+            srcIP: "8.8.8.8",
+            dstIP: "192.168.1.100",
+            srcPort: 53,
+            dstPort: 54321,
+            protocol: "DNS",
+            size: 128,
+            flags: "SYN-ACK",
+            payload: "Response: 142.250.185.46"
+        },
+        {
+            number: 3,
+            timestamp: 1695312002,
+            srcIP: "192.168.1.100",
+            dstIP: "142.250.185.46",
+            srcPort: 54322,
+            dstPort: 443,
+            protocol: "TCP",
+            size: 56,
+            flags: "SYN",
+            payload: "TLS Handshake Start"
+        },
+        {
+            number: 4,
+            timestamp: 1695312003,
+            srcIP: "142.250.185.46",
+            dstIP: "192.168.1.100",
+            srcPort: 443,
+            dstPort: 54322,
+            protocol: "TCP",
+            size: 1024,
+            flags: "SYN-ACK",
+            payload: "TLS Server Hello"
+        },
+        // ============ HTTP TRAFFIC ============
+        {
+            number: 5,
+            timestamp: 1695312004,
+            srcIP: "192.168.1.101",
+            dstIP: "93.184.216.34",
+            srcPort: 54323,
+            dstPort: 80,
+            protocol: "HTTP",
+            size: 256,
+            flags: "PSH-ACK",
+            payload: "GET /index.html HTTP/1.1"
+        },
+        {
+            number: 6,
+            timestamp: 1695312005,
+            srcIP: "93.184.216.34",
+            dstIP: "192.168.1.101",
+            srcPort: 80,
+            dstPort: 54323,
+            protocol: "HTTP",
+            size: 2048,
+            flags: "PSH-ACK",
+            payload: "HTTP/1.1 200 OK"
+        },
+        // ============ SUSPICIOUS TRAFFIC ⚠️ ============
+        {
+            number: 7,
+            timestamp: 1695312006,
+            srcIP: "10.0.0.50",
+            dstIP: "192.168.1.1",
+            srcPort: 44444,
+            dstPort: 3389,
+            protocol: "TCP",
+            size: 40,
+            flags: "SYN",
+            payload: "RDP Connection Attempt"
+        },
+        {
+            number: 8,
+            timestamp: 1695312007,
+            srcIP: "10.0.0.50",
+            dstIP: "192.168.1.1",
+            srcPort: 44445,
+            dstPort: 3389,
+            protocol: "TCP",
+            size: 40,
+            flags: "SYN",
+            payload: "RDP Connection Attempt"
+        },
+        {
+            number: 9,
+            timestamp: 1695312008,
+            srcIP: "10.0.0.50",
+            dstIP: "192.168.1.1",
+            srcPort: 44446,
+            dstPort: 3389,
+            protocol: "TCP",
+            size: 40,
+            flags: "SYN",
+            payload: "RDP Connection Attempt"
+        },
+        // ============ POTENTIAL MALWARE 🚨 ============
+        {
+            number: 10,
+            timestamp: 1695312009,
+            srcIP: "192.168.1.105",
+            dstIP: "195.154.0.0",
+            srcPort: 54324,
+            dstPort: 8080,
+            protocol: "TCP",
+            size: 512,
+            flags: "PSH-ACK",
+            payload: "C2 Beacon - Command Control Traffic"
+        },
+        {
+            number: 11,
+            timestamp: 1695312010,
+            srcIP: "195.154.0.0",
+            dstIP: "192.168.1.105",
+            srcPort: 8080,
+            dstPort: 54324,
+            protocol: "TCP",
+            size: 1024,
+            flags: "PSH-ACK",
+            payload: "C2 Command Response"
+        },
+        {
+            number: 12,
+            timestamp: 1695312011,
+            srcIP: "192.168.1.105",
+            dstIP: "195.154.0.0",
+            srcPort: 54325,
+            dstPort: 8080,
+            protocol: "TCP",
+            size: 2048,
+            flags: "PSH-ACK",
+            payload: "Exfiltrated Data - Credentials"
+        },
+        // ============ ICMP FLOOD 🌊 ============
+        {
+            number: 13,
+            timestamp: 1695312012,
+            srcIP: "203.0.113.45",
+            dstIP: "192.168.1.100",
+            srcPort: 0,
+            dstPort: 0,
+            protocol: "ICMP",
+            size: 1000,
+            flags: "ECHO-REQUEST",
+            payload: "PING Flood"
+        },
+        {
+            number: 14,
+            timestamp: 1695312012.1,
+            srcIP: "203.0.113.45",
+            dstIP: "192.168.1.100",
+            srcPort: 0,
+            dstPort: 0,
+            protocol: "ICMP",
+            size: 1000,
+            flags: "ECHO-REQUEST",
+            payload: "PING Flood"
+        },
+        {
+            number: 15,
+            timestamp: 1695312012.2,
+            srcIP: "203.0.113.45",
+            dstIP: "192.168.1.100",
+            srcPort: 0,
+            dstPort: 0,
+            protocol: "ICMP",
+            size: 1000,
+            flags: "ECHO-REQUEST",
+            payload: "PING Flood"
+        },
+        // ============ SQL INJECTION ATTEMPT 💉 ============
+        {
+            number: 16,
+            timestamp: 1695312013,
+            srcIP: "192.168.1.110",
+            dstIP: "10.0.0.20",
+            srcPort: 54326,
+            dstPort: 3306,
+            protocol: "MySQL",
+            size: 256,
+            flags: "PSH-ACK",
+            payload: "' OR '1'='1"
+        },
+        // ============ DNS EXFILTRATION 🔍 ============
+        {
+            number: 17,
+            timestamp: 1695312014,
+            srcIP: "192.168.1.115",
+            dstIP: "8.8.8.8",
+            srcPort: 54327,
+            dstPort: 53,
+            protocol: "DNS",
+            size: 512,
+            flags: "SYN",
+            payload: "Query: a9d8f7e6c5b4a3f2e1d0c9b8a7f6e5d4.malware.com"
+        },
+        // ============ SMB LATERAL MOVEMENT ↔️ ============
+        {
+            number: 18,
+            timestamp: 1695312015,
+            srcIP: "192.168.1.120",
+            dstIP: "192.168.1.121",
+            srcPort: 54328,
+            dstPort: 445,
+            protocol: "SMB",
+            size: 512,
+            flags: "PSH-ACK",
+            payload: "SMB Negotiation - Lateral Movement"
+        },
+        // ============ NORMAL FTP ============
+        {
+            number: 19,
+            timestamp: 1695312016,
+            srcIP: "192.168.1.130",
+            dstIP: "10.0.0.30",
+            srcPort: 54329,
+            dstPort: 21,
+            protocol: "FTP",
+            size: 128,
+            flags: "SYN",
+            payload: "220 FTP Server Ready"
+        },
+        {
+            number: 20,
+            timestamp: 1695312017,
+            srcIP: "192.168.1.130",
+            dstIP: "10.0.0.30",
+            srcPort: 54329,
+            dstPort: 21,
+            protocol: "FTP",
+            size: 256,
+            flags: "PSH-ACK",
+            payload: "USER admin\nPASS password123"
+        }
+    ];
+
+    return packets;
+}
+
+// Exporter pour utilisation
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { generateSamplePCAP };
+}
