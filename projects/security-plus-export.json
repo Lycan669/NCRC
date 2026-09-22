@@ -1,0 +1,3183 @@
+{
+  "questions": [
+    {
+      "d": 1,
+      "e": "hard",
+      "s": "Zero Trust architecture is built on which foundational assumption?",
+      "o": [
+        "Never trust, always verify — no implicit trust based on network location",
+        "Trust all internal traffic after VPN authentication",
+        "Perimeter firewalls are sufficient",
+        "MAC filtering provides adequate access control"
+      ],
+      "c": 0,
+      "x": "Zero Trust part du principe qu'aucune confiance implicite n'est accordée en fonction de l'emplacement réseau.",
+      "r": "Beaucoup croient encore qu'un VPN d'entreprise = Zero Trust."
+    },
+    {
+      "d": 1,
+      "e": "hard",
+      "s": "Which principle requires that critical tasks cannot be completed by a single individual?",
+      "o": [
+        "Separation of duties",
+        "Least privilege",
+        "Need to know",
+        "Defense in depth"
+      ],
+      "c": 0,
+      "x": "La séparation des tâches empêche qu'une seule personne contrôle un processus critique de bout en bout.",
+      "r": "Souvent confondu avec le moindre privilège."
+    },
+    {
+      "d": 1,
+      "e": "really-hard",
+      "s": "An organization implements both preventive and detective controls for the same risk. This best illustrates:",
+      "o": [
+        "Defense in depth",
+        "A compensating control",
+        "Risk avoidance",
+        "Single point of failure mitigation"
+      ],
+      "c": 0,
+      "x": "La défense en profondeur superpose plusieurs types de contrôles (préventifs + détectifs) sur la même menace.",
+      "r": "Un contrôle compensatoire remplace un contrôle manquant — il ne le superpose pas forcément."
+    },
+    {
+      "d": 1,
+      "e": "medium",
+      "s": "Hashing primarily provides which security property?",
+      "o": [
+        "Integrity",
+        "Confidentiality",
+        "Availability",
+        "Non-repudiation"
+      ],
+      "c": 0,
+      "x": "Les fonctions de hachage permettent de vérifier que les données n'ont pas été altérées.",
+      "r": "Le hachage n'est PAS du chiffrement et ne fournit pas la confidentialité."
+    },
+    {
+      "d": 1,
+      "e": "hard",
+      "s": "Which authentication factor is correctly described as 'something you are'?",
+      "o": [
+        "Fingerprint or facial recognition",
+        "Smart card",
+        "TOTP application",
+        "Password"
+      ],
+      "c": 0,
+      "x": "Les facteurs biométriques correspondent à 'quelque chose que vous êtes'.",
+      "r": "Smart card et TOTP sont 'quelque chose que vous avez'."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker exploits the time window between permission check and actual file use. What vulnerability is this?",
+      "o": [
+        "TOCTOU (Time-Of-Check to Time-Of-Use)",
+        "Buffer overflow",
+        "Use-after-free",
+        "Integer overflow"
+      ],
+      "c": 0,
+      "x": "TOCTOU est une race condition classique entre la vérification et l'utilisation d'une ressource.",
+      "r": "Beaucoup répondent buffer overflow par réflexe."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack re-sends a previously captured legitimate authentication message?",
+      "o": [
+        "Replay attack",
+        "Pass-the-hash",
+        "Kerberoasting",
+        "Credential stuffing"
+      ],
+      "c": 0,
+      "x": "L'attaque par rejeu rejoue un message d'authentification capturé précédemment.",
+      "r": "Pass-the-hash utilise le hash, pas le message original."
+    },
+    {
+      "d": 2,
+      "e": "really-hard",
+      "s": "A red team requests a TGS ticket for a high-privilege service account and cracks it offline. This technique is called:",
+      "o": [
+        "Kerberoasting",
+        "AS-REP roasting",
+        "Silver ticket",
+        "Golden ticket"
+      ],
+      "c": 0,
+      "x": "Kerberoasting demande un TGS chiffré avec le hash du compte de service puis le cracke hors ligne.",
+      "r": "AS-REP roasting cible les comptes sans pré-authentification Kerberos."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "What is the MOST effective combination against credential stuffing?",
+      "o": [
+        "MFA + rate limiting + breach password detection",
+        "Longer minimum password length only",
+        "Account lockout after 3 failures",
+        "CAPTCHA on every login page"
+      ],
+      "c": 0,
+      "x": "Le credential stuffing utilise des listes déjà compromises. MFA + détection de breaches + rate limiting sont les plus efficaces.",
+      "r": "Un simple lockout est facilement contourné par des attaques distribuées."
+    },
+    {
+      "d": 2,
+      "e": "really-hard",
+      "s": "An attacker forces an authenticated user's browser to perform an unwanted action on a trusted site. Primary defenses are:",
+      "o": [
+        "Anti-CSRF tokens + SameSite cookies",
+        "Content-Security-Policy only",
+        "X-Frame-Options",
+        "Input sanitization"
+      ],
+      "c": 0,
+      "x": "CSRF est mitigué principalement par les tokens anti-CSRF et les attributs SameSite.",
+      "r": "Beaucoup confondent avec XSS."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits nonce reuse in the WPA2 4-way handshake?",
+      "o": [
+        "KRACK",
+        "Heartbleed",
+        "POODLE",
+        "BEAST"
+      ],
+      "c": 0,
+      "x": "KRACK (Key Reinstallation Attack) force la réutilisation de nonces dans le handshake WPA2.",
+      "r": "Heartbleed est une faille de lecture mémoire OpenSSL."
+    },
+    {
+      "d": 2,
+      "e": "medium",
+      "s": "A threat actor leaves infected USB drives in a parking lot. This social engineering technique is known as:",
+      "o": [
+        "Baiting",
+        "Tailgating",
+        "Shoulder surfing",
+        "Pretexting"
+      ],
+      "c": 0,
+      "x": "Le baiting attire la victime avec un appât physique (USB, cadeau).",
+      "r": "Le tailgating consiste à suivre quelqu'un pour entrer dans une zone sécurisée."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which vulnerability allows an attacker to execute arbitrary commands by manipulating user input that is passed to a system shell?",
+      "o": [
+        "Command injection",
+        "SQL injection",
+        "XSS",
+        "XXE"
+      ],
+      "c": 0,
+      "x": "L'injection de commandes se produit lorsque l'entrée utilisateur est passée non filtrée à un interpréteur de commandes.",
+      "r": "SQLi cible la base de données, pas le shell système."
+    },
+    {
+      "d": 3,
+      "e": "hard",
+      "s": "In the shared responsibility model, which cloud service places the GREATEST security burden on the customer?",
+      "o": [
+        "IaaS",
+        "PaaS",
+        "SaaS",
+        "FaaS"
+      ],
+      "c": 0,
+      "x": "En IaaS le client gère l'OS, le middleware, les applications et les données.",
+      "r": "Beaucoup pensent à tort que SaaS donne plus de responsabilité au client."
+    },
+    {
+      "d": 3,
+      "e": "hard",
+      "s": "Which technology best enables true micro-segmentation inside a data center?",
+      "o": [
+        "Software-defined networking (SDN) with micro-segmentation",
+        "Traditional VLANs only",
+        "Physical air gaps",
+        "Port security with MAC filtering"
+      ],
+      "c": 0,
+      "x": "La micro-segmentation moderne repose sur SDN ou des overlays zero-trust.",
+      "r": "Les VLANs classiques ne suffisent plus pour une segmentation fine."
+    },
+    {
+      "d": 3,
+      "e": "really-hard",
+      "s": "Which architecture enforces access decisions based on identity, device posture and context instead of network location?",
+      "o": [
+        "Zero Trust Network Access (ZTNA) / SASE",
+        "Traditional remote-access VPN",
+        "DMZ reverse proxy",
+        "802.1X port-based NAC only"
+      ],
+      "c": 0,
+      "x": "ZTNA et SASE appliquent des politiques basées sur l'identité et le contexte.",
+      "r": "Le VPN classique donne un accès trop large une fois la connexion établie."
+    },
+    {
+      "d": 3,
+      "e": "hard",
+      "s": "Kerberos relies on which component to issue tickets?",
+      "o": [
+        "Key Distribution Center (KDC)",
+        "RADIUS server",
+        "LDAP directory only",
+        "OAuth authorization server"
+      ],
+      "c": 0,
+      "x": "Le KDC (AS + TGS) est le cœur de Kerberos et émet les tickets.",
+      "r": "RADIUS est un protocole AAA mais n'émet pas de tickets Kerberos."
+    },
+    {
+      "d": 3,
+      "e": "medium",
+      "s": "Which wireless security protocol is currently considered the strongest in widespread use?",
+      "o": [
+        "WPA3",
+        "WPA2-Enterprise",
+        "WPA",
+        "WEP"
+      ],
+      "c": 0,
+      "x": "WPA3 utilise SAE et offre une bien meilleure résistance aux attaques par dictionnaire hors ligne.",
+      "r": "WEP est totalement obsolète."
+    },
+    {
+      "d": 4,
+      "e": "hard",
+      "s": "During an incident, what should be done FIRST to preserve evidence on a live system?",
+      "o": [
+        "Create a bit-for-bit forensic image before any remediation",
+        "Immediately disconnect the network cable",
+        "Run a full antivirus scan",
+        "Reboot into safe mode"
+      ],
+      "c": 0,
+      "x": "L'image forensique doit être réalisée avant toute action qui modifie l'état du système.",
+      "r": "Débrancher trop vite fait perdre la preuve volatile en mémoire."
+    },
+    {
+      "d": 4,
+      "e": "hard",
+      "s": "Which SIEM feature is most useful for detecting multi-stage attacks over time?",
+      "o": [
+        "Correlation rules and behavioral analytics",
+        "Simple threshold-based alerts",
+        "Log retention only",
+        "Raw packet capture storage"
+      ],
+      "c": 0,
+      "x": "La corrélation et l'analyse comportementale permettent de lier des événements dispersés dans le temps.",
+      "r": "Un simple seuil ne détecte pas une chaîne d'attaque complexe."
+    },
+    {
+      "d": 4,
+      "e": "really-hard",
+      "s": "A SOC sees many failed Kerberos pre-authentication events followed by successful logons from unusual geolocations. Most likely attack?",
+      "o": [
+        "Password spraying / credential stuffing",
+        "Golden ticket",
+        "DCSync",
+        "Pass-the-hash exclusively"
+      ],
+      "c": 0,
+      "x": "Les nombreux échecs de pré-authentification suivis de succès indiquent typiquement du password spraying.",
+      "r": "Golden ticket n'entraîne pas de nombreux échecs de pré-auth."
+    },
+    {
+      "d": 4,
+      "e": "hard",
+      "s": "What is the most effective detection method for Living-off-the-Land (LotL) lateral movement?",
+      "o": [
+        "UEBA + detailed process command-line logging",
+        "Signature-based antivirus only",
+        "Blocking all PowerShell execution",
+        "Disabling RDP entirely"
+      ],
+      "c": 0,
+      "x": "Les outils légitimes sont difficiles à bloquer. L'UEBA et le logging des lignes de commande sont essentiels.",
+      "r": "Bloquer PowerShell casse trop d'opérations légitimes."
+    },
+    {
+      "d": 4,
+      "e": "hard",
+      "s": "Which order is correct for the incident response lifecycle?",
+      "o": [
+        "Preparation → Detection & Analysis → Containment, Eradication & Recovery → Post-incident Activity",
+        "Detection → Containment → Preparation → Recovery",
+        "Eradication → Detection → Recovery → Lessons learned",
+        "Preparation → Recovery → Detection → Containment"
+      ],
+      "c": 0,
+      "x": "Le cycle standard NIST est Préparation → Détection/Analyse → Contenance/Éradication/Récupération → Activité post-incident.",
+      "r": "Beaucoup inversent les phases."
+    },
+    {
+      "d": 4,
+      "e": "medium",
+      "s": "Which tool is primarily used for network protocol analysis and packet inspection?",
+      "o": [
+        "Wireshark",
+        "Nmap",
+        "Metasploit",
+        "Nessus"
+      ],
+      "c": 0,
+      "x": "Wireshark est l'outil de référence pour l'analyse de paquets et de protocoles.",
+      "r": "Nmap est un scanner de ports, pas un analyseur de paquets détaillé."
+    },
+    {
+      "d": 4,
+      "e": "hard",
+      "s": "A security team wants to automatically enrich alerts with threat intelligence and execute response playbooks. Which technology fits best?",
+      "o": [
+        "SOAR",
+        "SIEM only",
+        "EDR only",
+        "UEBA only"
+      ],
+      "c": 0,
+      "x": "SOAR (Security Orchestration, Automation and Response) orchestre les playbooks et enrichit les alertes.",
+      "r": "Le SIEM détecte et corrèle, mais n'automatise pas forcément la réponse."
+    },
+    {
+      "d": 5,
+      "e": "hard",
+      "s": "Which document formally defines the level of residual risk an organization is willing to accept?",
+      "o": [
+        "Risk appetite statement",
+        "Risk register",
+        "Business impact analysis",
+        "Disaster recovery plan"
+      ],
+      "c": 0,
+      "x": "Le risk appetite définit le niveau de risque résiduel acceptable par la direction.",
+      "r": "Le risk register liste les risques, il ne définit pas l'appétit."
+    },
+    {
+      "d": 5,
+      "e": "really-hard",
+      "s": "A third-party processor suffers a breach involving personal data. Which agreement is most critical for determining notification duties and liability?",
+      "o": [
+        "Data Processing Agreement (DPA) or Business Associate Agreement",
+        "Non-disclosure agreement (NDA)",
+        "Service level agreement (SLA)",
+        "Memorandum of understanding (MOU)"
+      ],
+      "c": 0,
+      "x": "Le DPA (ou BAA) définit les obligations de protection des données, de notification et de responsabilité.",
+      "r": "L'NDA protège la confidentialité commerciale, pas les obligations RGPD/HIPAA."
+    },
+    {
+      "d": 5,
+      "e": "hard",
+      "s": "Which risk treatment strategy involves purchasing cyber insurance?",
+      "o": [
+        "Risk transference",
+        "Risk avoidance",
+        "Risk mitigation",
+        "Risk acceptance"
+      ],
+      "c": 0,
+      "x": "Le transfert de risque consiste à faire porter le risque (financier) par un tiers, typiquement via une assurance.",
+      "r": "La mitigation réduit le risque, elle ne le transfère pas."
+    },
+    {
+      "d": 5,
+      "e": "medium",
+      "s": "Which framework is most commonly used for cybersecurity risk management in the United States?",
+      "o": [
+        "NIST Cybersecurity Framework / NIST RMF",
+        "ISO 27001 only",
+        "COBIT only",
+        "ITIL"
+      ],
+      "c": 0,
+      "x": "Le NIST CSF et le Risk Management Framework sont les références les plus utilisées aux États-Unis.",
+      "r": "ISO 27001 est international et très important, mais NIST domine dans le contexte US/gouvernemental."
+    },
+    {
+      "d": 5,
+      "e": "hard",
+      "s": "What is the primary purpose of a Business Impact Analysis (BIA)?",
+      "o": [
+        "Identify critical business functions and the impact of their disruption",
+        "List all technical vulnerabilities",
+        "Define the risk appetite",
+        "Create the incident response plan"
+      ],
+      "c": 0,
+      "x": "La BIA identifie les fonctions critiques et quantifie l'impact d'une interruption (RTO, RPO, etc.).",
+      "r": "Ce n'est pas un scan de vulnérabilités."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker requests a service ticket for a high-privilege account and then cracks it offline. What technique is being used?",
+      "o": [
+        "Kerberoasting",
+        "AS-REP roasting",
+        "Pass-the-ticket",
+        "Golden ticket"
+      ],
+      "c": 0,
+      "x": "Kerberoasting consiste à demander un TGS pour un compte de service puis à cracker le ticket hors ligne car il est chiffré avec le hash NTLM du compte.",
+      "r": "AS-REP roasting cible les comptes sans pré-authentification Kerberos."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits accounts that have the 'Do not require Kerberos preauthentication' flag set?",
+      "o": [
+        "AS-REP roasting",
+        "Kerberoasting",
+        "Silver ticket",
+        "DCSync"
+      ],
+      "c": 0,
+      "x": "AS-REP roasting cible les comptes configurés sans pré-authentification Kerberos et permet d'obtenir un AS-REP crackable hors ligne.",
+      "r": "Kerberoasting nécessite un TGS, pas un AS-REP."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker captures an NTLM hash and uses it to authenticate without knowing the cleartext password. This is known as:",
+      "o": [
+        "Pass-the-hash",
+        "Pass-the-ticket",
+        "Credential stuffing",
+        "Password spraying"
+      ],
+      "c": 0,
+      "x": "Pass-the-hash réutilise directement le hash NTLM pour s'authentifier sans avoir besoin du mot de passe en clair.",
+      "r": "Pass-the-ticket utilise des tickets Kerberos, pas des hashes NTLM."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "A forged Kerberos TGT created with the KRBTGT hash is called a:",
+      "o": [
+        "Golden ticket",
+        "Silver ticket",
+        "Diamond ticket",
+        "Sapphire ticket"
+      ],
+      "c": 0,
+      "x": "Un Golden Ticket est un TGT forgé à l'aide du hash du compte KRBTGT, donnant un accès quasi illimité au domaine.",
+      "r": "Un Silver Ticket est un TGS forgé pour un service spécifique."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack forges a service ticket (TGS) without needing the KRBTGT hash?",
+      "o": [
+        "Silver ticket",
+        "Golden ticket",
+        "Kerberoasting",
+        "AS-REP roasting"
+      ],
+      "c": 0,
+      "x": "Un Silver Ticket est un TGS forgé en utilisant le hash du compte de service cible, sans toucher au KRBTGT.",
+      "r": "Le Golden Ticket nécessite le hash KRBTGT."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker forces a victim’s browser to send authenticated requests to a trusted application. What is the primary defense?",
+      "o": [
+        "Anti-CSRF tokens combined with SameSite cookies",
+        "Content-Security-Policy alone",
+        "X-Frame-Options",
+        "Input sanitization"
+      ],
+      "c": 0,
+      "x": "CSRF est principalement mitigué par des tokens anti-CSRF et l'attribut SameSite sur les cookies.",
+      "r": "CSP protège surtout contre XSS, pas contre CSRF."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which vulnerability occurs when a program checks a condition and then uses a resource that can change between the check and the use?",
+      "o": [
+        "TOCTOU",
+        "Buffer overflow",
+        "Integer overflow",
+        "Use-after-free"
+      ],
+      "c": 0,
+      "x": "TOCTOU (Time-Of-Check to Time-Of-Use) est une race condition entre la vérification et l'utilisation d'une ressource.",
+      "r": "Use-after-free concerne la réutilisation d'une zone mémoire déjà libérée."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker injects a malicious XML entity that causes the server to read local files. This is an example of:",
+      "o": [
+        "XXE (XML External Entity)",
+        "SSRF",
+        "SSTI",
+        "Deserialization attack"
+      ],
+      "c": 0,
+      "x": "XXE permet à un attaquant de faire résoudre des entités externes par le parseur XML, souvent pour lire des fichiers locaux.",
+      "r": "SSRF force le serveur à faire des requêtes vers d'autres systèmes."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack tricks a server into making requests to internal or restricted resources on behalf of the attacker?",
+      "o": [
+        "SSRF (Server-Side Request Forgery)",
+        "CSRF",
+        "XXE",
+        "Open redirect"
+      ],
+      "c": 0,
+      "x": "SSRF permet à un attaquant de forcer le serveur à émettre des requêtes vers des ressources internes ou protégées.",
+      "r": "CSRF force le navigateur de la victime, pas le serveur."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "A web application evaluates user-controlled input as a template. This most likely leads to:",
+      "o": [
+        "Server-Side Template Injection (SSTI)",
+        "XSS",
+        "SQL injection",
+        "Command injection"
+      ],
+      "c": 0,
+      "x": "SSTI se produit lorsque l'entrée utilisateur est interprétée par un moteur de template côté serveur.",
+      "r": "XSS s'exécute côté client dans le navigateur."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique allows an attacker to execute code by abusing insecure deserialization of objects?",
+      "o": [
+        "Insecure deserialization",
+        "XXE",
+        "SSRF",
+        "Prototype pollution"
+      ],
+      "c": 0,
+      "x": "La désérialisation non sécurisée peut permettre l'exécution de code arbitraire si des objets malveillants sont fournis.",
+      "r": "Prototype pollution concerne principalement JavaScript."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker modifies the prototype of a base object in JavaScript to affect all instances. This is called:",
+      "o": [
+        "Prototype pollution",
+        "Deserialization attack",
+        "DOM clobbering",
+        "XSS"
+      ],
+      "c": 0,
+      "x": "La pollution de prototype consiste à modifier Object.prototype ou des prototypes similaires pour impacter l'application.",
+      "r": "DOM clobbering utilise des éléments HTML pour écraser des variables JavaScript."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits the difference between how a browser and a server interpret a URL or path?",
+      "o": [
+        "Path traversal / directory traversal",
+        "Open redirect",
+        "SSRF",
+        "CRLF injection"
+      ],
+      "c": 0,
+      "x": "Le path traversal utilise des séquences comme ../ pour accéder à des fichiers en dehors du répertoire prévu.",
+      "r": "Open redirect redirige l'utilisateur vers un site externe."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker injects CRLF characters to split HTTP responses or log entries. This is known as:",
+      "o": [
+        "HTTP response splitting / CRLF injection",
+        "XSS",
+        "SQL injection",
+        "Command injection"
+      ],
+      "c": 0,
+      "x": "L'injection CRLF permet de manipuler les en-têtes HTTP ou les logs en insérant des retours à la ligne.",
+      "r": "XSS injecte du JavaScript, pas des caractères de contrôle HTTP."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses a legitimate process to load a malicious DLL from an unexpected location?",
+      "o": [
+        "DLL sideloading / DLL search order hijacking",
+        "Process injection",
+        "Atom bombing",
+        "Process hollowing"
+      ],
+      "c": 0,
+      "x": "Le DLL sideloading profite de l'ordre de recherche des DLL pour charger une bibliothèque malveillante.",
+      "r": "Process hollowing remplace le code d'un processus légitime en mémoire."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker creates a suspended process, unmaps its memory, and replaces it with malicious code. This technique is called:",
+      "o": [
+        "Process hollowing",
+        "DLL injection",
+        "APC injection",
+        "Atom bombing"
+      ],
+      "c": 0,
+      "x": "Process hollowing consiste à vider un processus légitime et à y injecter du code malveillant.",
+      "r": "DLL injection charge une bibliothèque dans un processus existant."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which living-off-the-land binary is frequently abused to download and execute payloads?",
+      "o": [
+        "certutil.exe or bitsadmin.exe",
+        "notepad.exe",
+        "calc.exe",
+        "explorer.exe"
+      ],
+      "c": 0,
+      "x": "certutil et bitsadmin sont des binaires légitimes Windows souvent utilisés pour télécharger des payloads.",
+      "r": "notepad et calc ne servent généralement pas à télécharger des fichiers."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses PowerShell to download a payload directly into memory without touching disk. This is an example of:",
+      "o": [
+        "Fileless malware / living-off-the-land",
+        "Traditional dropper",
+        "Bootkit",
+        "Rootkit"
+      ],
+      "c": 0,
+      "x": "Les malwares fileless s'exécutent principalement en mémoire en utilisant des outils légitimes comme PowerShell.",
+      "r": "Un dropper classique écrit un fichier sur le disque."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack floods a target with traffic from many compromised systems simultaneously?",
+      "o": [
+        "Distributed Denial of Service (DDoS)",
+        "Denial of Service (DoS)",
+        "SYN flood only",
+        "Amplification attack only"
+      ],
+      "c": 0,
+      "x": "Un DDoS utilise un grand nombre de machines (botnet) pour submerger la cible.",
+      "r": "Un DoS classique provient généralement d'une seule source."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An amplification attack that abuses open DNS resolvers is most commonly associated with:",
+      "o": [
+        "DNS amplification DDoS",
+        "NTP amplification",
+        "SSDP amplification",
+        "Memcached amplification"
+      ],
+      "c": 0,
+      "x": "Les résolveurs DNS ouverts sont fréquemment utilisés pour des attaques par amplification DNS.",
+      "r": "NTP, SSDP et Memcached sont d'autres vecteurs d'amplification, mais DNS reste le plus courant."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which wireless attack forces clients to disconnect and then captures the handshake when they reconnect?",
+      "o": [
+        "Deauthentication attack followed by handshake capture",
+        "Evil twin only",
+        "KRACK",
+        "Fragmentation attack"
+      ],
+      "c": 0,
+      "x": "L'attaque par désauthentification force les clients à se reconnecter, permettant la capture du 4-way handshake.",
+      "r": "KRACK exploite la réinstallation de clés, pas la capture initiale du handshake."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker sets up a rogue access point with the same SSID as a legitimate network. This is called:",
+      "o": [
+        "Evil twin",
+        "Karma attack",
+        "Honeypot",
+        "WPS attack"
+      ],
+      "c": 0,
+      "x": "Un evil twin est un point d'accès malveillant qui imite un SSID légitime pour attirer les clients.",
+      "r": "Karma répond automatiquement à toutes les sondes des clients."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits the WPS PIN feature to recover the WPA/WPA2 passphrase?",
+      "o": [
+        "WPS PIN brute-force / Reaver-style attack",
+        "KRACK",
+        "Dragonblood",
+        "PMKID attack"
+      ],
+      "c": 0,
+      "x": "WPS utilise un PIN à 8 chiffres (en réalité 7 + checksum) qui peut être brute-forcé relativement rapidement.",
+      "r": "KRACK et Dragonblood concernent WPA2/WPA3, pas WPS."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker captures a single EAPOL frame containing the PMKID and cracks it offline. This technique is known as:",
+      "o": [
+        "PMKID attack",
+        "KRACK",
+        "Handshake capture only",
+        "Evil twin"
+      ],
+      "c": 0,
+      "x": "L'attaque PMKID permet de récupérer un hash crackable sans avoir besoin du 4-way handshake complet.",
+      "r": "Le handshake classique nécessite les 4 messages EAPOL."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which vulnerability in WPA3 allows an attacker to recover the password through side-channel or timing attacks?",
+      "o": [
+        "Dragonblood",
+        "KRACK",
+        "PMKID",
+        "WPS"
+      ],
+      "c": 0,
+      "x": "Dragonblood désigne une famille de vulnérabilités affectant WPA3-SAE, incluant des attaques par canaux auxiliaires.",
+      "r": "KRACK concerne principalement WPA2."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker intercepts traffic between two parties and can read or modify it in real time. This is a:",
+      "o": [
+        "Man-in-the-middle (MitM) attack",
+        "Replay attack",
+        "Pass-the-hash",
+        "Session hijacking only"
+      ],
+      "c": 0,
+      "x": "Une attaque de l'homme du milieu s'intercale activement entre deux parties communicantes.",
+      "r": "Le replay rejoue des données capturées, sans nécessairement les modifier en temps réel."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack steals a valid session token and reuses it to impersonate the user?",
+      "o": [
+        "Session hijacking",
+        "Session fixation",
+        "CSRF",
+        "XSS"
+      ],
+      "c": 0,
+      "x": "Le détournement de session consiste à voler et réutiliser un identifiant de session valide.",
+      "r": "La fixation de session force la victime à utiliser un identifiant choisi par l'attaquant."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker forces a user to authenticate with a session ID chosen by the attacker. This is called:",
+      "o": [
+        "Session fixation",
+        "Session hijacking",
+        "CSRF",
+        "Open redirect"
+      ],
+      "c": 0,
+      "x": "La fixation de session impose à la victime un identifiant de session connu de l'attaquant.",
+      "r": "Le hijacking vole un identifiant déjà établi."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which type of XSS occurs when user input is stored on the server and later displayed to other users?",
+      "o": [
+        "Stored (persistent) XSS",
+        "Reflected XSS",
+        "DOM-based XSS",
+        "Mutation XSS"
+      ],
+      "c": 0,
+      "x": "Le XSS stocké (persistant) enregistre la charge utile sur le serveur et l'affiche à d'autres utilisateurs.",
+      "r": "Le XSS réfléchi renvoie immédiatement la charge utile dans la réponse."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An XSS payload that never reaches the server and is executed entirely in the browser is known as:",
+      "o": [
+        "DOM-based XSS",
+        "Stored XSS",
+        "Reflected XSS",
+        "Blind XSS"
+      ],
+      "c": 0,
+      "x": "Le XSS basé sur le DOM se produit entièrement côté client via la manipulation du DOM.",
+      "r": "Le XSS stocké et réfléchi transitent par le serveur."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack tricks a user into clicking on a hidden or disguised element?",
+      "o": [
+        "Clickjacking",
+        "UI redressing",
+        "Tabnabbing",
+        "Cursorjacking"
+      ],
+      "c": 0,
+      "x": "Le clickjacking (ou UI redressing) superpose des éléments invisibles pour tromper le clic de l'utilisateur.",
+      "r": "Tabnabbing modifie un onglet inactif pour ressembler à une page de connexion."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker changes the content of an inactive browser tab to look like a login page. This technique is called:",
+      "o": [
+        "Tabnabbing",
+        "Clickjacking",
+        "Tabjacking",
+        "Session hijacking"
+      ],
+      "c": 0,
+      "x": "Le tabnabbing modifie un onglet laissé inactif pour imiter une page de connexion légitime.",
+      "r": "Le clickjacking trompe un clic, pas le contenu d'un onglet."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which malware encrypts files and demands payment for the decryption key?",
+      "o": [
+        "Ransomware",
+        "Trojan",
+        "Worm",
+        "Spyware"
+      ],
+      "c": 0,
+      "x": "Le ransomware chiffre les données de la victime et exige une rançon en échange de la clé.",
+      "r": "Un Trojan ouvre généralement une porte dérobée sans forcément chiffrer les fichiers."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "A malware that spreads automatically to other systems without user interaction is best classified as a:",
+      "o": [
+        "Worm",
+        "Virus",
+        "Trojan",
+        "Rootkit"
+      ],
+      "c": 0,
+      "x": "Un ver (worm) se propage de manière autonome sur le réseau sans avoir besoin d'un fichier hôte.",
+      "r": "Un virus a besoin d'un fichier hôte pour se propager."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which type of malware hides its presence by modifying the operating system or using stealth techniques?",
+      "o": [
+        "Rootkit",
+        "Spyware",
+        "Adware",
+        "Ransomware"
+      ],
+      "c": 0,
+      "x": "Un rootkit est conçu pour dissimuler sa présence et celle d'autres malwares.",
+      "r": "Le spyware collecte des informations, mais ne se cache pas forcément au niveau du noyau."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "A malware that records keystrokes and sends them to an attacker is called a:",
+      "o": [
+        "Keylogger",
+        "Rootkit",
+        "Bootkit",
+        "Scareware"
+      ],
+      "c": 0,
+      "x": "Un keylogger capture les frappes clavier pour voler identifiants et données sensibles.",
+      "r": "Un bootkit infecte le processus de démarrage."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which social engineering technique involves creating a fake scenario to obtain information?",
+      "o": [
+        "Pretexting",
+        "Baiting",
+        "Quid pro quo",
+        "Tailgating"
+      ],
+      "c": 0,
+      "x": "Le pretexting consiste à inventer un scénario crédible pour manipuler la victime.",
+      "r": "Le baiting utilise un appât physique ou numérique."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker offers a service or benefit in exchange for information or access. This is known as:",
+      "o": [
+        "Quid pro quo",
+        "Pretexting",
+        "Baiting",
+        "Shoulder surfing"
+      ],
+      "c": 0,
+      "x": "Le quid pro quo propose quelque chose en échange (ex. : support technique gratuit contre un mot de passe).",
+      "r": "Le pretexting invente une histoire, sans forcément offrir de contrepartie."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves following an authorized person through a secure door?",
+      "o": [
+        "Tailgating / piggybacking",
+        "Shoulder surfing",
+        "Dumpster diving",
+        "Impersonation"
+      ],
+      "c": 0,
+      "x": "Le tailgating (ou piggybacking) consiste à suivre quelqu'un pour entrer dans une zone contrôlée.",
+      "r": "Le shoulder surfing consiste à regarder par-dessus l'épaule."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker searches through discarded documents to find sensitive information. This is called:",
+      "o": [
+        "Dumpster diving",
+        "Shoulder surfing",
+        "Tailgating",
+        "Pretexting"
+      ],
+      "c": 0,
+      "x": "Le dumpster diving consiste à fouiller les poubelles à la recherche d'informations sensibles.",
+      "r": "Le shoulder surfing est une observation visuelle directe."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which password attack uses a list of common words and variations?",
+      "o": [
+        "Dictionary attack",
+        "Brute-force attack",
+        "Rainbow table attack",
+        "Credential stuffing"
+      ],
+      "c": 0,
+      "x": "L'attaque par dictionnaire utilise une liste de mots et de variantes courantes.",
+      "r": "La force brute teste toutes les combinaisons possibles."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses precomputed hash tables to crack passwords faster. This relies on:",
+      "o": [
+        "Rainbow tables",
+        "Dictionary lists only",
+        "Brute-force only",
+        "Salted hashes"
+      ],
+      "c": 0,
+      "x": "Les tables arc-en-ciel (rainbow tables) contiennent des hashs précalculés pour accélérer le cracking.",
+      "r": "Les sels rendent les rainbow tables inefficaces."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack tries the same password across many different accounts?",
+      "o": [
+        "Password spraying",
+        "Credential stuffing",
+        "Brute-force",
+        "Dictionary attack"
+      ],
+      "c": 0,
+      "x": "Le password spraying teste un petit nombre de mots de passe sur de nombreux comptes pour éviter les lockouts.",
+      "r": "Le credential stuffing réutilise des paires identifiant/mot de passe déjà compromises."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker reuses username/password pairs leaked from other breaches. This is called:",
+      "o": [
+        "Credential stuffing",
+        "Password spraying",
+        "Brute-force",
+        "Pass-the-hash"
+      ],
+      "c": 0,
+      "x": "Le credential stuffing teste des identifiants volés sur d'autres services.",
+      "r": "Le password spraying utilise des mots de passe communs, pas des paires volées."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which cryptographic attack exploits the reuse of initialization vectors or nonces?",
+      "o": [
+        "IV/nonce reuse attack",
+        "Birthday attack",
+        "Padding oracle",
+        "Timing attack"
+      ],
+      "c": 0,
+      "x": "La réutilisation d'IV ou de nonces peut permettre de récupérer des informations sur le clair ou la clé.",
+      "r": "L'attaque d'anniversaire concerne les collisions de hashs."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker exploits differences in processing time to recover cryptographic keys or secrets. This is a:",
+      "o": [
+        "Timing attack",
+        "Power analysis",
+        "Padding oracle",
+        "Side-channel attack (general)"
+      ],
+      "c": 0,
+      "x": "Les attaques temporelles (timing attacks) mesurent les variations de temps d'exécution.",
+      "r": "L'analyse de puissance mesure la consommation électrique."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses a chosen ciphertext to decrypt data without knowing the key, often via error messages?",
+      "o": [
+        "Padding oracle attack",
+        "Timing attack",
+        "Birthday attack",
+        "Known-plaintext attack"
+      ],
+      "c": 0,
+      "x": "Une padding oracle exploite les messages d'erreur liés au padding pour déchiffrer des données.",
+      "r": "L'attaque à texte clair connu utilise des paires clair/chiffré connues."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker finds two different inputs that produce the same hash value. This is a:",
+      "o": [
+        "Collision attack / birthday attack",
+        "Preimage attack",
+        "Second preimage attack",
+        "Length extension attack"
+      ],
+      "c": 0,
+      "x": "Une collision se produit lorsque deux entrées différentes donnent le même hash (facilitée par le paradoxe de l'anniversaire).",
+      "r": "Une préimage cherche une entrée qui correspond à un hash donné."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack appends data to a hashed message without knowing the original secret?",
+      "o": [
+        "Length extension attack",
+        "Collision attack",
+        "Birthday attack",
+        "Rainbow table"
+      ],
+      "c": 0,
+      "x": "L'attaque par extension de longueur exploite certaines fonctions de hachage (Merkle-Damgård) pour ajouter des données.",
+      "r": "Les fonctions comme SHA-3 ou HMAC résistent mieux à cette attaque."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker exploits a vulnerability that is unknown to the vendor and has no patch available. This is a:",
+      "o": [
+        "Zero-day vulnerability",
+        "N-day vulnerability",
+        "Known exploited vulnerability",
+        "Misconfiguration"
+      ],
+      "c": 0,
+      "x": "Une vulnérabilité zero-day est inconnue du public et du vendeur, donc sans correctif disponible.",
+      "r": "Une N-day est une vulnérabilité déjà connue et parfois déjà patchée."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which supply-chain attack involves compromising a software update mechanism?",
+      "o": [
+        "Software supply-chain attack (e.g., poisoned update)",
+        "Hardware implant",
+        "Typosquatting",
+        "Dependency confusion"
+      ],
+      "c": 0,
+      "x": "Les attaques de la chaîne d'approvisionnement logicielle ciblent souvent les mécanismes de mise à jour ou les dépôts.",
+      "r": "Le typosquatting enregistre des noms de domaines ou de paquets proches."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker publishes a malicious package with a name similar to a popular library. This is known as:",
+      "o": [
+        "Typosquatting or dependency confusion",
+        "Supply-chain compromise of the original library",
+        "Watering hole",
+        "Spear phishing"
+      ],
+      "c": 0,
+      "x": "Le typosquatting et la confusion de dépendances exploitent des noms de paquets proches ou internes.",
+      "r": "Un watering hole compromet un site fréquenté par la cible."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack compromises a website frequently visited by the target group?",
+      "o": [
+        "Watering hole attack",
+        "Spear phishing",
+        "Whaling",
+        "Baiting"
+      ],
+      "c": 0,
+      "x": "Le watering hole consiste à infecter un site web légitime fréquenté par la cible.",
+      "r": "Le spear phishing envoie des emails ciblés."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "A highly targeted phishing attack aimed at senior executives is called:",
+      "o": [
+        "Whaling",
+        "Spear phishing",
+        "Vishing",
+        "Smishing"
+      ],
+      "c": 0,
+      "x": "Le whaling est une forme de spear phishing visant spécifiquement les dirigeants (les 'baleines').",
+      "r": "Le spear phishing est ciblé mais pas forcément limité aux cadres dirigeants."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses voice calls to socially engineer victims?",
+      "o": [
+        "Vishing",
+        "Smishing",
+        "Phishing",
+        "Whaling"
+      ],
+      "c": 0,
+      "x": "Le vishing (voice phishing) utilise le téléphone pour manipuler les victimes.",
+      "r": "Le smishing utilise les SMS."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker sends malicious SMS messages to trick users. This is known as:",
+      "o": [
+        "Smishing",
+        "Vishing",
+        "Phishing",
+        "Spear phishing"
+      ],
+      "c": 0,
+      "x": "Le smishing est du phishing par SMS.",
+      "r": "Le vishing passe par la voix."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker remaining undetected in a network for an extended period?",
+      "o": [
+        "Advanced Persistent Threat (APT) behavior",
+        "Hit-and-run attack",
+        "Opportunistic malware",
+        "Script kiddie activity"
+      ],
+      "c": 0,
+      "x": "Les APT se caractérisent par une présence longue, discrète et ciblée dans le réseau de la victime.",
+      "r": "Les attaques opportunistes sont généralement plus brèves et moins ciblées."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses legitimate administrative tools already present on the system to avoid detection. This is called:",
+      "o": [
+        "Living-off-the-land (LotL)",
+        "Fileless malware exclusively",
+        "Rootkit",
+        "Bootkit"
+      ],
+      "c": 0,
+      "x": "Living-off-the-land consiste à utiliser des outils légitimes (PowerShell, WMI, etc.) déjà présents sur le système.",
+      "r": "Un rootkit dissimule la présence d'un malware, mais n'est pas forcément LotL."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which Windows binary is commonly abused to execute PowerShell commands in a stealthy way?",
+      "o": [
+        "mshta.exe, rundll32.exe or regsvr32.exe",
+        "notepad.exe",
+        "calc.exe",
+        "write.exe"
+      ],
+      "c": 0,
+      "x": "mshta, rundll32 et regsvr32 sont fréquemment utilisés pour exécuter du code de manière détournée.",
+      "r": "notepad et calc ne sont pas des proxy d'exécution courants."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker injects code into a running process by queuing an Asynchronous Procedure Call. This is:",
+      "o": [
+        "APC injection",
+        "Process hollowing",
+        "DLL sideloading",
+        "Atom bombing"
+      ],
+      "c": 0,
+      "x": "L'injection APC (Asynchronous Procedure Call) permet d'exécuter du code dans le contexte d'un autre thread.",
+      "r": "Process hollowing remplace entièrement l'image d'un processus."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique stores malicious code in Windows atom tables and then executes it?",
+      "o": [
+        "Atom bombing",
+        "Process hollowing",
+        "DLL injection",
+        "APC injection"
+      ],
+      "c": 0,
+      "x": "Atom bombing utilise les tables d'atomes Windows pour y placer du code malveillant.",
+      "r": "DLL injection charge une bibliothèque dans l'espace d'adressage d'un processus."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker replaces the legitimate binary of a service with a malicious one. This is an example of:",
+      "o": [
+        "Trojanized / backdoored binary",
+        "Rootkit",
+        "Bootkit",
+        "Fileless malware"
+      ],
+      "c": 0,
+      "x": "Remplacer un binaire légitime par une version trojanisée permet de maintenir un accès persistant.",
+      "r": "Un bootkit infecte le bootloader ou le secteur de démarrage."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack targets the boot process to load malware before the operating system?",
+      "o": [
+        "Bootkit",
+        "Rootkit",
+        "Firmware implant",
+        "BIOS rootkit"
+      ],
+      "c": 0,
+      "x": "Un bootkit infecte le processus de démarrage (MBR, bootloader, etc.) pour s'exécuter très tôt.",
+      "r": "Un rootkit classique opère une fois le système démarré."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker compromises the firmware of a device (UEFI/BIOS). This is considered a:",
+      "o": [
+        "Firmware-level implant / UEFI rootkit",
+        "Bootkit only",
+        "Kernel rootkit",
+        "Userland rootkit"
+      ],
+      "c": 0,
+      "x": "Les implants au niveau firmware (UEFI/BIOS) sont extrêmement persistants et difficiles à détecter.",
+      "r": "Un bootkit cible plutôt le chargeur d'amorçage que le firmware lui-même."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which vulnerability allows an attacker to read memory from a process by exploiting a buffer over-read?",
+      "o": [
+        "Heartbleed-style buffer over-read",
+        "Buffer overflow (write)",
+        "Integer overflow",
+        "Format string"
+      ],
+      "c": 0,
+      "x": "Heartbleed était une lecture hors limites (over-read) dans OpenSSL permettant de fuiter de la mémoire.",
+      "r": "Un buffer overflow classique permet généralement d'écrire au-delà de la zone allouée."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a format string vulnerability to read or write arbitrary memory. This is possible because of:",
+      "o": [
+        "Improper use of functions like printf with user-controlled format strings",
+        "Buffer overflow only",
+        "Integer overflow",
+        "Use-after-free"
+      ],
+      "c": 0,
+      "x": "Les format strings non contrôlées permettent de lire ou d'écrire en mémoire via des spécificateurs comme %x ou %n.",
+      "r": "Ce n'est pas un simple débordement de tampon."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits integer overflows to bypass security checks or cause unexpected behavior?",
+      "o": [
+        "Integer overflow / underflow",
+        "Buffer overflow",
+        "TOCTOU",
+        "Race condition"
+      ],
+      "c": 0,
+      "x": "Un débordement d'entier peut faire passer une valeur négative pour une grande valeur positive, contournant des contrôles.",
+      "r": "TOCTOU est une race condition temporelle."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker triggers a use-after-free vulnerability. What does this typically allow?",
+      "o": [
+        "Code execution or information disclosure by reusing freed memory",
+        "Denial of service only",
+        "Privilege escalation only through kernel",
+        "Nothing exploitable"
+      ],
+      "c": 0,
+      "x": "Use-after-free permet de réutiliser une zone mémoire déjà libérée, souvent pour exécuter du code.",
+      "r": "Ce n'est pas limité au simple déni de service."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which mitigation makes buffer overflow exploitation significantly harder by randomizing memory addresses?",
+      "o": [
+        "ASLR (Address Space Layout Randomization)",
+        "DEP/NX only",
+        "Stack canaries only",
+        "Control Flow Guard only"
+      ],
+      "c": 0,
+      "x": "ASLR randomise les adresses mémoire, rendant les exploits basés sur des adresses fixes beaucoup plus difficiles.",
+      "r": "DEP/NX empêche l'exécution de données, mais ne randomise pas les adresses."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "What does a stack canary (stack cookie) primarily protect against?",
+      "o": [
+        "Stack-based buffer overflows that overwrite the return address",
+        "Heap overflows",
+        "Integer overflows",
+        "Format string attacks"
+      ],
+      "c": 0,
+      "x": "Le canari de pile détecte les écrasements de la pile avant le retour de fonction.",
+      "r": "Il ne protège pas directement contre les débordements de tas."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which Windows mitigation prevents the execution of code from data pages?",
+      "o": [
+        "DEP / NX bit",
+        "ASLR",
+        "CFG (Control Flow Guard)",
+        "Stack canaries"
+      ],
+      "c": 0,
+      "x": "DEP (Data Execution Prevention) marque les pages de données comme non exécutables.",
+      "r": "ASLR randomise les adresses, CFG protège le flot de contrôle."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Control Flow Guard (CFG) is designed to mitigate which type of attacks?",
+      "o": [
+        "Control-flow hijacking (e.g., ROP, return-oriented programming)",
+        "Buffer over-reads",
+        "Timing attacks",
+        "Side-channel attacks"
+      ],
+      "c": 0,
+      "x": "CFG vérifie que les cibles d'appels indirects sont légitimes, rendant le ROP plus difficile.",
+      "r": "Il ne protège pas contre les lectures hors limites."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses return-oriented programming (ROP) to bypass DEP. What does ROP rely on?",
+      "o": [
+        "Existing executable code gadgets already present in memory",
+        "Injecting new executable shellcode",
+        "Disabling ASLR only",
+        "Exploiting a kernel vulnerability"
+      ],
+      "c": 0,
+      "x": "ROP enchaîne de petits gadgets de code déjà exécutables pour contourner DEP/NX.",
+      "r": "Il n'injecte pas de nouveau code exécutable."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack technique reuses legitimate code sequences ending in a return instruction?",
+      "o": [
+        "Return-oriented programming (ROP)",
+        "Jump-oriented programming (JOP)",
+        "Call-oriented programming",
+        "Heap spraying"
+      ],
+      "c": 0,
+      "x": "ROP utilise des gadgets se terminant par RET pour construire une chaîne d'exécution.",
+      "r": "JOP utilise des sauts plutôt que des retours."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Heap spraying is primarily used to:",
+      "o": [
+        "Increase the chance of landing on attacker-controlled code/data in memory",
+        "Bypass ASLR completely",
+        "Disable DEP",
+        "Create a buffer overflow"
+      ],
+      "c": 0,
+      "x": "Le heap spraying remplit le tas avec des structures contrôlées par l'attaquant pour faciliter l'exploitation.",
+      "r": "Il ne désactive pas DEP ni ASLR."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits a vulnerability in a parser by providing malformed data that causes unexpected behavior?",
+      "o": [
+        "Fuzzing-discovered parser vulnerability exploitation",
+        "SQL injection",
+        "XSS",
+        "CSRF"
+      ],
+      "c": 0,
+      "x": "Les parseurs (fichiers, protocoles, images, etc.) sont des cibles fréquentes de fuzzing et d'exploitation.",
+      "r": "SQLi et XSS sont des injections, pas des bugs de parsing pure."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker sends malformed packets to crash a network service. This is most accurately described as:",
+      "o": [
+        "A denial-of-service exploit targeting a vulnerability",
+        "A brute-force attack",
+        "A man-in-the-middle attack",
+        "A replay attack"
+      ],
+      "c": 0,
+      "x": "Faire planter un service via des paquets malformés est une forme d'exploitation menant à un déni de service.",
+      "r": "Ce n'est pas une attaque par force brute."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker positioning themselves between a user and a legitimate website to intercept credentials?",
+      "o": [
+        "Man-in-the-middle / evil proxy / SSL stripping",
+        "Session fixation",
+        "Clickjacking",
+        "Tabnabbing"
+      ],
+      "c": 0,
+      "x": "Un proxy malveillant ou une attaque MitM permet d'intercepter les communications, parfois via SSL stripping.",
+      "r": "La fixation de session impose un ID de session."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "SSL stripping attacks are most effective when:",
+      "o": [
+        "The user initially connects over HTTP and the attacker prevents the upgrade to HTTPS",
+        "The site uses HSTS with a long max-age",
+        "Certificate pinning is enforced",
+        "The user types https:// directly"
+      ],
+      "c": 0,
+      "x": "SSL stripping fonctionne surtout lorsque la connexion commence en HTTP et que l'attaquant empêche le passage en HTTPS.",
+      "r": "HSTS et le pinning rendent cette attaque beaucoup plus difficile."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which header helps mitigate SSL stripping and protocol downgrade attacks?",
+      "o": [
+        "Strict-Transport-Security (HSTS)",
+        "Content-Security-Policy",
+        "X-Frame-Options",
+        "X-Content-Type-Options"
+      ],
+      "c": 0,
+      "x": "HSTS force le navigateur à utiliser uniquement HTTPS pour le domaine pendant une durée définie.",
+      "r": "CSP protège principalement contre XSS et l'injection de contenu."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker exploits a vulnerability in a third-party library used by many applications. This is a classic example of:",
+      "o": [
+        "Software supply-chain risk",
+        "Zero-day exclusively",
+        "Misconfiguration",
+        "Insider threat"
+      ],
+      "c": 0,
+      "x": "Les bibliothèques tierces créent un risque de chaîne d'approvisionnement logicielle.",
+      "r": "Ce n'est pas forcément un zero-day."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack targets the integrity of software during the build or distribution process?",
+      "o": [
+        "Software supply-chain attack",
+        "Watering hole",
+        "Spear phishing",
+        "Ransomware"
+      ],
+      "c": 0,
+      "x": "Les attaques de la chaîne d'approvisionnement logicielle ciblent le code source, les builds ou les mécanismes de distribution.",
+      "r": "Le watering hole cible les sites web fréquentés par les victimes."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker compromises a popular open-source project and inserts a backdoor. This is best categorized as:",
+      "o": [
+        "Supply-chain compromise",
+        "Typosquatting",
+        "Dependency confusion",
+        "Watering hole"
+      ],
+      "c": 0,
+      "x": "Compromettre un projet open-source largement utilisé est une attaque de la chaîne d'approvisionnement.",
+      "r": "Le typosquatting crée un paquet au nom similaire."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves publishing a package with the same name as an internal company package to a public repository?",
+      "o": [
+        "Dependency confusion",
+        "Typosquatting",
+        "Supply-chain compromise of the original",
+        "Namespace squatting"
+      ],
+      "c": 0,
+      "x": "La confusion de dépendances exploite le fait que les gestionnaires de paquets peuvent télécharger un paquet public au lieu d'un paquet interne.",
+      "r": "Le typosquatting utilise un nom légèrement différent."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a compromised account to create additional persistent accounts or backdoors. This is part of which attack phase?",
+      "o": [
+        "Persistence / maintaining access",
+        "Initial access",
+        "Privilege escalation",
+        "Exfiltration"
+      ],
+      "c": 0,
+      "x": "Créer des comptes ou des backdoors supplémentaires fait partie de la phase de persistance.",
+      "r": "L'accès initial est la première compromission."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique is commonly used for privilege escalation on Windows when a service runs with elevated privileges and has a weak ACL on its binary?",
+      "o": [
+        "Service binary hijacking / weak service permissions",
+        "Token impersonation",
+        "UAC bypass only",
+        "DLL sideloading only"
+      ],
+      "c": 0,
+      "x": "Si un service privilégié a des permissions faibles sur son exécutable, un attaquant peut le remplacer.",
+      "r": "L'usurpation de jeton (token impersonation) est une autre technique d'élévation."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker steals a high-privilege token and uses it in another process. This is known as:",
+      "o": [
+        "Token impersonation / token theft",
+        "Pass-the-hash",
+        "Pass-the-ticket",
+        "Kerberoasting"
+      ],
+      "c": 0,
+      "x": "L'usurpation de jeton consiste à voler et réutiliser un jeton d'accès Windows.",
+      "r": "Pass-the-hash utilise des hashes NTLM, pas des jetons."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack allows an attacker to dump credentials from LSASS memory?",
+      "o": [
+        "Credential dumping (e.g., Mimikatz-style)",
+        "Kerberoasting",
+        "AS-REP roasting",
+        "DCSync"
+      ],
+      "c": 0,
+      "x": "Le dumping d'identifiants depuis LSASS permet de récupérer des hashes ou des tickets en mémoire.",
+      "r": "DCSync simule un contrôleur de domaine pour demander des hashes."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses Directory Replication Service functions to request password hashes from a domain controller. This is called:",
+      "o": [
+        "DCSync",
+        "DCShadow",
+        "Golden ticket",
+        "Silver ticket"
+      ],
+      "c": 0,
+      "x": "DCSync abuse des privilèges de réplication pour obtenir des hashes de mots de passe comme le ferait un DC.",
+      "r": "DCShadow enregistre un faux DC pour injecter des objets."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique registers a rogue domain controller to push malicious changes into Active Directory?",
+      "o": [
+        "DCShadow",
+        "DCSync",
+        "Golden ticket",
+        "Skeleton key"
+      ],
+      "c": 0,
+      "x": "DCShadow permet d'enregistrer un faux contrôleur de domaine et de pousser des modifications.",
+      "r": "DCSync lit les données, DCShadow les écrit."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "A malware that patches LSASS to accept any password for any account is known as a:",
+      "o": [
+        "Skeleton key",
+        "Golden ticket",
+        "Silver ticket",
+        "Pass-the-hash"
+      ],
+      "c": 0,
+      "x": "La skeleton key est une backdoor en mémoire qui fait accepter n'importe quel mot de passe.",
+      "r": "Le Golden Ticket est un ticket Kerberos forgé."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses a compromised account to request tickets for other services and move laterally?",
+      "o": [
+        "Lateral movement using stolen credentials or tickets",
+        "Vertical privilege escalation only",
+        "Persistence only",
+        "Exfiltration only"
+      ],
+      "c": 0,
+      "x": "Le mouvement latéral consiste à utiliser des identifiants ou tickets volés pour accéder à d'autres systèmes.",
+      "r": "L'élévation de privilèges est verticale (sur la même machine)."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses WMI or WinRM to execute commands on remote systems. This is an example of:",
+      "o": [
+        "Living-off-the-land lateral movement",
+        "Custom malware only",
+        "Exploit-based lateral movement",
+        "Physical access"
+      ],
+      "c": 0,
+      "x": "WMI et WinRM sont des outils légitimes fréquemment utilisés pour le mouvement latéral.",
+      "r": "Ce n'est pas forcément basé sur un exploit."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker creating a scheduled task or service for persistence?",
+      "o": [
+        "Scheduled task / service persistence",
+        "Registry Run key only",
+        "Startup folder only",
+        "Bootkit"
+      ],
+      "c": 0,
+      "x": "Les tâches planifiées et les services sont des méthodes classiques de persistance sur Windows.",
+      "r": "Les clés Run et le dossier Startup sont d'autres méthodes, mais pas les seules."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker adds a malicious entry under HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run. This provides:",
+      "o": [
+        "Persistence via Registry Run keys",
+        "Privilege escalation",
+        "Credential dumping",
+        "Lateral movement"
+      ],
+      "c": 0,
+      "x": "Les clés Run du registre permettent de lancer automatiquement un programme au démarrage de la session.",
+      "r": "Ce n'est pas une technique d'élévation de privilèges en soi."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack modifies the legitimate binary of a frequently executed application to maintain persistence?",
+      "o": [
+        "Application shimming or binary replacement / trojanizing",
+        "DLL sideloading only",
+        "Process hollowing",
+        "Atom bombing"
+      ],
+      "c": 0,
+      "x": "Trojaniser un binaire légitime ou utiliser des shims peut assurer une persistance discrète.",
+      "r": "Process hollowing est plus lié à l'exécution qu'à la persistance long terme."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a compromised web server to serve malware to visitors. This is an example of:",
+      "o": [
+        "Watering hole or drive-by download infrastructure",
+        "Spear phishing",
+        "Whaling",
+        "Baiting"
+      ],
+      "c": 0,
+      "x": "Utiliser un site compromis pour distribuer du malware relève du watering hole ou des drive-by downloads.",
+      "r": "Le spear phishing utilise l'email comme vecteur principal."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker registering domains that are slight misspellings of legitimate brands?",
+      "o": [
+        "Typosquatting / URL hijacking",
+        "Watering hole",
+        "Spear phishing",
+        "Homograph attack"
+      ],
+      "c": 0,
+      "x": "Le typosquatting enregistre des noms de domaine proches pour tromper les utilisateurs.",
+      "r": "Les attaques homographes utilisent des caractères Unicode ressemblants."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses Unicode characters that look identical to Latin letters in a domain name. This is a:",
+      "o": [
+        "Homograph / IDN homograph attack",
+        "Typosquatting",
+        "Punycode attack only",
+        "DNS spoofing"
+      ],
+      "c": 0,
+      "x": "Les attaques homographes exploitent des caractères Unicode visuellement similaires.",
+      "r": "Le typosquatting utilise des fautes de frappe classiques."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack poisons a DNS cache to redirect users to a malicious site?",
+      "o": [
+        "DNS cache poisoning / DNS spoofing",
+        "ARP spoofing",
+        "DHCP spoofing",
+        "SSL stripping"
+      ],
+      "c": 0,
+      "x": "L'empoisonnement de cache DNS fait résoudre un nom de domaine vers une adresse IP malveillante.",
+      "r": "ARP spoofing travaille au niveau de la couche liaison locale."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker sends forged ARP replies to associate their MAC with the IP of the gateway. This is:",
+      "o": [
+        "ARP spoofing / ARP poisoning",
+        "DNS spoofing",
+        "DHCP starvation",
+        "MAC flooding"
+      ],
+      "c": 0,
+      "x": "L'ARP spoofing permet de se positionner en homme du milieu sur un réseau local.",
+      "r": "Le MAC flooding vise à saturer la table CAM d'un switch."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exhausts the pool of available IP addresses on a DHCP server?",
+      "o": [
+        "DHCP starvation",
+        "DHCP spoofing",
+        "ARP spoofing",
+        "DNS poisoning"
+      ],
+      "c": 0,
+      "x": "La famine DHCP consiste à demander un grand nombre d'adresses pour épuiser le pool.",
+      "r": "Le DHCP spoofing consiste à faire tourner un faux serveur DHCP."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker sets up a rogue DHCP server to provide malicious gateway or DNS information. This is:",
+      "o": [
+        "DHCP spoofing / rogue DHCP",
+        "DHCP starvation",
+        "ARP spoofing",
+        "DNS cache poisoning"
+      ],
+      "c": 0,
+      "x": "Un serveur DHCP pirate peut distribuer une passerelle ou des DNS malveillants.",
+      "r": "La famine DHCP épuise les adresses, elle ne fournit pas de configuration."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which switch attack fills the CAM table so that the switch starts flooding traffic like a hub?",
+      "o": [
+        "MAC flooding / CAM table overflow",
+        "ARP spoofing",
+        "VLAN hopping",
+        "Spanning Tree attack"
+      ],
+      "c": 0,
+      "x": "Le MAC flooding sature la table CAM, forçant le switch à diffuser le trafic.",
+      "r": "L'ARP spoofing empoisonne les tables ARP des hôtes."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker sends frames with double 802.1Q tags to reach another VLAN. This is known as:",
+      "o": [
+        "VLAN hopping (double tagging)",
+        "MAC flooding",
+        "ARP spoofing",
+        "STP manipulation"
+      ],
+      "c": 0,
+      "x": "Le double tagging permet à certaines configurations de 'sauter' d'un VLAN à un autre.",
+      "r": "Le MAC flooding sature la table d'adresses MAC."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack manipulates the Spanning Tree Protocol to become the root bridge and intercept traffic?",
+      "o": [
+        "STP root bridge attack / STP manipulation",
+        "VLAN hopping",
+        "MAC flooding",
+        "ARP spoofing"
+      ],
+      "c": 0,
+      "x": "En devenant root bridge, un attaquant peut forcer le passage du trafic par sa machine.",
+      "r": "Le VLAN hopping exploite le tagging 802.1Q."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker intercepts and modifies traffic between a client and a server at the application layer. This is still a form of:",
+      "o": [
+        "Man-in-the-middle attack",
+        "Replay attack",
+        "Session fixation",
+        "Clickjacking"
+      ],
+      "c": 0,
+      "x": "Même au niveau applicatif, l'interception et la modification active constituent une attaque MitM.",
+      "r": "Le replay rejoue des données sans forcément les modifier en temps réel."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique uses a compromised site to redirect users to a malware download after a successful exploit?",
+      "o": [
+        "Drive-by download",
+        "Watering hole only",
+        "Spear phishing",
+        "Typosquatting"
+      ],
+      "c": 0,
+      "x": "Un drive-by download télécharge et exécute un malware simplement en visitant une page compromise.",
+      "r": "Le watering hole est le compromis du site ; le drive-by est le mécanisme de distribution."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker embeds a malicious macro in a document that downloads a payload when opened. This is a common:",
+      "o": [
+        "Malicious document / macro-based initial access technique",
+        "Fileless attack exclusively",
+        "Bootkit",
+        "Rootkit"
+      ],
+      "c": 0,
+      "x": "Les documents avec macros (Office, etc.) restent un vecteur d'accès initial très répandu.",
+      "r": "Ce n'est pas forcément fileless."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits the trust relationship between a parent and child domain or forest?",
+      "o": [
+        "Trust relationship abuse / Golden Ticket across trusts",
+        "Kerberoasting only",
+        "AS-REP roasting only",
+        "Silver ticket only"
+      ],
+      "c": 0,
+      "x": "Les relations d'approbation mal configurées peuvent être exploitées pour se déplacer entre domaines ou forêts.",
+      "r": "Kerberoasting reste dans le périmètre des comptes de service accessibles."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a compromised workstation to request tickets and access resources in another domain via a trust. This demonstrates:",
+      "o": [
+        "Lateral movement across domain trusts",
+        "Local privilege escalation only",
+        "Persistence only",
+        "Exfiltration only"
+      ],
+      "c": 0,
+      "x": "L'abus de relations d'approbation permet le mouvement latéral inter-domaines.",
+      "r": "Ce n'est pas limité à une élévation locale."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker creating a fake Group Policy Object to deploy malware domain-wide?",
+      "o": [
+        "Malicious GPO / Group Policy abuse",
+        "DCSync",
+        "DCShadow",
+        "Golden ticket"
+      ],
+      "c": 0,
+      "x": "Un GPO malveillant peut être utilisé pour déployer des scripts ou des logiciels sur l'ensemble du domaine.",
+      "r": "DCSync et DCShadow ciblent la réplication AD."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker modifies the ACLs on an OU or object to maintain control even after password changes. This is a form of:",
+      "o": [
+        "Persistence through ACL modification / ACL backdoor",
+        "Credential dumping",
+        "Kerberoasting",
+        "Pass-the-hash"
+      ],
+      "c": 0,
+      "x": "Modifier les ACL sur des objets AD permet de conserver des droits même si les mots de passe changent.",
+      "r": "Ce n'est pas une technique de dumping d'identifiants."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses a compromised account with DCOM or WinRM permissions to execute code on remote systems?",
+      "o": [
+        "Remote code execution via DCOM/WinRM (lateral movement)",
+        "Local privilege escalation",
+        "Credential dumping",
+        "Persistence via registry"
+      ],
+      "c": 0,
+      "x": "DCOM et WinRM sont des mécanismes légitimes souvent abusés pour l'exécution de code à distance.",
+      "r": "Ce n'est pas une technique d'élévation locale."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a stolen certificate to sign malware so that it appears legitimate. This is an example of:",
+      "o": [
+        "Code signing certificate abuse",
+        "SSL certificate spoofing",
+        "Kerberos ticket forgery",
+        "Hash collision"
+      ],
+      "c": 0,
+      "x": "Abuser d'un certificat de signature de code permet de faire passer un malware pour un logiciel signé légitime.",
+      "r": "Ce n'est pas de la falsification de tickets Kerberos."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker obtaining a code-signing certificate through compromise or fraudulent issuance?",
+      "o": [
+        "Stolen or fraudulently obtained code-signing certificate",
+        "Self-signed certificate only",
+        "Let's Encrypt abuse only",
+        "Internal PKI misconfiguration only"
+      ],
+      "c": 0,
+      "x": "Les certificats de signature de code volés ou obtenus frauduleusement sont utilisés pour signer des malwares.",
+      "r": "Un certificat auto-signé est facilement détecté comme non fiable."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker exploits a vulnerability in a VPN concentrator to gain access to the internal network. This is an example of:",
+      "o": [
+        "External remote service exploitation for initial access",
+        "Phishing only",
+        "Supply-chain attack",
+        "Insider threat"
+      ],
+      "c": 0,
+      "x": "Les services exposés (VPN, RDP, etc.) sont des cibles classiques pour l'accès initial.",
+      "r": "Ce n'est pas forcément du phishing."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses a compromised cloud instance or container to mine cryptocurrency?",
+      "o": [
+        "Cryptojacking / cryptomining malware",
+        "Ransomware",
+        "Wiper",
+        "Spyware"
+      ],
+      "c": 0,
+      "x": "Le cryptojacking utilise les ressources de la victime pour miner de la cryptomonnaie.",
+      "r": "Le ransomware chiffre les fichiers et demande une rançon."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker deploys malware that destroys data and makes recovery extremely difficult. This is best classified as a:",
+      "o": [
+        "Wiper",
+        "Ransomware",
+        "Spyware",
+        "Adware"
+      ],
+      "c": 0,
+      "x": "Un wiper a pour objectif de détruire les données plutôt que de les chiffrer pour une rançon.",
+      "r": "Le ransomware laisse généralement une chance de récupération contre paiement."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using a compromised email account to send further phishing emails to internal users?",
+      "o": [
+        "Business Email Compromise (BEC) / account takeover for lateral phishing",
+        "External spear phishing only",
+        "Whaling only",
+        "Vishing"
+      ],
+      "c": 0,
+      "x": "La compromission de comptes email internes permet d'envoyer des phishing très crédibles à d'autres employés.",
+      "r": "Ce n'est plus du phishing purement externe."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker impersonates a CEO and requests an urgent wire transfer. This is a classic:",
+      "o": [
+        "Business Email Compromise (BEC) / CEO fraud",
+        "Spear phishing only",
+        "Whaling only",
+        "Pretexting only"
+      ],
+      "c": 0,
+      "x": "Le BEC / fraude au président consiste souvent à usurper l'identité d'un dirigeant pour demander des virements.",
+      "r": "Le whaling est plus large et pas forcément lié à un virement."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses deepfake audio or video to impersonate a trusted person?",
+      "o": [
+        "Deepfake-enabled social engineering",
+        "Traditional vishing",
+        "Pretexting only",
+        "Baiting"
+      ],
+      "c": 0,
+      "x": "Les deepfakes audio/vidéo renforcent considérablement les attaques d'ingénierie sociale.",
+      "r": "Le vishing traditionnel n'utilise pas de synthèse vocale avancée."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker exploits a misconfigured S3 bucket to access sensitive data. This is an example of:",
+      "o": [
+        "Cloud storage misconfiguration exploitation",
+        "Zero-day exploit",
+        "Supply-chain attack",
+        "Insider threat"
+      ],
+      "c": 0,
+      "x": "Les buckets S3 (ou équivalents) mal configurés sont une source fréquente de fuites de données.",
+      "r": "Ce n'est pas nécessairement un zero-day."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using a compromised identity to access cloud resources according to the principle of least privilege violation?",
+      "o": [
+        "Cloud account takeover / excessive permissions abuse",
+        "Local privilege escalation",
+        "Kerberoasting",
+        "DCSync"
+      ],
+      "c": 0,
+      "x": "La prise de contrôle d'un compte cloud avec des permissions excessives permet un accès large aux ressources.",
+      "r": "Kerberoasting et DCSync sont liés à Active Directory on-premises."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a stolen API key or access token to interact with cloud services. This is a form of:",
+      "o": [
+        "Credential / token theft and reuse in the cloud",
+        "Pass-the-hash",
+        "Kerberoasting",
+        "Golden ticket"
+      ],
+      "c": 0,
+      "x": "Les clés API et tokens cloud volés permettent d'accéder aux services sans authentification interactive.",
+      "r": "Pass-the-hash est spécifique à NTLM/Windows."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits insecure direct object references to access other users' data?",
+      "o": [
+        "Insecure Direct Object Reference (IDOR)",
+        "SQL injection",
+        "XSS",
+        "CSRF"
+      ],
+      "c": 0,
+      "x": "L'IDOR permet d'accéder à des objets (fichiers, enregistrements) d'autres utilisateurs en modifiant un identifiant.",
+      "r": "SQLi injecte du code SQL, XSS injecte du JavaScript."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker modifies a hidden form field or parameter to change the price of an item. This is an example of:",
+      "o": [
+        "Parameter tampering / business logic abuse",
+        "SQL injection",
+        "XSS",
+        "CSRF"
+      ],
+      "c": 0,
+      "x": "La manipulation de paramètres permet souvent de contourner des contrôles métier côté client.",
+      "r": "Ce n'est pas une injection SQL."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which vulnerability allows an attacker to force an application to load a remote resource that they control?",
+      "o": [
+        "SSRF or unsafe redirect / open redirect leading to further attacks",
+        "XSS",
+        "CSRF",
+        "Clickjacking"
+      ],
+      "c": 0,
+      "x": "SSRF et les open redirects peuvent être enchaînés pour charger des ressources contrôlées par l'attaquant.",
+      "r": "XSS s'exécute dans le navigateur de la victime."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses an open redirect to craft a more convincing phishing URL. This is a common:",
+      "o": [
+        "Open redirect abuse for phishing",
+        "CSRF",
+        "XSS",
+        "Clickjacking"
+      ],
+      "c": 0,
+      "x": "Les open redirects sont souvent utilisés pour rendre les liens de phishing plus crédibles.",
+      "r": "Ce n'est pas une attaque CSRF."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker injecting malicious content into logs that is later executed or interpreted by an admin tool?",
+      "o": [
+        "Log injection / log poisoning",
+        "XSS",
+        "SQL injection",
+        "Command injection"
+      ],
+      "c": 0,
+      "x": "L'injection dans les logs peut permettre d'exécuter du code lorsque les logs sont visualisés ou traités de manière non sécurisée.",
+      "r": "Ce n'est pas une injection SQL classique."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker poisons a log file with a PHP web shell that is later included by the application. This is an example of:",
+      "o": [
+        "Log poisoning leading to code execution",
+        "Classic file upload vulnerability",
+        "XXE",
+        "SSRF"
+      ],
+      "c": 0,
+      "x": "La pollution de logs combinée à une inclusion de fichier peut mener à l'exécution de code.",
+      "r": "Ce n'est pas un simple upload de fichier."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits a vulnerability in the way an application handles file uploads to place a web shell on the server?",
+      "o": [
+        "Unrestricted / unrestricted file upload leading to remote code execution",
+        "Path traversal only",
+        "XXE",
+        "SSRF"
+      ],
+      "c": 0,
+      "x": "Un upload de fichier non restreint permet souvent de déposer un web shell et d'obtenir une RCE.",
+      "r": "Le path traversal permet d'accéder à des fichiers, pas forcément d'en uploader."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a race condition to upload a file and execute it before it is deleted by a security control. This is a:",
+      "o": [
+        "TOCTOU / race condition in file handling",
+        "Classic unrestricted upload",
+        "Path traversal",
+        "XXE"
+      ],
+      "c": 0,
+      "x": "Les conditions de course (TOCTOU) peuvent permettre d'exécuter un fichier avant qu'il ne soit analysé ou supprimé.",
+      "r": "Ce n'est pas un simple upload non restreint."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker sending a specially crafted request that causes the application to execute unexpected commands at the OS level?",
+      "o": [
+        "OS command injection",
+        "SQL injection",
+        "XSS",
+        "XXE"
+      ],
+      "c": 0,
+      "x": "L'injection de commandes système se produit lorsque l'entrée utilisateur est passée à un interpréteur de commandes.",
+      "r": "SQLi cible la base de données."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses shell metacharacters to break out of a restricted command and execute additional commands. This is classic:",
+      "o": [
+        "Command injection",
+        "SQL injection",
+        "LDAP injection",
+        "XPath injection"
+      ],
+      "c": 0,
+      "x": "Les métacaractères de shell (;, |, &&, etc.) sont souvent utilisés pour enchaîner des commandes.",
+      "r": "LDAP et XPath sont d'autres formes d'injection."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which injection attack targets a directory service by manipulating LDAP queries?",
+      "o": [
+        "LDAP injection",
+        "SQL injection",
+        "XPath injection",
+        "Command injection"
+      ],
+      "c": 0,
+      "x": "L'injection LDAP manipule les filtres LDAP pour contourner l'authentification ou extraire des données.",
+      "r": "SQLi cible SQL, pas LDAP."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker manipulates an XPath query to bypass authentication or extract data. This is:",
+      "o": [
+        "XPath injection",
+        "SQL injection",
+        "LDAP injection",
+        "NoSQL injection"
+      ],
+      "c": 0,
+      "x": "L'injection XPath cible les requêtes XPath utilisées pour interroger des documents XML.",
+      "r": "NoSQL injection cible les bases NoSQL."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack targets NoSQL databases by injecting operators or altering query logic?",
+      "o": [
+        "NoSQL injection",
+        "SQL injection",
+        "LDAP injection",
+        "XPath injection"
+      ],
+      "c": 0,
+      "x": "L'injection NoSQL exploite la façon dont les requêtes sont construites dans des bases comme MongoDB.",
+      "r": "SQLi est spécifique aux bases SQL."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a blind SQL injection technique where the only feedback is based on time delays. This is called:",
+      "o": [
+        "Time-based blind SQL injection",
+        "Boolean-based blind SQL injection",
+        "Union-based SQL injection",
+        "Error-based SQL injection"
+      ],
+      "c": 0,
+      "x": "L'injection SQL aveugle basée sur le temps utilise des fonctions d'attente pour inférer des informations.",
+      "r": "L'injection booléenne se base sur des réponses vraies/fausses."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which SQL injection technique uses UNION SELECT to extract data from other tables?",
+      "o": [
+        "Union-based SQL injection",
+        "Blind SQL injection",
+        "Time-based SQL injection",
+        "Out-of-band SQL injection"
+      ],
+      "c": 0,
+      "x": "L'injection basée sur UNION permet de fusionner les résultats de la requête originale avec des données arbitraires.",
+      "r": "Les techniques aveugles n'affichent pas directement les données."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker extracts data via DNS or HTTP requests made by the database server. This is an example of:",
+      "o": [
+        "Out-of-band SQL injection",
+        "Union-based SQL injection",
+        "Boolean-based blind SQL injection",
+        "Error-based SQL injection"
+      ],
+      "c": 0,
+      "x": "L'injection out-of-band utilise des canaux secondaires (DNS, HTTP) pour exfiltrer des données.",
+      "r": "Union-based affiche les données dans la réponse HTTP normale."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using a compromised machine to proxy traffic for other attackers or tools?",
+      "o": [
+        "Using the victim as a proxy / pivot",
+        "Direct lateral movement only",
+        "Credential dumping only",
+        "Persistence only"
+      ],
+      "c": 0,
+      "x": "Transformer une machine compromise en proxy ou pivot permet de rebondir vers d'autres segments réseau.",
+      "r": "Ce n'est pas limité au dumping d'identifiants."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker establishes a reverse shell from a compromised internal host to an external command-and-control server. This is primarily used for:",
+      "o": [
+        "Command and control / maintaining interactive access",
+        "Initial access only",
+        "Privilege escalation only",
+        "Exfiltration only"
+      ],
+      "c": 0,
+      "x": "Un reverse shell fournit un accès interactif et sert au contrôle de la machine compromise.",
+      "r": "Ce n'est pas uniquement de l'exfiltration."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves encrypting or encoding C2 traffic to blend in with normal network traffic?",
+      "o": [
+        "Command-and-control traffic obfuscation / encryption ",
+        "Plain HTTP C2 only",
+        "DNS tunneling only",
+        "ICMP tunneling only"
+      ],
+      "c": 0,
+      "x": "Chiffrer ou obfusquer le trafic de C2 permet de le rendre plus difficile à détecter.",
+      "r": "DNS et ICMP tunneling sont des canaux spécifiques, pas la seule méthode."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses DNS queries to exfiltrate data or receive commands. This is known as:",
+      "o": [
+        "DNS tunneling / DNS C2",
+        "HTTP C2 only",
+        "ICMP tunneling",
+        "SMTP exfiltration only"
+      ],
+      "c": 0,
+      "x": "Le tunneling DNS utilise les requêtes et réponses DNS comme canal de communication ou d'exfiltration.",
+      "r": "Ce n'est pas limité à HTTP."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses ICMP packets to carry covert data or commands?",
+      "o": [
+        "ICMP tunneling / ICMP C2",
+        "DNS tunneling",
+        "HTTP tunneling",
+        "SMTP tunneling"
+      ],
+      "c": 0,
+      "x": "Le tunneling ICMP encapsule des données dans des paquets ICMP (ping, etc.).",
+      "r": "DNS tunneling utilise le protocole DNS."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker stages data on an internal system before sending it out in small encrypted chunks. This is part of:",
+      "o": [
+        "Data exfiltration / staging and covert channels",
+        "Lateral movement only",
+        "Privilege escalation only",
+        "Persistence only"
+      ],
+      "c": 0,
+      "x": "L'exfiltration implique souvent un staging puis l'utilisation de canaux discrets pour sortir les données.",
+      "r": "Ce n'est pas de la persistance."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using steganography to hide data inside images or files before exfiltration?",
+      "o": [
+        "Steganographic exfiltration",
+        "Encryption only",
+        "Compression only",
+        "Base64 encoding only"
+      ],
+      "c": 0,
+      "x": "La stéganographie dissimule des données dans d'autres fichiers (images, audio, etc.).",
+      "r": "Le chiffrement protège la confidentialité mais ne dissimule pas forcément l'existence des données."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker deletes or modifies logs to hide their activity. This is an example of:",
+      "o": [
+        "Anti-forensics / log tampering",
+        "Credential dumping",
+        "Lateral movement",
+        "Privilege escalation"
+      ],
+      "c": 0,
+      "x": "La suppression ou la modification des journaux fait partie des techniques anti-forensiques.",
+      "r": "Ce n'est pas une technique d'élévation de privilèges."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using a tool to clear event logs on a Windows system?",
+      "o": [
+        "Log clearing / event log deletion (anti-forensics)",
+        "Credential dumping",
+        "Kerberoasting",
+        "DCSync"
+      ],
+      "c": 0,
+      "x": "Effacer les journaux d'événements est une technique classique pour masquer les traces.",
+      "r": "DCSync et Kerberoasting sont liés aux identifiants."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker timestamps files to match legitimate system files in order to avoid detection. This is a form of:",
+      "o": [
+        "Timestomping (anti-forensics)",
+        "Log clearing",
+        "Process injection",
+        "DLL sideloading"
+      ],
+      "c": 0,
+      "x": "Le timestomping modifie les horodatages des fichiers pour les faire paraître légitimes.",
+      "r": "Ce n'est pas de l'injection de processus."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack aims to destroy evidence and make forensic analysis extremely difficult?",
+      "o": [
+        "Anti-forensics techniques (wiping, timestomping, log deletion)",
+        "Credential dumping",
+        "Lateral movement",
+        "Persistence"
+      ],
+      "c": 0,
+      "x": "Les techniques anti-forensiques visent à effacer ou altérer les preuves numériques.",
+      "r": "Ce n'est pas une technique de mouvement latéral."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a custom packer or crypter to make malware harder to detect by antivirus. This is an example of:",
+      "o": [
+        "Obfuscation / packing / crypter usage",
+        "Living-off-the-land only",
+        "Fileless malware only",
+        "Rootkit"
+      ],
+      "c": 0,
+      "x": "Les packers et crypters obfusquent le code malveillant pour contourner les signatures antivirus.",
+      "r": "Living-off-the-land utilise des outils légitimes, pas forcément du packing."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker testing malware against many antivirus engines before deployment?",
+      "o": [
+        "AV evasion testing / using multi-scanner services",
+        "Direct deployment without testing",
+        "Only using fileless techniques",
+        "Only using LotL"
+      ],
+      "c": 0,
+      "x": "Les attaquants testent souvent leurs échantillons sur des services multi-antivirus pour vérifier la détection.",
+      "r": "Ce n'est pas une technique d'exécution en soi."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses polymorphic or metamorphic code to change the malware’s signature on each infection. This is a form of:",
+      "o": [
+        "Polymorphism / metamorphism for AV evasion",
+        "Simple packing",
+        "Encryption only",
+        "Steganography"
+      ],
+      "c": 0,
+      "x": "Le code polymorphe ou métamorphe change son apparence à chaque génération pour éviter les signatures.",
+      "r": "Le packing simple encapsule le code sans forcément le faire muter."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits a vulnerability in a hardware component (e.g., speculative execution)?",
+      "o": [
+        "Side-channel / speculative execution attack (Spectre, Meltdown class)",
+        "Buffer overflow only",
+        "Integer overflow only",
+        "TOCTOU"
+      ],
+      "c": 0,
+      "x": "Spectre, Meltdown et d'autres attaques exploitent des comportements spéculatifs du processeur.",
+      "r": "Ce ne sont pas de simples débordements de tampon logiciels."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker measures cache access patterns to extract cryptographic keys. This is a type of:",
+      "o": [
+        "Cache-based side-channel attack",
+        "Timing attack only",
+        "Power analysis only",
+        "Acoustic attack"
+      ],
+      "c": 0,
+      "x": "Les attaques par canaux auxiliaires basées sur le cache observent les motifs d'accès à la mémoire cache.",
+      "r": "L'analyse de puissance mesure la consommation électrique."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using electromagnetic emissions to extract secrets from a device?",
+      "o": [
+        "TEMPEST-style / electromagnetic side-channel attack",
+        "Cache side-channel only",
+        "Timing attack only",
+        "Acoustic cryptanalysis"
+      ],
+      "c": 0,
+      "x": "Les attaques électromagnétiques (style TEMPEST) captent les rayonnements pour extraire des informations.",
+      "r": "Les attaques acoustiques analysent les sons émis par les composants."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a malicious peripheral (e.g., USB device) that acts as a keyboard to execute commands. This is known as:",
+      "o": [
+        "USB-based attack / BadUSB / Rubber Ducky style",
+        "Traditional malware dropper",
+        "Network-based exploit",
+        "Phishing"
+      ],
+      "c": 0,
+      "x": "Les attaques de type BadUSB ou Rubber Ducky émulent un clavier pour injecter des frappes.",
+      "r": "Ce n'est pas un dropper réseau classique."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses a USB device to drop malware or exfiltrate data when plugged in?",
+      "o": [
+        "USB drop / USB baiting leading to malware execution or data theft",
+        "Network worm only",
+        "Email phishing only",
+        "Supply-chain attack only"
+      ],
+      "c": 0,
+      "x": "Les clés USB abandonnées (baiting) restent un vecteur d'infection et d'exfiltration physique.",
+      "r": "Ce n'est pas un ver réseau."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker physically accesses a server and boots from external media to reset passwords or extract data. This is an example of:",
+      "o": [
+        "Physical attack / offline attack on a system",
+        "Network-based exploit",
+        "Remote code execution",
+        "Social engineering only"
+      ],
+      "c": 0,
+      "x": "L'accès physique permet des attaques hors ligne (boot externe, extraction de disques, etc.).",
+      "r": "Ce n'est pas une exploitation réseau distante."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker removing a hard drive and analyzing it on another system?",
+      "o": [
+        "Offline disk analysis / physical extraction",
+        "Live memory forensics only",
+        "Network packet capture",
+        "Log analysis only"
+      ],
+      "c": 0,
+      "x": "L'analyse hors ligne d'un disque est une technique forensique et offensive classique après accès physique.",
+      "r": "La forensique mémoire s'intéresse à la RAM."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a cold-boot attack to extract encryption keys from memory. This relies on:",
+      "o": [
+        "Data remanence in RAM after power-off",
+        "Disk encryption only",
+        "Firmware implants only",
+        "Network interception"
+      ],
+      "c": 0,
+      "x": "Les attaques cold-boot exploitent la rémanence des données en RAM pendant un court laps de temps après la mise hors tension.",
+      "r": "Ce n'est pas lié au chiffrement de disque lui-même."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack targets the Trusted Platform Module or secure enclave to extract secrets?",
+      "o": [
+        "TPM / secure enclave side-channel or implementation attack",
+        "Simple password guessing",
+        "Kerberoasting",
+        "Pass-the-hash"
+      ],
+      "c": 0,
+      "x": "Les TPM et enclaves sécurisées peuvent être ciblés par des attaques d'implémentation ou par canaux auxiliaires.",
+      "r": "Kerberoasting et pass-the-hash sont liés à Active Directory / Windows."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker exploits a vulnerability in a smart card or hardware token to clone or extract keys. This is a form of:",
+      "o": [
+        "Hardware token / smart card attack",
+        "Software-only credential dumping",
+        "Kerberoasting",
+        "AS-REP roasting"
+      ],
+      "c": 0,
+      "x": "Les tokens matériels et cartes à puce peuvent être attaqués pour extraire ou cloner des clés.",
+      "r": "Ce n'est pas une attaque purement logicielle sur AD."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using a compromised CI/CD pipeline to inject malicious code into builds?",
+      "o": [
+        "CI/CD pipeline / software supply-chain compromise",
+        "Traditional phishing",
+        "Watering hole",
+        "USB drop"
+      ],
+      "c": 0,
+      "x": "Compromettre la pipeline CI/CD permet d'injecter du code malveillant dans les builds distribués.",
+      "r": "Ce n'est pas un vecteur d'hameçonnage classique."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker poisons a public package repository so that a malicious version is installed by developers. This is a:",
+      "o": [
+        "Package repository / dependency supply-chain attack",
+        "Typosquatting only",
+        "Dependency confusion only",
+        "Watering hole"
+      ],
+      "c": 0,
+      "x": "Empoisonner un dépôt de paquets est une attaque de la chaîne d'approvisionnement logicielle.",
+      "r": "Le typosquatting et la confusion de dépendances sont des variantes spécifiques."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits the trust in a widely used open-source maintainer account?",
+      "o": [
+        "Account takeover of a popular open-source maintainer (supply-chain)",
+        "Spear phishing only",
+        "Whaling only",
+        "Baiting"
+      ],
+      "c": 0,
+      "x": "La prise de contrôle du compte d'un mainteneur populaire permet de distribuer des versions malveillantes.",
+      "r": "Ce n'est pas limité au phishing."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a compromised browser extension to steal credentials or sessions. This is an example of:",
+      "o": [
+        "Malicious browser extension / supply-chain or direct installation",
+        "Traditional XSS only",
+        "CSRF only",
+        "Clickjacking only"
+      ],
+      "c": 0,
+      "x": "Les extensions de navigateur malveillantes peuvent voler des sessions, des mots de passe ou modifier le contenu.",
+      "r": "Ce n'est pas une simple vulnérabilité XSS d'un site."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker injecting malicious code into a legitimate website through a compromised third-party script?",
+      "o": [
+        "Magecart-style / third-party script supply-chain attack",
+        "Stored XSS only",
+        "Reflected XSS only",
+        "DOM XSS only"
+      ],
+      "c": 0,
+      "x": "Les attaques de type Magecart compromettent des scripts tiers pour skimmer des données de cartes bancaires.",
+      "r": "Ce n'est pas limité à un XSS classique sur le site cible."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a compromised marketing or analytics script to skim credit card data. This is a form of:",
+      "o": [
+        "Web skimming / Magecart attack",
+        "Traditional SQL injection",
+        "CSRF",
+        "Clickjacking"
+      ],
+      "c": 0,
+      "x": "Le web skimming (Magecart) injecte du JavaScript pour capturer les données de paiement.",
+      "r": "Ce n'est pas une injection SQL."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits the fact that many users accept default or weak configurations on network devices?",
+      "o": [
+        "Exploitation of default credentials / misconfiguration",
+        "Zero-day exclusively",
+        "Supply-chain attack",
+        "Physical attack only"
+      ],
+      "c": 0,
+      "x": "Les identifiants par défaut et les mauvaises configurations restent un vecteur d'attaque très courant.",
+      "r": "Ce n'est pas forcément un zero-day."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker scans for devices still using factory default passwords. This activity is typically the start of:",
+      "o": [
+        "Opportunistic exploitation of misconfigurations and default credentials",
+        "Targeted APT only",
+        "Supply-chain attack only",
+        "Insider threat"
+      ],
+      "c": 0,
+      "x": "Le scan d'identifiants par défaut est une technique opportuniste très répandue.",
+      "r": "Ce n'est pas réservé aux APT ciblées."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using a legitimate cloud service as a command-and-control channel?",
+      "o": [
+        "Abuse of legitimate cloud / web services for C2 (e.g., Google Drive, Discord, Slack)",
+        "Traditional custom C2 server only",
+        "DNS tunneling only",
+        "ICMP tunneling only"
+      ],
+      "c": 0,
+      "x": "Abuser de services cloud légitimes pour le C2 permet de se fondre dans le trafic normal.",
+      "r": "Ce n'est pas limité aux tunnels DNS ou ICMP."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a popular collaboration platform to send commands to malware. This is an example of:",
+      "o": [
+        "Living-off-the-land / abuse of legitimate services for C2",
+        "Custom binary protocol C2 only",
+        "Email-based C2 only",
+        "SMS-based C2 only"
+      ],
+      "c": 0,
+      "x": "Utiliser des plateformes légitimes (Discord, Slack, GitHub, etc.) pour le C2 est une technique de plus en plus courante.",
+      "r": "Ce n'est pas forcément un protocole binaire personnalisé."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack involves an attacker registering a domain that was previously owned by a legitimate company and still has residual trust?",
+      "o": [
+        "Expired domain / residual trust abuse",
+        "Typosquatting",
+        "Homograph attack",
+        "DNS spoofing"
+      ],
+      "c": 0,
+      "x": "Reprendre un domaine expiré qui bénéficie encore de confiance (liens, certificats, etc.) est une technique d'abus de confiance résiduelle.",
+      "r": "Le typosquatting crée un nom similaire, pas forcément un domaine expiré."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a domain that was previously used for a legitimate service and still has active certificates or backlinks. This is a form of:",
+      "o": [
+        "Residual trust / expired domain abuse",
+        "Classic typosquatting",
+        "IDN homograph",
+        "DNS cache poisoning"
+      ],
+      "c": 0,
+      "x": "L'abus de domaines expirés profite de la confiance résiduelle (SEO, certificats, configurations).",
+      "r": "Ce n'est pas une attaque homographe."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using a compromised account to create rules that forward emails to an external address?",
+      "o": [
+        "Email forwarding rule persistence / BEC persistence",
+        "Simple credential dumping",
+        "Kerberoasting",
+        "Golden ticket"
+      ],
+      "c": 0,
+      "x": "Créer des règles de transfert d'emails permet de maintenir un accès discret aux communications.",
+      "r": "Ce n'est pas une technique liée à Kerberos."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker creates an inbox rule that moves security alerts to a hidden folder. This is primarily used for:",
+      "o": [
+        "Hiding detection alerts / anti-forensics and persistence in email",
+        "Credential dumping",
+        "Lateral movement",
+        "Privilege escalation"
+      ],
+      "c": 0,
+      "x": "Les règles de boîte de réception malveillantes permettent de masquer les alertes de sécurité.",
+      "r": "Ce n'est pas du dumping d'identifiants."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses a compromised SaaS account to invite malicious guests or OAuth applications?",
+      "o": [
+        "SaaS account takeover leading to malicious OAuth app or guest invitation",
+        "Local Windows privilege escalation",
+        "Kerberoasting",
+        "DCSync"
+      ],
+      "c": 0,
+      "x": "La prise de contrôle d'un compte SaaS permet d'inviter des applications OAuth malveillantes ou des invités.",
+      "r": "Ce n'est pas une technique Active Directory classique."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker consents to a malicious OAuth application that requests excessive permissions. This is an example of:",
+      "o": [
+        "OAuth phishing / illicit consent grant attack",
+        "Classic password phishing only",
+        "Kerberoasting",
+        "Pass-the-hash"
+      ],
+      "c": 0,
+      "x": "Les attaques par consentement OAuth illicite font autoriser une application malveillante par l'utilisateur.",
+      "r": "Ce n'est pas une attaque sur les hashes NTLM."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using a stolen refresh token to maintain long-term access to a cloud account?",
+      "o": [
+        "Refresh token theft and reuse",
+        "Password spraying only",
+        "Credential stuffing only",
+        "Pass-the-hash"
+      ],
+      "c": 0,
+      "x": "Les refresh tokens volés permettent de générer de nouveaux access tokens sans réauthentification.",
+      "r": "Pass-the-hash est spécifique à Windows/NTLM."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a compromised service principal or application identity in Azure/Entra ID to access resources. This is a form of:",
+      "o": [
+        "Cloud service principal / application identity abuse",
+        "Kerberoasting",
+        "AS-REP roasting",
+        "Golden ticket"
+      ],
+      "c": 0,
+      "x": "Les identités d'application et service principals compromis permettent un accès automatisé aux ressources cloud.",
+      "r": "Kerberoasting et Golden Ticket sont liés à Active Directory on-premises."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits overly permissive IAM roles in a cloud environment?",
+      "o": [
+        "Cloud privilege escalation via excessive IAM permissions",
+        "Local Windows UAC bypass",
+        "Token impersonation on Windows only",
+        "Kerberoasting"
+      ],
+      "c": 0,
+      "x": "Des rôles IAM trop permissifs permettent une élévation de privilèges dans le cloud.",
+      "r": "Ce n'est pas une technique Windows locale."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker enumerates cloud metadata services from a compromised instance to obtain temporary credentials. This is a classic:",
+      "o": [
+        "Cloud metadata service abuse (e.g., 169.254.169.254)",
+        "SSRF only",
+        "XXE only",
+        "Local file inclusion"
+      ],
+      "c": 0,
+      "x": "Les services de métadonnées cloud (IMDS) sont souvent abusés pour récupérer des credentials temporaires.",
+      "r": "C'est souvent combiné avec SSRF, mais le but final est l'accès aux credentials."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker using a compromised container to escape to the host system?",
+      "o": [
+        "Container escape",
+        "VM escape",
+        "Hypervisor exploit only",
+        "Firmware implant"
+      ],
+      "c": 0,
+      "x": "Une évasion de conteneur permet de sortir de l'isolation du conteneur vers l'hôte.",
+      "r": "L'évasion de VM cible l'hyperviseur."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker exploits a vulnerability in the container runtime to gain access to the underlying host. This is known as:",
+      "o": [
+        "Container escape / runtime exploit",
+        "Simple privilege escalation inside the container",
+        "Network lateral movement only",
+        "Credential dumping only"
+      ],
+      "c": 0,
+      "x": "Les failles dans le runtime (Docker, containerd, etc.) peuvent permettre l'évasion vers l'hôte.",
+      "r": "Ce n'est pas limité à une élévation à l'intérieur du conteneur."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack targets the hypervisor to compromise multiple virtual machines on the same host?",
+      "o": [
+        "VM escape / hypervisor attack",
+        "Container escape only",
+        "Guest-to-guest attack only",
+        "Network-based lateral movement only"
+      ],
+      "c": 0,
+      "x": "Une évasion de machine virtuelle cible l'hyperviseur pour affecter d'autres VMs ou l'hôte.",
+      "r": "L'évasion de conteneur reste au niveau du runtime de conteneurs."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a compromised virtual machine to attack the hypervisor. This is an example of:",
+      "o": [
+        "Guest-to-host / VM escape attempt",
+        "Simple network scanning",
+        "Credential dumping inside the guest",
+        "Persistence inside the guest only"
+      ],
+      "c": 0,
+      "x": "Les attaques guest-to-host cherchent à sortir de la VM vers l'hyperviseur.",
+      "r": "Ce n'est pas limité à des actions à l'intérieur de l'invité."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker abusing exposed management interfaces of hypervisors or cloud control planes?",
+      "o": [
+        "Management interface / control plane exposure exploitation",
+        "Guest-to-guest attack only",
+        "Simple network worm",
+        "Phishing only"
+      ],
+      "c": 0,
+      "x": "Les interfaces de gestion d'hyperviseurs ou de plans de contrôle cloud exposées sont des cibles à haute valeur.",
+      "r": "Ce n'est pas une attaque entre invités."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker gains access to the cloud control plane and creates new high-privilege identities. This demonstrates:",
+      "o": [
+        "Cloud control plane compromise leading to persistence and privilege escalation",
+        "Simple instance-level compromise only",
+        "Network lateral movement only",
+        "Endpoint malware only"
+      ],
+      "c": 0,
+      "x": "La compromission du plan de contrôle cloud permet de créer des identités et des ressources de manière persistante.",
+      "r": "Ce n'est pas limité à une instance compromise."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack uses a compromised CI system to inject backdoors into production container images?",
+      "o": [
+        "CI/CD / container image supply-chain attack",
+        "Simple typosquatting",
+        "Dependency confusion only",
+        "Watering hole"
+      ],
+      "c": 0,
+      "x": "Compromettre la CI pour modifier les images de conteneurs est une attaque de la chaîne d'approvisionnement.",
+      "r": "Ce n'est pas du typosquatting."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker poisons a base container image that is widely used in an organization. This is a form of:",
+      "o": [
+        "Container image supply-chain compromise",
+        "Runtime container escape",
+        "Orchestrator exploit only",
+        "Network attack only"
+      ],
+      "c": 0,
+      "x": "Empoisonner une image de base affecte toutes les images qui en dérivent.",
+      "r": "Ce n'est pas une évasion runtime."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which technique involves an attacker exploiting a vulnerability in Kubernetes or another orchestrator to gain cluster-wide access?",
+      "o": [
+        "Kubernetes / container orchestrator exploitation",
+        "Simple container escape only",
+        "VM escape only",
+        "Endpoint malware only"
+      ],
+      "c": 0,
+      "x": "Les failles dans Kubernetes (API server, etcd, etc.) peuvent permettre une prise de contrôle du cluster.",
+      "r": "Ce n'est pas limité à une évasion de conteneur isolée."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker obtains a service account token mounted in a pod and uses it to access the Kubernetes API. This is a classic:",
+      "o": [
+        "Kubernetes service account token abuse",
+        "Docker socket escape only",
+        "VM escape",
+        "Firmware attack"
+      ],
+      "c": 0,
+      "x": "Les tokens de service account montés dans les pods sont fréquemment abusés pour interagir avec l'API Kubernetes.",
+      "r": "Ce n'est pas une évasion via le socket Docker."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "Which attack exploits a misconfigured pod security policy or admission controller to run a privileged container?",
+      "o": [
+        "Privileged container / weak admission control exploitation",
+        "Simple application vulnerability only",
+        "Network policy bypass only",
+        "Storage attack only"
+      ],
+      "c": 0,
+      "x": "Des politiques de sécurité de pods trop permissives permettent de lancer des conteneurs privilégiés.",
+      "r": "Ce n'est pas uniquement une vulnérabilité applicative."
+    },
+    {
+      "d": 2,
+      "e": "hard",
+      "s": "An attacker uses a compromised pod to access the underlying node via the cloud instance metadata service. This combines:",
+      "o": [
+        "Container compromise + cloud metadata abuse",
+        "Simple container escape only",
+        "VM escape only",
+        "Network lateral movement only"
+      ],
+      "c": 0,
+      "x": "Depuis un pod, l'accès au service de métadonnées cloud peut fournir des credentials de l'instance hôte.",
+      "r": "Ce n'est pas une simple évasion de conteneur."
+    }
+  ],
+  "history": []
+}

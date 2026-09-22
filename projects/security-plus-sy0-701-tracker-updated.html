@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CompTIA Security+ SY0-701 Study Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f172a; --panel:#111c33; --ink:#e2e8f0; --muted:#94a3b8;
+    --accent:#38bdf8; --accent2:#a78bfa; --good:#10b981; --bad:#ef4444;
+    --warn:#f59e0b; --line:#1e293b; --chip:#1e293b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  header{padding:24px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#0b1228,#15224a)}
+  header h1{margin:0 0 6px;font-size:26px;letter-spacing:.3px}
+  header .sub{color:var(--muted);font-size:13px}
+  main{max-width:1200px;margin:0 auto;padding:18px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 18px}
+  .tab{padding:8px 14px;border-radius:999px;background:var(--chip);color:var(--ink);
+       border:1px solid var(--line);cursor:pointer;font-size:14px}
+  .tab.active{background:var(--accent);color:#04111f;border-color:var(--accent);font-weight:600}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+         padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  label.field{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:4px}
+  input[type=text],input[type=search],textarea,select{
+    background:#0b1530;color:var(--ink);border:1px solid var(--line);border-radius:8px;
+    padding:8px 10px;font-size:14px;font-family:inherit
+  }
+  textarea{min-height:90px;resize:vertical}
+  button{background:var(--accent);color:#04111f;border:0;border-radius:8px;
+         padding:8px 14px;font-weight:600;cursor:pointer;font-size:13px}
+  button.secondary{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  button.danger{background:var(--bad);color:#fff}
+  .q{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#0c1830}
+  .q h3{margin:0 0 8px;font-size:16px}
+  .q .meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+  .opts{display:grid;gap:6px;margin-top:6px}
+  .opt{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#0a142a;cursor:pointer}
+  .opt.sel{border-color:var(--accent);background:#0d2547}
+  .opt.correct{border-color:var(--good);background:#0c2a23}
+  .opt.wrong{border-color:var(--bad);background:#3a0d10}
+  .explain{margin-top:10px;padding:10px;background:#0a142a;border-left:3px solid var(--accent2);
+           border-radius:6px;font-size:14px;color:#dbeafe}
+  .trap{margin-top:6px;padding:8px;background:#2a1d05;border-left:3px solid var(--warn);
+        border-radius:6px;font-size:13px;color:#fde68a}
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--chip);
+         font-size:11px;color:var(--muted);margin-right:6px}
+  .domain-1{color:#60a5fa}.domain-2{color:#f87171}.domain-3{color:#34d399}
+  .domain-4{color:#fbbf24}.domain-5{color:#a78bfa}
+  .score-card{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px}
+  .score-card .cell{padding:10px;background:#0a142a;border:1px solid var(--line);border-radius:8px;text-align:center}
+  .score-card .cell .v{font-size:22px;font-weight:700}
+  .score-card .cell .l{font-size:12px;color:var(--muted)}
+  .hide{display:none}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.grid-2{grid-template-columns:1fr}}
+  /* Print */
+  @media print{
+    body{background:#fff;color:#000}
+    header,.tabs,button,label.field,input,select,textarea,.no-print{display:none !important}
+    .panel,.q{background:#fff;color:#000;border:1px solid #999;box-shadow:none}
+    .q{page-break-inside:avoid}
+    .explain,.trap{background:#f4f4f4;color:#111;border-left-color:#444}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>CompTIA Security+ SY0-701 — Study Tracker</h1>
+  <div class="sub">Question stems and options in English • Explanations and traps in French • Domain-2 heavy</div>
+</header>
+
+<main>
+  <nav class="tabs no-print" id="tabs">
+    <button class="tab active" data-view="browse">Browse &amp; Revise</button>
+    <button class="tab" data-view="quiz">Quiz Mode</button>
+    <button class="tab" data-view="add">Add Question</button>
+    <button class="tab" data-view="history">Score History</button>
+    <button class="tab" data-view="data">Data (Export / Import)</button>
+  </nav>
+
+  <!-- ============ BROWSE / REVISION VIEW ============ -->
+  <section id="view-browse" class="panel">
+    <div class="row">
+      <label class="field" style="flex:1;min-width:240px">
+        <span>Live search</span>
+        <input id="search" type="search" placeholder="Search stems, options, explanations…">
+      </label>
+      <label class="field">
+        <span>Difficulty</span>
+        <select id="difficulty">
+          <option value="">All</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <span class="badge">Domains (multi-select):</span>
+      <label><input type="checkbox" class="dfilt" value="1" checked> D1 12%</label>
+      <label><input type="checkbox" class="dfilt" value="2" checked> D2 22%</label>
+      <label><input type="checkbox" class="dfilt" value="3" checked> D3 18%</label>
+      <label><input type="checkbox" class="dfilt" value="4" checked> D4 28%</label>
+      <label><input type="checkbox" class="dfilt" value="5" checked> D5 20%</label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="revBtn" class="secondary">Revision mode (reveal answers)</button>
+      <span id="revState" class="badge">OFF</span>
+    </div>
+    <div id="qlist"></div>
+  </section>
+
+  <!-- ============ QUIZ VIEW ============ -->
+  <section id="view-quiz" class="panel hide">
+    <div class="row">
+      <label class="field">
+        <span>Quiz size</span>
+        <select id="quizSize">
+          <option>10</option><option selected>20</option><option>30</option><option>50</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Domains (multi-select)</span>
+        <select id="quizDomains" multiple size="5" style="min-width:120px">
+          <option value="1" selected>D1 — General Security Concepts (12%)</option>
+          <option value="2" selected>D2 — Threats, Vulnerabilities &amp; Mitigations (22%)</option>
+          <option value="3" selected>D3 — Security Architecture (18%)</option>
+          <option value="4" selected>D4 — Security Operations (28%)</option>
+          <option value="5" selected>D5 — Security Program Management &amp; Oversight (20%)</option>
+        </select>
+      </label>
+      <button id="quizStart">Start Quiz</button>
+    </div>
+    <div id="quizArea"></div>
+  </section>
+
+  <!-- ============ ADD QUESTION VIEW ============ -->
+  <section id="view-add" class="panel hide">
+    <h2 style="margin-top:0">Add a new question</h2>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 10px">
+      Saved in your browser (localStorage). English stems/options, French explanations preferred.
+    </p>
+    <div class="grid-2">
+      <label class="field">Domain
+        <select id="addDomain">
+          <option value="1">1 — General Security Concepts (12%)</option>
+          <option value="2" selected>2 — Threats, Vulnerabilities &amp; Mitigations (22%)</option>
+          <option value="3">3 — Security Architecture (18%)</option>
+          <option value="4">4 — Security Operations (28%)</option>
+          <option value="5">5 — Security Program Management &amp; Oversight (20%)</option>
+        </select>
+      </label>
+      <label class="field">Difficulty
+        <select id="addDiff">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+    </div>
+    <label class="field" style="margin-top:8px">Stem (English)
+      <textarea id="addStem"></textarea>
+    </label>
+    <div class="grid-2" style="margin-top:8px">
+      <label class="field">Option A <input id="addO0" type="text"></label>
+      <label class="field">Option B <input id="addO1" type="text"></label>
+      <label class="field">Option C <input id="addO2" type="text"></label>
+      <label class="field">Option D <input id="addO3" type="text"></label>
+    </div>
+    <label class="field" style="margin-top:8px">Correct index (0-3)
+      <input id="addCorrect" type="text" value="0">
+    </label>
+    <label class="field" style="margin-top:8px">Explanation (French)
+      <textarea id="addExplain"></textarea>
+    </label>
+    <label class="field" style="margin-top:8px">Trap (French) — common wrong reasoning
+      <textarea id="addTrap"></textarea>
+    </label>
+    <div class="row" style="margin-top:10px">
+      <button id="addSave">Save to localStorage</button>
+      <span id="addStatus" class="badge"></span>
+    </div>
+  </section>
+
+  <!-- ============ HISTORY VIEW ============ -->
+  <section id="view-history" class="panel hide">
+    <h2 style="margin-top:0">Score history</h2>
+    <div id="historyList"></div>
+  </section>
+
+  <!-- ============ DATA VIEW ============ -->
+  <section id="view-data" class="panel hide">
+    <h2 style="margin-top:0">Data</h2>
+    <div class="row">
+      <button id="exportBtn">Export JSON (questions + history)</button>
+      <label class="field">
+        <span>Import JSON</span>
+        <input id="importFile" type="file" accept="application/json">
+      </label>
+      <span id="dataStatus" class="badge"></span>
+    </div>
+    <p style="color:var(--muted);font-size:13px;margin-top:10px">
+      Exports include every built-in question, your localStorage additions, and your score history.
+    </p>
+  </section>
+
+</main>
+
+<!-- ====== Question bank (71 questions) ====== -->
+<script>
+// Question bank for SY0-701 — stems/options English, explanations French
+const QUESTIONS = [
+  // ===== DOMAIN 1: General Security Concepts (12% — 8 questions) =====
+  {d:1,e:"easy",s:"Which security principle ensures that data is not altered in transit?",o:["Integrity","Confidentiality","Availability","Non-repudiation"],c:0,t:["Availability","Confidentiality","Non-repudiation"],x:"L'intégrité garantit que les données ne sont pas modifiées de manière non autorisée pendant le stockage ou le transit.",r:"Souvent confondue avec la confidentialité — la CIA triad est ici distincte."},
+  {d:1,e:"easy",s:"Which concept refers to proving that a user performed an action?",o:["Non-repudiation","Authentication","Authorization","Accountability"],c:0,t:["Accountability","Authentication","Authorization"],x:"La non-répudiation empêche un utilisateur de nier avoir effectué une action, généralement via des signatures ou des journaux.",r:"Penser 'ne peut pas refuser' — à ne pas confondre avec l'authentification."},
+  {d:1,e:"medium",s:"A defense-in-depth strategy primarily relies on which concept?",o:["Layered controls","Single strong control","Outsourced SOC","Encryption only"],c:0,t:["Encryption only","Single strong control","Outsourced SOC"],x:"La défense en profondeur empile plusieurs couches de contrôles pour qu'aucune défaillance unique ne compromette le système.",r:"Trompe les candidats qui pensent qu'un seul contrôle suffit."},
+  {d:1,e:"medium",s:"Which CIA pillar ensures systems remain accessible when needed?",o:["Availability","Integrity","Confidentiality","Authenticity"],c:0,t:["Integrity","Confidentiality","Authenticity"],x:"La disponibilité garantit que les systèmes et les données sont accessibles aux utilisateurs autorisés en temps voulu.",r:"Souvent oubliée dans la triade CIA — c'est l'un des trois piliers."},
+  {d:1,e:"easy",s:"Hashing provides which security property?",o:["Integrity","Confidentiality","Availability","Authentication"],c:0,t:["Confidentiality","Availability","Authentication"],x:"Les fonctions de hachage produisent une empreinte qui permet de vérifier l'intégrité d'un fichier ou d'un message.",r:"Le hachage n'est PAS du chiffrement — il ne fournit pas la confidentialité."},
+  {d:1,e:"hard",s:"Which authentication factor is BEST described as 'something you are'?",o:["Biometric","Password","Smart card","TOTP token"],c:0,t:["Password","Smart card","TOTP token"],x:"Les facteurs biométriques (empreinte, visage, iris) correspondent à la catégorie 'quelque chose que vous êtes'.",r:"TOTP et smart card sont 'quelque chose que vous avez' — pas 'ce que vous êtes'."},
+  {d:1,e:"medium",s:"Which term describes giving the MINIMUM access required for a task?",o:["Least privilege","Need to know","Separation of duties","Defense in depth"],c:0,t:["Need to know","Separation of duties","Defense in depth"],x:"Le principe du moindre privilège limite l'accès d'un utilisateur au strict minimum nécessaire à son rôle.",r:"Souvent confondu avec 'need to know' — qui est plus strict (par ressource)."},
+  {d:1,e:"hard",s:"Zero Trust architecture is built on which foundational assumption?",o:["No implicit trust based on network location","Trust internal networks fully","VPN guarantees security","MAC filtering is enough"],c:0,t:["Trust internal networks fully","VPN guarantees security","MAC filtering is enough"],x:"Zero Trust suppose qu'aucune confiance implicite n'est accordée en fonction de l'emplacement réseau ou du périmètre.",r:"L'erreur classique : croire qu'un VPN d'entreprise suffit."},
+
+  // ===== DOMAIN 2: Threats, Vulnerabilities & Mitigations (22% — 16 questions) =====
+  {d:2,e:"easy",s:"An attacker calls an employee pretending to be the IT department to obtain a password. What is this attack?",o:["Social engineering","Brute force","SQL injection","Cross-site scripting"],c:0,t:["Brute force","SQL injection","Cross-site scripting"],x:"L'ingénierie sociale manipule des personnes pour qu'elles divulguent des informations ou effectuent des actions.",r:"Pas technique — purement humain."},
+  {d:2,e:"medium",s:"Which malware encrypts user data and demands payment for the decryption key?",o:["Ransomware","Trojan","Spyware","Adware"],c:0,t:["Trojan","Spyware","Adware"],x:"Le ransomware chiffre les fichiers de la victime et exige une rançon pour fournir la clé de déchiffrement.",r:"Un cheval de Troie ne chiffre généralement pas — il ouvre une porte dérobée."},
+  {d:2,e:"medium",s:"Which attack injects malicious scripts into a trusted website to target other users?",o:["Cross-site scripting (XSS)","SQL injection","Buffer overflow","Directory traversal"],c:0,t:["SQL injection","Buffer overflow","Directory traversal"],x:"Le XSS injecte du code (souvent JavaScript) dans une page vue par d'autres utilisateurs.",r:"SQLi cible la base de données — XSS cible les autres utilisateurs du navigateur."},
+  {d:2,e:"hard",s:"A buffer overflow vulnerability is BEST mitigated by which technique?",o:["Address Space Layout Randomization (ASLR)","Disabling the firewall","Increasing password length","Using HTTP"],c:0,t:["Disabling the firewall","Increasing password length","Using HTTP"],x:"L'ASLR randomise les emplacements mémoire rendant l'exploitation d'un débordement nettement plus difficile.",r:"Trompe les candidats qui pensent qu'un pare-feu applicatif résoudra tout."},
+  {d:2,e:"easy",s:"Which attack floods a server with traffic to make it unavailable?",o:["Denial of Service (DoS)","Man-in-the-middle","Phishing","Replay"],c:0,t:["Man-in-the-middle","Phishing","Replay"],x:"Une attaque par déni de service submerge un système de trafic pour empêcher les utilisateurs légitimes d'y accéder.",r:"À ne pas confondre avec DDoS qui utilise plusieurs sources distribuées."},
+  {d:2,e:"medium",s:"Phishing emails that target a specific executive are called what?",o:["Spear phishing","Whaling","Vishing","Smishing"],c:0,t:["Vishing","Smishing","Whaling"],x:"Le spear phishing cible des individus ou organisations spécifiques. 'Whaling' cible les dirigeants.",r:"Whaling cible spécifiquement les hauts dirigeants — spear phishing est plus général."},
+  {d:2,e:"hard",s:"Which technique allows an attacker to intercept traffic between two parties without their knowledge?",o:["Man-in-the-middle","Side channel","Brute force","Rainbow table"],c:0,t:["Side channel","Brute force","Rainbow table"],x:"L'attaque de l'homme du milieu s'intercepte silencieusement entre deux parties qui croient communiquer directement.",r:"Side channel analyse les fuites physiques (alimentation, timing) — pas le trafic réseau."},
+  {d:2,e:"medium",s:"Which password attack tries every possible character combination?",o:["Brute force","Dictionary","Rainbow table","Credential stuffing"],c:0,t:["Dictionary","Rainbow table","Credential stuffing"],x:"La force brute essaie systématiquement toutes les combinaisons possibles — très lent mais exhaustif.",r:"Le dictionnaire utilise une liste de mots courants — beaucoup plus rapide mais moins complet."},
+  {d:2,e:"hard",s:"A TOCTOU vulnerability is exploited by doing what?",o:["Changing a resource between check and use","Buffer overflow in memory","SQL injection","Phishing"],c:0,t:["Buffer overflow in memory","SQL injection","Phishing"],x:"Time-Of-Check to Time-Of-Use exploite la fenêtre entre la vérification d'une ressource et son utilisation.",r:"Erreur classique : confondre avec un simple race condition générique."},
+  {d:2,e:"medium",s:"Which vulnerability allows execution of arbitrary code due to improper input handling?",o:["Injection","Cross-site request forgery","Open redirect","Clickjacking"],c:0,t:["Cross-site request forgery","Open redirect","Clickjacking"],x:"Les failles d'injection (SQL, commande, LDAP) permettent d'exécuter du code ou des commandes non autorisés.",r:"CSRF force l'utilisateur à effectuer une action — il n'injecte pas de code."},
+  {d:2,e:"easy",s:"Which term refers to software flaws that can be exploited?",o:["Vulnerability","Threat","Risk","Asset"],c:0,t:["Threat","Risk","Asset"],x:"Une vulnérabilité est une faiblesse dans un système qui peut être exploitée par une menace.",r:"La menace est l'agent — la vulnérabilité est la faiblesse exploitée."},
+  {d:2,e:"medium",s:"A threat actor leaves a USB stick in a parking lot hoping an employee plugs it in. What is this technique?",o:["Social engineering / baiting","Tailgating","Shoulder surfing","Phishing"],c:0,t:["Tailgating","Shoulder surfing","Phishing"],x:"Le baiting attire une victime avec un appât (USB, cadeau) pour la compromettre ensuite.",r:"Le tailgating suit physiquement quelqu'un — sans objet."},
+  {d:2,e:"hard",s:"Which attack exploits the reuse of cryptographic nonces in WPA2?",o:["KRACK","Heartbleed","POODLE","BEAST"],c:0,t:["Heartbleed","POODLE","BEAST"],x:"KRACK (Key Reinstallation Attack) force la réutilisation de nonces dans le handshake WPA2.",r:"Heartbleed lit la mémoire via une extension TLS — pas WPA2."},
+  {d:2,e:"medium",s:"Which type of malware records keystrokes and sends them to an attacker?",o:["Keylogger","Ransomware","Rootkit","Bootkit"],c:0,t:["Rootkit","Bootkit","Ransomware"],x:"Un keylogger capture les frappes au clavier pour voler identifiants, mots de passe et données sensibles.",r:"Un rootkit cache la présence d'un malware — il ne capture pas forcément les frappes."},
+  {d:2,e:"hard",s:"Which cryptographic weakness allowed creation of precomputed hash tables?",o:["Lack of salt on passwords","Weak RSA keys","Improper key escrow","Reused IVs"],c:0,t:["Weak RSA keys","Improper key escrow","Reused IVs"],x:"Sans sel, des mots de passe identiques produisent le même hachage, permettant des tables arc-en-ciel.",r:"Le sel n'est PAS nécessaire au chiffrement RSA — il sert au hachage de mots de passe."},
+  {d:2,e:"medium",s:"Which technique encrypts only the most sensitive parts of a database column?",o:["Column-level encryption","Full disk encryption","Transparent encryption","TLS only"],c:0,t:["Full disk encryption","Transparent encryption","TLS only"],x:"Le chiffrement au niveau de la colonne protège des champs spécifiques (ex.: numéro de carte) au sein d'une table.",r:"Le chiffrement complet du disque protège le volume — pas un champ ciblé."},
+
+  // ===== DOMAIN 3: Security Architecture (18% — 13 questions) =====
+  {d:3,e:"easy",s:"Which network device forwards traffic based on MAC addresses?",o:["Switch","Router","Hub","Firewall"],c:0,t:["Router","Hub","Firewall"],x:"Un commutateur (switch) utilise les adresses MAC pour transmettre les trames au bon port.",r:"Le routeur utilise les adresses IP — couche 3."},
+  {d:3,e:"medium",s:"Which cloud service model provides virtualized hardware resources only?",o:["IaaS","PaaS","SaaS","FaaS"],c:0,t:["PaaS","SaaS","FaaS"],x:"L'IaaS (Infrastructure as a Service) offre des ressources virtualisées : serveurs, stockage, réseau.",r:"SaaS fournit des applications complètes — PaaS fournit une plateforme de développement."},
+  {d:3,e:"medium",s:"Which zone is used to host publicly accessible web servers?",o:["DMZ","Internal LAN","Guest network","Management VLAN"],c:0,t:["Internal LAN","Guest network","Management VLAN"],x:"Une DMZ héberge des services exposés à Internet, isolés du réseau interne.",r:"Le réseau interne héberge les postes et serveurs internes — non exposés."},
+  {d:3,e:"hard",s:"Which authentication protocol uses tickets issued by a Key Distribution Center?",o:["Kerberos","LDAP","RADIUS","OAuth"],c:0,t:["RADIUS","LDAP","OAuth"],x:"Kerberos utilise un KDC pour émettre des tickets (TGT, TGS) permettant l'authentification mutuelle.",r:"RADIUS est AAA mais ne gère pas de tickets Kerberos."},
+  {d:3,e:"easy",s:"Which device filters traffic between networks using a set of rules?",o:["Firewall","Hub","Repeater","Bridge"],c:0,t:["Hub","Repeater","Bridge"],x:"Un pare-feu applique des règles pour autoriser ou refuser le trafic entre zones réseau.",r:"Un hub ne fait que répéter le trafic — il ne le filtre pas."},
+  {d:3,e:"medium",s:"Which protocol is used to securely manage network devices via command line?",o:["SSH","Telnet","FTP","HTTP"],c:0,t:["Telnet","FTP","HTTP"],x:"SSH (Secure Shell) chiffre la session d'administration à distance, contrairement à Telnet.",r:"Telnet envoie tout en clair — facile à intercepter."},
+  {d:3,e:"hard",s:"Which technology virtualizes an entire OS, including the kernel?",o:["Hardware virtualization (Type 1/2)","Container","Sandbox","Jail"],c:0,t:["Container","Sandbox","Jail"],x:"L'hyperviseur virtualise le matériel complet et permet à plusieurs OS invités de tourner indépendamment.",r:"Un conteneur partage le noyau hôte — pas une virtualisation complète."},
+  {d:3,e:"medium",s:"Which concept uses multiple physical servers to act as a single logical system?",o:["Clustering","RAID","Load balancing only","Mirroring"],c:0,t:["RAID","Load balancing only","Mirroring"],x:"Le clustering combine plusieurs nœuds pour offrir haute disponibilité et équilibrage de charge.",r:"RAID concerne le stockage redondant — pas la disponibilité applicative."},
+  {d:3,e:"easy",s:"Which wireless security protocol is CURRENTLY the strongest in widespread use?",o:["WPA3","WEP","WPA","WPA2-Enterprise"],c:0,t:["WEP","WPA","WPA2-Enterprise"],x:"WPA3 utilise SAE (Simultaneous Authentication of Equals) et offre une protection supérieure contre les attaques par dictionnaire.",r:"WEP est totalement obsolète et crackable en minutes."},
+  {d:3,e:"hard",s:"Which architecture segregates networks into functional zones with controlled flows?",o:["Network segmentation","Flat network","Hub-and-spoke","VLAN hopping"],c:0,t:["Flat network","Hub-and-spoke","VLAN hopping"],x:"La segmentation réseau divise le réseau en zones (VLAN, sous-réseaux) avec des règles de flux stricts.",r:"Le réseau plat permet à toute communication d'atteindre n'importe quelle zone — dangereux."},
+  {d:3,e:"medium",s:"Which protocol provides centralized authentication, authorization, and accounting?",o:["RADIUS / TACACS+","NTP","DNS","SNMP"],c:0,t:["NTP","DNS","SNMP"],x:"RADIUS et TACACS+ offrent les services AAA pour l'accès réseau et l'administration des équipements.",r:"SNMP gère la supervision — pas l'AAA."},
+  {d:3,e:"hard",s:"Which deployment model combines on-premises and cloud with orchestration between them?",o:["Hybrid cloud","Public cloud only","Private cloud only","Community cloud"],c:0,t:["Public cloud only","Private cloud only","Community cloud"],x:"Le cloud hybride combine cloud public et privé, permettant la portabilité et l'orchestration des charges.",r:"Le cloud public n'inclut pas d'environnement local — c'est hybride qui le fait."},
+  {d:3,e:"medium",s:"Which security control type BEST describes a firewall rule blocking traffic?",o:["Technical control","Administrative control","Physical control","Detective control"],c:0,t:["Administrative control","Physical control","Detective control"],x:"Les contrôles techniques (pare-feu, ACL, chiffrement) sont mis en œuvre via la technologie.",r:"Les contrôles administratifs sont des politiques/procédures — pas du matériel/logiciel."},
+
+  // ===== DOMAIN 4: Security Operations (28% — 20 questions) =====
+  {d:4,e:"easy",s:"Which log entry indicates a successful user logon on Windows?",o:["Event ID 4624","Event ID 4625","Event ID 4648","Event ID 1102"],c:0,t:["Event ID 4625","Event ID 4648","Event ID 1102"],x:"L'Event ID 4624 est généré pour chaque ouverture de session réussie sur un système Windows.",r:"4625 correspond à un échec de connexion — utile pour détecter les brute force."},
+  {d:4,e:"medium",s:"Which SIEM function BEST supports detecting a brute-force attack?",o:["Correlation rules across multiple log sources","Single-event alerts only","Manual review only","Backup verification"],c:0,t:["Single-event alerts only","Manual review only","Backup verification"],x:"La corrélation croise plusieurs événements (4625 répétés, source IP, comptes ciblés) pour détecter un pattern d'attaque.",r:"Une alerte sur un seul 4625 génère trop de bruit — il faut corréler."},
+  {d:4,e:"hard",s:"Which technique allows running untrusted code in an isolated environment to observe its behavior?",o:["Sandboxing","Code signing","Whitelisting","Blacklisting"],c:0,t:["Code signing","Whitelisting","Blacklisting"],x:"Le sandboxing exécute le code dans un environnement confiné pour analyser son comportement en toute sécurité.",r:"Le code signing vérifie l'intégrité du code — il ne l'exécute pas."},
+  {d:4,e:"medium",s:"Which metric measures how quickly a security team responds to an incident?",o:["Mean Time to Respond (MTTR)","Mean Time Between Failures","Recovery Point Objective","Service Level Agreement"],c:0,t:["Mean Time Between Failures","Recovery Point Objective","Service Level Agreement"],x:"Le MTTR mesure le temps moyen de réponse/résolution après la détection d'un incident.",r:"MTBF mesure la fiabilité — pas la réponse aux incidents."},
+  {d:4,e:"easy",s:"Which backup type copies only files changed since the last full backup?",o:["Incremental","Differential","Full","Snapshot"],c:0,t:["Differential","Full","Snapshot"],x:"Un incrémental ne copie que les changements depuis la dernière sauvegarde (full ou incrémentale).",r:"Le différentiel copie tout depuis le dernier full — taille cumule à chaque cycle."},
+  {d:4,e:"medium",s:"Which protocol securely transfers files over a network?",o:["SFTP","Telnet","TFTP","HTTP"],c:0,t:["Telnet","TFTP","HTTP"],x:"SFTP (SSH File Transfer Protocol) chiffre le canal de transfert de fichiers.",r:"TFTP envoie en clair et sans authentification — non sécurisé."},
+  {d:4,e:"hard",s:"Which type of malware modifies the system's boot process to gain persistence?",o:["Bootkit","Spyware","Adware","Worm"],c:0,t:["Spyware","Adware","Worm"],x:"Un bootkit infecte le MBR/UEFI pour s'exécuter avant l'OS et maintenir sa persistance.",r:"Un rootkit peut cacher des processus, mais le bootkit cible spécifiquement le démarrage."},
+  {d:4,e:"medium",s:"Which forensic principle preserves the original evidence without alteration?",o:["Chain of custody","Order of volatility","Live forensics","Root cause analysis"],c:0,t:["Live forensics","Root cause analysis","Order of volatility"],x:"La chaîne de custody documente la possession continue des preuves pour garantir leur intégrité juridique.",r:"L'ordre de volatilité dicte l'ordre d'acquisition — c'est différent."},
+  {d:4,e:"easy",s:"Which security tool inspects packets up to the application layer?",o:["Deep Packet Inspection (DPI)","Hub","Repeater","Media converter"],c:0,t:["Hub","Repeater","Media converter"],x:"L'inspection approfondie des paquets analyse le contenu (couche 7) pour détecter des menaces avancées.",r:"Un hub ne fait que répéter les bits — aucune analyse."},
+  {d:4,e:"hard",s:"Which detection method monitors program behavior at runtime to flag malicious activity?",o:["Behavioral / heuristic analysis","Signature-based only","Blacklist check","CRC check"],c:0,t:["Signature-based only","Blacklist check","CRC check"],x:"L'analyse comportementale observe les actions (modifications registre, appels réseau) pour repérer des malwares inconnus.",r:"La détection par signature échoue face aux malwares polymorphes ou zero-day."},
+  {d:4,e:"medium",s:"Which concept involves practicing incident response steps in advance?",o:["Tabletop exercise","Penetration testing","Red team engagement","Audit"],c:0,t:["Penetration testing","Red team engagement","Audit"],x:"Un exercice sur table simule un scénario pour entraîner l'équipe à réagir sans toucher aux systèmes.",r:"Le pentest est technique — il vise les systèmes, pas la coordination humaine."},
+  {d:4,e:"easy",s:"Which term describes restoring systems and data after a disruption?",o:["Disaster recovery","Incident response","Patch management","Hardening"],c:0,t:["Incident response","Patch management","Hardening"],x:"La reprise après sinistre (DR) couvre la restauration des opérations après un incident majeur.",r:"L'IR gère la phase active — DR se concentre sur la reprise des activités."},
+  {d:4,e:"medium",s:"Which type of control is intended to DETECT a security incident that has occurred?",o:["Detective","Preventive","Corrective","Deterrent"],c:0,t:["Preventive","Corrective","Deterrent"],x:"Les contrôles de détection (logs, IDS, caméras) identifient les incidents en cours ou passés.",r:"Un pare-feu est préventif — il vise à empêcher l'incident avant qu'il ne survienne."},
+  {d:4,e:"hard",s:"Which IDS/IPS mode drops malicious traffic inline?",o:["Inline / IPS mode","Passive / IDS mode","Tap mode","Span mode"],c:0,t:["Passive / IDS mode","Tap mode","Span mode"],x:"Le mode inline (IPS) s'insère dans le flux et peut bloquer activement le trafic malveillant.",r:"Le mode IDS passif observe sans bloquer — il ne fait qu'alerter."},
+  {d:4,e:"medium",s:"Which log source is most useful for detecting lateral movement on Windows?",o:["Windows Security log (4624, 4673, 4688)","DHCP log only","DNS debug log only","Print server log"],c:0,t:["DHCP log only","DNS debug log only","Print server log"],x:"Les événements de sécurité Windows (logons, accès, processus) révèlent les mouvements latéraux d'un attaquant.",r:"Les logs DHCP seuls n'indiquent pas les actions sur l'hôte."},
+  {d:4,e:"hard",s:"Which technique uses deception to mislead attackers within a network?",o:["Honeypot","Firewall","NAT","Subnetting"],c:0,t:["Firewall","NAT","Subnetting"],x:"Un honeypot est un faux système conçu pour attirer et étudier les attaquants.",r:"Un NAT traduit des adresses — il ne trompe pas l'attaquant."},
+  {d:4,e:"medium",s:"Which backup strategy stores copies off-site for disaster resilience?",o:["3-2-1 rule","RAID 0","Single disk","No backup"],c:0,t:["RAID 0","Single disk","No backup"],x:"La règle 3-2-1 : 3 copies, 2 supports, 1 hors site — base de la résilience.",r:"RAID 0 n'offre AUCUNE redondance — un disque perdu = données perdues."},
+  {d:4,e:"easy",s:"Which protocol provides secure email retrieval?",o:["POP3S / IMAPS","SMTP","Telnet","FTP"],c:0,t:["SMTP","Telnet","FTP"],x:"POP3S et IMAPS chiffrent la récupération des e-mails via TLS.",r:"SMTP standard (sans STARTTLS) envoie en clair — intercepteurs en clair possible."},
+  {d:4,e:"hard",s:"Which endpoint detection capability monitors process behavior via kernel hooks?",o:["EDR (Endpoint Detection & Response)","Basic antivirus only","Disk defragmenter","File backup"],c:0,t:["Basic antivirus only","Disk defragmenter","File backup"],x:"L'EDR utilise des hooks noyau et télémétrie continue pour détecter des comportements suspects sur l'endpoint.",r:"Un antivirus classique se base principalement sur les signatures — il manque de contexte comportemental."},
+  {d:4,e:"medium",s:"Which concept means testing recovery procedures without disrupting production?",o:["Disaster recovery test in isolated environment","Live production cutover","Phishing simulation","Red team test"],c:0,t:["Live production cutover","Phishing simulation","Red team test"],x:"Tester le DR dans un environnement isolé vérifie les procédures sans risque pour la production.",r:"Un basculement en production est trop risqué pour un simple test."},
+
+  // ===== DOMAIN 5: Security Program Management & Oversight (20% — 14 questions) =====
+  {d:5,e:"easy",s:"Which document describes the rules and expected behavior of employees regarding security?",o:["Acceptable Use Policy (AUP)","SLA","MOU","NDA"],c:0,t:["SLA","MOU","NDA"],x:"L'AUP définit l'usage acceptable des ressources informatiques par les employés.",r:"Un NDA protège la confidentialité — il ne régit pas l'usage des systèmes."},
+  {d:5,e:"medium",s:"Which risk treatment involves accepting the risk without mitigation?",o:["Risk acceptance","Risk mitigation","Risk transference","Risk avoidance"],c:0,t:["Risk mitigation","Risk transference","Risk avoidance"],x:"L'acceptation du risque reconnaît un risque résiduel et accepte ses conséquences potentielles.",r:"Le transfert (ex.: assurance) déplace le risque — l'acceptation le garde."},
+  {d:5,e:"medium",s:"Which framework is widely used for cybersecurity risk management?",o:["NIST CSF","OSI model","TCP/IP","COBIT only"],c:0,t:["OSI model","TCP/IP","COBIT only"],x:"Le NIST Cybersecurity Framework (Identify, Protect, Detect, Respond, Recover) structure la gestion du risque cyber.",r:"OSI décrit le réseau — pas la gestion du risque."},
+  {d:5,e:"hard",s:"Which contract element specifies measurable performance targets for a vendor?",o:["Service Level Agreement (SLA)","NDA","AUP","MOU"],c:0,t:["NDA","AUP","MOU"],x:"Un SLA définit des niveaux de service mesurables (disponibilité, RTO, RPO) entre client et fournisseur.",r:"Une MOU décrit des intentions de partenariat — pas des engagements mesurables."},
+  {d:5,e:"medium",s:"Which type of assessment simulates an attacker's actions to find vulnerabilities?",o:["Penetration test","Vulnerability scan","Compliance audit","Risk assessment"],c:0,t:["Vulnerability scan","Compliance audit","Risk assessment"],x:"Un test d'intrusion imite un attaquant réel pour identifier et exploiter les faiblesses.",r:"Un scan de vulnérabilités est automatisé — il n'exploite pas activement les failles."},
+  {d:5,e:"easy",s:"Which principle states that data should be classified by sensitivity?",o:["Data classification","Data minimization","Data sovereignty","Data residency"],c:0,t:["Data minimization","Data sovereignty","Data residency"],x:"La classification des données attribue des niveaux (public, interne, confidentiel, secret) pour piloter les contrôles.",r:"La minimisation collecte le strict nécessaire — c'est différent."},
+  {d:5,e:"hard",s:"Which audit type evaluates controls against a specific regulation (e.g., PCI-DSS)?",o:["Compliance audit","Operational audit","Financial audit","Performance audit"],c:0,t:["Operational audit","Financial audit","Performance audit"],x:"Un audit de conformité vérifie l'adhésion à une norme ou réglementation spécifique (PCI-DSS, HIPAA, RGPD).",r:"Un audit opérationnel évalue l'efficacité des processus internes — pas la conformité."},
+  {d:5,e:"medium",s:"Which role is ultimately accountable for an organization's security posture?",o:["Senior management / CISO","Help desk technician","End user","Intern"],c:0,t:["Help desk technician","End user","Intern"],x:"La haute direction (ou le CISO) porte la responsabilité ultime de la posture de sécurité de l'organisation.",r:"L'utilisateur respecte la politique — mais la gouvernance revient au management."},
+  {d:5,e:"medium",s:"Which document defines how long evidence of activity must be retained?",o:["Data retention policy","Privacy policy","AUP","MOU"],c:0,t:["Privacy policy","AUP","MOU"],x:"La politique de rétention précise la durée de conservation des différents types de données et journaux.",r:"La politique de confidentialité traite du traitement des données personnelles."},
+  {d:5,e:"hard",s:"Which governance control ensures separation of conflicting duties?",o:["Separation of duties","Job rotation","Mandatory vacations","Least privilege"],c:0,t:["Job rotation","Mandatory vacations","Least privilege"],x:"La séparation des tâches empêche qu'une seule personne contrôle un processus critique de bout en bout.",r:"Le moindre privilège limite les accès — c'est complémentaire mais distinct."},
+  {d:5,e:"medium",s:"Which regulation protects personal data of EU citizens?",o:["GDPR","HIPAA","PCI-DSS","SOX"],c:0,t:["HIPAA","PCI-DSS","SOX"],x:"Le RGPD (GDPR) encadre le traitement des données personnelles des résidents de l'Union européenne.",r:"HIPAA cible la santé aux USA — PCI-DSS cible les paiements par carte."},
+  {d:5,e:"easy",s:"Which metric tracks the number of security incidents over time?",o:["Incident rate","MTTR only","RPO","MTBF"],c:0,t:["MTTR only","RPO","MTBF"],x:"Le taux d'incidents mesure la fréquence des événements de sécurité sur une période donnée.",r:"MTTR mesure le temps de réponse — pas la fréquence."},
+  {d:5,e:"medium",s:"Which process ensures only authorized changes are made to production systems?",o:["Change management","Patch management only","Asset inventory","Vulnerability scan"],c:0,t:["Patch management only","Asset inventory","Vulnerability scan"],x:"La gestion des changements impose approbation, tests et documentation avant tout déploiement en production.",r:"La gestion des correctifs traite uniquement des patches — la change management est plus large."},
+  {d:5,e:"hard",s:"Which standard provides a risk management framework for U.S. federal agencies?",o:["NIST RMF (SP 800-37)","ISO 27001 only","COBIT only","PCI-DSS"],c:0,t:["ISO 27001 only","COBIT only","PCI-DSS"],x:"Le NIST RMF (Risk Management Framework) guide les agences fédérales US dans la catégorisation, sélection et mise en œuvre de contrôles.",r:"ISO 27001 est international — le NIST RMF cible spécifiquement les agences fédérales US."},
+  {d:1,e:"medium",s:"Which PKI hierarchy starts with the Root CA at the top, signed by itself?",o:["Root CA → Intermediate CA → Issuing CA","Flat trust","Single self-signed only","Web of trust only"],c:0,t:["Flat trust","Single self-signed only","Web of trust only"],x:"Une hiérarchie X.509 typique : Root CA (auto-signé) → Intermediate(s) → Issuing CA — permet la rotation des intermédiaires.",r:"Le flat trust (tous égaux) complique la révocation ; le web of trust est PGP — pas PKI X.509."},
+  {d:1,e:"hard",s:"Which certificate field uniquely identifies the subject (e.g., domain, user, server)?",o:["Subject (DN) / Subject Alternative Name","Issuer only","Serial number","Public key only"],c:0,t:["Issuer only","Serial number","Public key only"],x:"Le Subject DN (CN, O, OU) et le SAN (Subject Alternative Name) identifient ce que certifie le certificat.",r:"L'Issuer identifie l'émetteur ; le Serial est unique côté CA ; la Public Key est le matériel cryptographique."},
+  {d:1,e:"medium",s:"Which PKI trust model is used by modern browsers and OS trust stores?",o:["Hierarchical CA (X.509/PKI)","PGP web of trust","TOFU only","Direct trust"],c:0,t:["PGP web of trust","TOFU only","Direct trust"],x:"Les browsers/OS font confiance à un ensemble de Root CA hiérarchiques (CA/Browser Forum baseline requirements).",r:"PGP web of trust est pour email ; TOFU = Trust On First Use (SSH) ; direct trust = certificats personnalisés."},
+  {d:1,e:"hard",s:"Which PKI process publishes revoked certificates so relying parties reject them?",o:["Certificate Revocation List (CRL) / OCSP","Renewal only","Reissuance","Rekeying"],c:0,t:["Renewal only","Reissuance","Rekeying"],x:"CRL = liste signée par la CA des certs révoqués ; OCSP = vérification en temps réel via OCSP responder.",r:"Le renouvellement/Rekeying crée un nouveau cert ; la révocation annule un cert valide non expiré."},
+  {d:1,e:"medium",s:"Which OCSP stapling improvement attaches the OCSP response to the TLS handshake?",o:["OCSP stapling (TLS Certificate Status Request)","Plain OCSP","CRL only","No check"],c:0,t:["Plain OCSP","CRL only","No check"],x:"OCSP stapling permet au serveur d'attacher une réponse OCSP fraîche à son handshake — évite une requête CA par client.",r:"Le plain OCSP coûte une requête par user ; CRL = download périodique ; no check = vulnérable aux certs révoqués."},
+  {d:1,e:"hard",s:"Which TLS 1.3 improvement removes support for legacy ciphers (RC4, 3DES, MD5, SHA-1)?",o:["Mandatory AEAD + forward secrecy by default","Optional PFS","Static RSA","CBC only"],c:0,t:["Optional PFS","Static RSA","CBC only"],x:"TLS 1.3 impose AES-GCM/ChaCha20-Poly1305 + ECDHE/DHE — toutes les suites sans PFS sont retirées.",r:"Static RSA key exchange = pas de PFS (historiquement PKCS#1 v1.5 CBC) — retiré pour les attaques ROBOT/Sweet32."},
+  {d:1,e:"medium",s:"Which hashing property makes it computationally infeasible to find two inputs with the same hash?",o:["Collision resistance","Pre-image resistance","Speed","Determinism"],c:0,t:["Pre-image resistance","Speed","Determinism"],x:"La résistance aux collisions (birthday attack 2^(n/2)) garantit l'impossibilité pratique de collisions.",r:"La résistance en pré-image : difficile de retrouver l'input depuis le hash ; SHA-256 = 2^128 collisions."},
+  {d:1,e:"hard",s:"Which cryptographic key escrow scheme allows a third party (court order) to decrypt data?",o:["Key escrow / key recovery","PFS","ECDHE","Self-destruct"],c:0,t:["PFS","ECDHE","Self-destruct"],x:"Le key escrow dépose une copie des clés auprès d'un tiers (ex: gouvernement) — permet la levée du chiffrement.",r:"PFS = éphémère (incompatible avec escrow) ; ECDHE = DH éphémère ; self-destruct = détruit la clé après usage."},
+  {d:1,e:"medium",s:"Which symmetric cipher mode encrypts each block independently with the same key?",o:["ECB (Electronic Codebook)","CBC","GCM","CTR"],c:0,t:["CBC","GCM","CTR"],x:"ECB chiffre chaque bloc séparément — patterns visibles (Pingouin ECB image) — déprécié.",r:"CBC chaîne les blocs via XOR avec précédent ; GCM = AEAD ; CTR = compteur — tous sécurisés."},
+  {d:1,e:"hard",s:"Which cryptographic flaw in ECB allows structural patterns to leak in encrypted images?",o:["Deterministic per-block encryption (no IV)","Random IV","MAC required","Nonce reuse"],c:0,t:["Random IV","MAC required","Nonce reuse"],x:"ECB produit le même chiffre pour le même plaintext — patterns visibles dans images/texte structuré.",r:"Random IV (CBC, CTR) randomise ; MAC = intégrité ; nonce reuse casse CTR/GCM — distincts."},
+  {d:1,e:"medium",s:"Which password storage approach iterates a hash function to slow brute force?",o:["Key stretching (PBKDF2 / bcrypt / Argon2)","Single SHA-256","Plaintext + salt","HMAC only"],c:0,t:["Single SHA-256","Plaintext + salt","HMAC only"],x:"PBKDF2 (100k+ iterations), bcrypt (cost ≥12), scrypt/Argon2id ajoutent un coût délibéré.",r:"SHA-256 est rapide (GPU/ASIC) ; plaintext + salt = stocke en clair (avec sel inutile) ; HMAC = KDF rapide."},
+  {d:1,e:"hard",s:"Which NIST guidance specifies password complexity and length requirements?",o:["NIST SP 800-63B","NIST SP 800-53","NIST CSF","NIST SP 800-30"],c:0,t:["NIST SP 800-53","NIST CSF","NIST SP 800-30"],x:"NIST 800-63B = digital identity guidelines : minimum 8 caractères (12-14+ recommandé), pas de complexité arbitraire.",r:"800-53 = controls catalog ; CSF = fonctions ; 800-30 = risk assessment — distincts."},
+  {d:1,e:"medium",s:"Which hashing algorithm is QUANTUM-RESISTANT (currently under standardization by NIST)?",o:["CRYSTALS-Kyber / CRYSTALS-Dilithium / SPHINCS+","RSA","ECC","DH"],c:0,t:["RSA","ECC","DH"],x:"Les PQC (Kyber, Dilithium, SPHINCS+) sont les algorithmes sélectionnés par NIST en 2022-2024 pour résister à Shor/Grover.",r:"RSA/ECC/DH sont vulnérables à l'algorithme de Shor sur ordinateur quantique — à migrer."},
+  {d:1,e:"hard",s:"Which attack on hash functions finds two different inputs producing the same hash?",o:["Collision attack","Pre-image attack","Brute force on plaintext","Side-channel"],c:0,t:["Pre-image attack","Brute force on plaintext","Side-channel"],x:"Une collision (birthday bound 2^(n/2)) trouve deux inputs m1≠m2 avec même hash — ex: SHAttered (SHA-1).",r:"Le pre-image attack = trouver un input depuis un hash ; le brute force plaintext cherche le mot ; side-channel = fuites physiques."},
+  {d:1,e:"medium",s:"Which SAML 2.0 binding uses HTTP Redirect to transmit the AuthnRequest?",o:["HTTP Redirect binding","HTTP POST binding","SOAP binding","Artifact binding"],c:0,t:["HTTP POST binding","SOAP binding","Artifact binding"],x:"L'HTTP Redirect binding encode l'AuthnRequest en URL params (limitée en taille).",r:"HTTP POST = form auto-submit (par défaut pour la réponse) ; SOAP = legacy WSA ; Artifact = référence + retrieve."},
+  {d:1,e:"hard",s:"Which OAuth 2.0 token vulnerability is mitigated by short access tokens + refresh tokens?",o:["Token replay / long-lived token leakage","CSRF only","XSS only","Phishing only"],c:0,t:["CSRF only","XSS only","Phishing only"],x:"Les access tokens courts (15-60 min) + refresh rotation limitent l'impact d'une fuite.",r:"CSRF/XSS/phishing sont des vecteurs d'obtention du token — pas un défaut de durée de vie."},
+  {d:1,e:"medium",s:"Which directory integration pattern uses a single sign-on across multiple trusted domains?",o:["Federated SSO (SAML/OIDC)","Local accounts","Password sync","Manual login"],c:0,t:["Local accounts","Password sync","Manual login"],x:"La fédération SSO délègue l'auth à un IdP central — Trust Circle entre organizations (eduGAIN, federation.gov).",r:"Password sync réplique les hashs ; local accounts = silos ; manual login = pas de SSO."},
+  {d:1,e:"hard",s:"Which identity attribute is exchanged via SAML/OIDC for authorization decisions?",o:["User attributes / claims / entitlements","Only NameID","Password","Hash"],c:0,t:["Only NameID","Password","Hash"],x:"Les attributs (rôle, groupe, département, clearance) sont échangés pour l'authz — pas seulement l'identité.",r:"NameID seul = pas d'info pour RBAC/ABAC ; password/hash ne transitent jamais via SAML/OIDC."},
+  {d:1,e:"medium",s:"Which MFA factor requires physical possession (smart card, token, phone)?",o:["Possession (something you have)","Knowledge","Inherence","Location"],c:0,t:["Knowledge","Inherence","Location"],x:"Possession = smart card, YubiKey, téléphone (push/TOTP) — perdu = vol possible mais nécessite vol physique.",r:"Knowledge = password/PIN ; Inherence = biométrie ; Location = géolocalisation — autres catégories."},
+  {d:1,e:"hard",s:"Which SAML signature wrapping attack injects a malicious assertion alongside a legitimate one?",o:["XML Signature Wrapping (XSW)","CSRF","XSS","SQLi"],c:0,t:["CSRF","XSS","SQLi"],x:"XSW exploite la disparité entre ce qui est signé et ce qui est validé — référence vs XPath de l'assertion.",r:"CSRF/XSS/SQLi sont des attaques navigateur ou DB — pas XML signature processing."},
+  {d:1,e:"medium",s:"Which IAM concept grants the minimum permissions required to perform a task?",o:["Least privilege","Defense in depth","Zero trust","Fail open"],c:0,t:["Defense in depth","Zero trust","Fail open"],x:"Least privilege = n'accorder que les permissions strictement nécessaires (POLP - Principle of Least Privilege).",r:"Defense in depth = couches ; Zero trust = vérification continue ; Fail open = tout autoriser en cas d'erreur."},
+  {d:1,e:"hard",s:"Which attack on Kerberos requests a service ticket for an SPN and cracks it offline?",o:["Kerberoasting","AS-REP Roasting","Pass-the-hash","Golden Ticket"],c:0,t:["AS-REP Roasting","Pass-the-hash","Golden Ticket"],x:"Kerberoasting = request TGS pour SPN (account with SPN set) → crack offline le ticket chiffré RC4-HMAC.",r:"AS-REP Roasting = pas de pre-auth ; PtH = NTLM ; Golden Ticket = forge TGT via krbtgt key."},
+  {d:1,e:"medium",s:"Which attribute in X.509 defines the validity period of a certificate?",o:["Validity (notBefore / notAfter)","Serial","Issuer","Public Key"],c:0,t:["Serial","Issuer","Public Key"],x:"Validity : notBefore (début) et notAfter (fin) — expiration automatique.",r:"Serial = identifiant unique CA ; Issuer = émetteur ; Public Key = clé publique du sujet."},
+  {d:1,e:"hard",s:"Which OCSP response code indicates the certificate is revoked?",o:["revoked (status: 1)","good","unknown","error"],c:0,t:["good","unknown","error"],x:"OCSP status 'revoked' (code 1) + revocation reason + revocationTime — bloque le cert.",r:"good = valide ; unknown = issuer ne connaît pas le cert ; error = erreur de traitement (retry)."},
+  {d:1,e:"medium",s:"Which OAuth 2.0 scope restricts an access token to read-only user profile access?",o:["scope=read:profile (or 'profile')","scope=admin","scope=write:*","scope=*"],c:0,t:["scope=admin","scope=write:*","scope=*"],x:"Le scope profile (OIDC) ou read:profile limite l'accès aux attributs de profil — moindre privilège.",r:"admin/write:*/scope=* donnent trop de droits — anti-pattern."},
+  {d:1,e:"hard",s:"Which password manager security feature encrypts the vault with a key derived from the master password?",o:["Zero-knowledge / PBKDF2 / Argon2id KDF","Plain SHA-1","Plaintext vault","Server-side decryption"],c:0,t:["Plain SHA-1","Plaintext vault","Server-side decryption"],x:"Zero-knowledge = le serveur ne voit jamais la clé maître ; dérivation PBKDF2/Argon2 avec sel unique.",r:"SHA-1 trop rapide ; plaintext = pas de chiffrement ; server-side decryption expose le vault."},
+  {d:1,e:"medium",s:"Which directory service port is used by LDAPS (LDAP over TLS)?",o:["636","389","3268","53"],c:0,t:["389","3268","53"],x:"LDAPS = port 636 (LDAP over TLS) — alternative à StartTLS sur 389 ; à utiliser pour les communications sécurisées.",r:"389 = LDAP en clair ; 3268 = Global Catalog (MS AD) ; 53 = DNS."},
+  {d:1,e:"hard",s:"Which Kerberos delegation type allows a service to impersonate users to any other service?",o:["Unconstrained delegation (legacy, dangerous)","Constrained","Resource-based","None"],c:0,t:["Constrained","Resource-based","None"],x:"Unconstrained delegation = l'utilisateur transmet son TGT au service — celui-ci peut impersonate partout — dangereux.",r:"Constrained = limité à des SPNs spécifiques (msDS-AllowedToDelegateTo) ; resource-based = SPN contrôle qui peut delegate."},
+  {d:1,e:"medium",s:"Which password rotation policy follows NIST 800-63B guidance (no forced periodic rotation)?",o:["Rotate only on compromise / weak password detected","Every 30 days","Every 90 days","Never"],c:0,t:["Every 30 days","Every 90 days","Never"],x:"NIST 800-63B : ne pas imposer de rotation périodique (entraîne passwords faibles) — changer sur compromission ou faiblesse.",r:"Les rotations forcées produisent des patterns faibles (Spring2024!) — anti-pattern reconnu."},
+  {d:1,e:"hard",s:"Which SAML element cryptographically signs the assertion to prove authenticity?",o:["<ds:Signature> in <Assertion>","<Subject> only","<Conditions> only","<AuthnStatement> only"],c:0,t:["<Subject> only","<Conditions> only","<AuthnStatement> only"],x:"Le <ds:Signature> (XMLDSig) est obligatoire pour qu'un IdP signe l'assertion et que le SP la valide.",r:"Subject identifie l'utilisateur ; Conditions précise validity window ; AuthnStatement = méthode et instant d'auth."},
+  {d:1,e:"medium",s:"Which OAuth 2.0 PKCE element binds the code to the original client request?",o:["code_verifier / code_challenge (S256)","access_token","refresh_token","id_token"],c:0,t:["access_token","refresh_token","id_token"],x:"PKCE : client génère code_verifier (random 43-128 chars), envoie code_challenge = SHA256(code_verifier).",r:"access_token = résultat final ; refresh_token = renouvellement ; id_token = OIDC identity."},
+  {d:1,e:"hard",s:"Which JSON Web Token (JWT) vulnerability allows an attacker to switch algorithm to 'none'?",o:["alg=none confusion","Padding oracle","Bleichenbacher","ROBOT"],c:0,t:["Padding oracle","Bleichenbacher","ROBOT"],x:"alg=none (historique) : la bibliothèque décode sans vérifier signature — exploitation via header forgé.",r:"Padding oracle/Bleichenbacher/ROBOT ciblent RSA-PKCS#1 — pas JWT."},
+  {d:2,e:"medium",s:"Which social engineering technique uses urgency and authority to compel action?",o:["Authority + urgency principle","Reciprocity only","Consensus","Scarcity only"],c:0,t:["Reciprocity only","Consensus","Scarcity only"],x:"Les attaques d'autorité (CEO fraud) combinées à l'urgence (virement immédiat) sont les patterns BEC les plus efficaces.",r:"Les principes de Cialdini (reciprocity, consensus, scarcity) sont aussi exploités — mais urgence + autorité dominent."},
+  {d:2,e:"hard",s:"Which phishing variant uses a homoglyph domain (e.g., paypaI.com with capital I)?",o:["Homoglyph / IDN homograph attack","Spear phishing only","Whaling","Vishing"],c:0,t:["Spear phishing only","Whaling","Vishing"],x:"Le homoglyph (caractères Unicode visuellement identiques : Cyrillic а vs Latin a) trompe l'œil humain.",r:"Spear/whaling sont des ciblages spécifiques ; vishing = voix."},
+  {d:2,e:"medium",s:"Which ransomware technique abuses legitimate Windows tools to evade detection?",o:["LOLBins / Living-off-the-land binaries","Custom binary only","Macro only","PowerShell only"],c:0,t:["Custom binary only","Macro only","PowerShell only"],x:"Les LOLBins (powershell.exe, wmic.exe, rundll32.exe) sont signés Microsoft — bypass AV/EDR basique.",r:"Une binaire custom est détectée par AV ; les macros Office sont bloquables ; PowerShell seul est une catégorie de LOLBin."},
+  {d:2,e:"hard",s:"Which PowerShell-based attack downloads and executes code entirely in memory?",o:["Fileless malware / reflective load","Disk-resident","Macro document","DLL side-load"],c:0,t:["Disk-resident","Macro document","DLL side-load"],x:"Fileless malware exécute via PowerShell/PsExec/WMI directement en RAM — pas de fichier à scanner sur disque.",r:"Disk-resident = fichier traditionnel ; macro doc = vecteur ; DLL side-load = exploitation de DLL légitime."},
+  {d:2,e:"medium",s:"Which supply chain attack vector compromises vendor software updates?",o:["Software supply chain injection (SolarWinds / XZ Utils)","Phishing only","DDoS only","SQLi"],c:0,t:["Phishing only","DDoS only","SQLi"],x:"L'injection dans les builds/logiciels du fournisseur (SolarWinds 2020, 3CX 2023, XZ Utils 2024) distribue à tous les clients.",r:"Phishing cible les employés ; DDoS perturbe la disponibilité ; SQLi cible les apps — pas le build vendor."},
+  {d:2,e:"hard",s:"Which Advanced Persistent Threat (APT) group is known for exploiting zero-days in perimeter appliances?",o:["APT28 / APT29 / Equation Group","Script kiddies","Hacktivists only","Insiders"],c:0,t:["Script kiddies","Hacktivists only","Insiders"],x:"Les APT étatiques (APT28=Fancy Bear, APT29=Cozy Bear, Equation Group=NSA) maintiennent des stocks de 0-days.",r:"Script kiddies utilisent des outils publics ; hacktivists sont opportunistes ; insiders sont internes."},
+  {d:2,e:"medium",s:"Which password attack uses precomputed tables of hashes?",o:["Rainbow table attack","Brute force linear","Dictionary only","Rule-based only"],c:0,t:["Brute force linear","Dictionary only","Rule-based only"],x:"Les rainbow tables mappent hash→plaintext pour casser rapidement des hashs non salés (LM, MD5 sans sel).",r:"Le brute force teste chaque combinaison ; le dictionnaire utilise des mots courants ; rule-based applique des mutations."},
+  {d:2,e:"hard",s:"Which evasion technique fragments packets to bypass simple signature-based IDS?",o:["Packet fragmentation / session splicing","Single large packet","Header only","Default route"],c:0,t:["Single large packet","Header only","Default route"],x:"La fragmentation (Tiny Fragments, session splicing) scinde la payload — un IDS qui ne réassemble pas ne détecte pas.",r:"Un grand paquet unique est analysé tel quel ; le header seul n'a pas de signature ; default route = pas une évasion."},
+  {d:2,e:"medium",s:"Which credential theft technique captures hashes by relaying authentication to a server?",o:["NTLM relay / Kerberos relay","Brute force","Dictionary","Hash dump only"],c:0,t:["Brute force","Dictionary","Hash dump only"],x:"NTLM relay (responder, ntlmrelayx) intercepte et relaie l'auth vers un serveur cible — exploite NTLMv1/PET.",r:"Le brute force teste des passwords ; le dictionnaire utilise des listes ; le hash dump lit la SAM/LSASS — distincts."},
+  {d:2,e:"hard",s:"Which web shell technique maintains persistence after initial compromise of a web server?",o:["Web shell backdoor (China Chopper, C99)","Phishing page","Defacement only","SEO spam"],c:0,t:["Phishing page","Defacement only","SEO spam"],x:"Un web shell (PHP/JSP/ASPX) permet l'exécution de commandes via HTTP — persistance discrète.",r:"Une page de phishing héberge un kit ; le defacement change l'apparence ; le SEO spam injecte des liens."},
+  {d:2,e:"medium",s:"Which social engineering technique drops USB drives in parking lots hoping an employee plugs one in?",o:["Baiting / USB drop","Phishing","Vishing","Pretexting"],c:0,t:["Phishing","Vishing","Pretexting"],x:"Le baiting exploite la curiosité humaine — 45-98% des USB dropped sont branchés selon les études (Univ. Illinois).",r:"Phishing = email ; Vishing = voix ; Pretexting = scénario inventé (IT support, auditeur)."},
+  {d:2,e:"hard",s:"Which rootkit type hides in the boot sector before the OS loads?",o:["Bootkit (MBR/UEFI)","User-mode rootkit","Kernel-mode rootkit","Firmware only"],c:0,t:["User-mode rootkit","Kernel-mode rootkit","Firmware only"],x:"Un bootkit infecte MBR/VBR/EFI System Partition — s'exécute avant l'OS — très difficile à détecter/supprimer.",r:"Les rootkits user-mode hookent API ; kernel-mode hookent syscalls ; firmware est une catégorie à part (UEFI/BIOS)."},
+  {d:2,e:"medium",s:"Which vulnerability class involves an application including remote content insecurely?",o:["Insecure direct object reference / SSRF / XXE","XSS only","CSRF only","Open redirect"],c:0,t:["XSS only","CSRF only","Open redirect"],x:"IDOR, SSRF et XXE (XML External Entity) couvrent les inclusions distantes non validées.",r:"XSS/CSRF/open redirect sont des catégories distinctes — IDOR/SSRF/XXE = inclusion/fetching."},
+  {d:2,e:"hard",s:"Which attack on AI models crafts inputs to cause misclassification?",o:["Adversarial ML / prompt injection","Phishing","SQLi","XSS"],c:0,t:["Phishing","SQLi","XSS"],x:"Les exemples adversariaux (FGSM, PGD) trompent les modèles de vision/ML ; prompt injection manipule les LLM.",r:"Phishing/SQLi/XSS ciblent les humains ou les apps classiques — pas les modèles ML."},
+  {d:2,e:"medium",s:"Which protocol is abused in DNS amplification DDoS attacks?",o:["DNS (UDP 53)","NTP","HTTP","SMTP"],c:0,t:["NTP","HTTP","SMTP"],x:"DNS amplification : requête petite (60B) + réponse large (4000+B) + IP spoofing → facteur ×50-100.",r:"NTP = monlist (en partie mitigé) ; HTTP = pas amplification classique ; SMTP = spam."},
+  {d:2,e:"hard",s:"Which BGP attack announces illegitimate routes to hijack IP prefixes?",o:["BGP hijacking / route hijack","ARP spoof","DNS cache poisoning","MAC flooding"],c:0,t:["ARP spoof","DNS cache poisoning","MAC flooding"],x:"Announcing more-specific prefixes (route hijack) détourne le trafic — Pakistan Telecom YouTube 2008, etc.",r:"ARP spoof = L2 ; DNS poisoning = L7 ; MAC flooding = switch CAM overflow — distincts."},
+  {d:2,e:"medium",s:"Which credential reuse vulnerability allows one breach to compromise many accounts?",o:["Credential stuffing (pairs from breach A used on site B)","Brute force only","Dictionary only","Rainbow tables"],c:0,t:["Brute force only","Dictionary only","Rainbow tables"],x:"Credential stuffing exploite les paires email/password des breaches antérieurs sur d'autres sites — automatisé.",r:"Brute force tente des passwords aléatoires ; dictionary utilise une wordlist ; rainbow tables ciblent des hashs non salés."},
+  {d:2,e:"hard",s:"Which memory vulnerability allows reading/writing arbitrary memory via bounds check omission?",o:["Buffer overflow (stack/heap)","XSS","CSRF","IDOR"],c:0,t:["XSS","CSRF","IDOR"],x:"Stack overflow écrase le return address ; heap overflow corrompt les structures d'allocation — RCE possible.",r:"XSS = JS injection web ; CSRF = action forcée ; IDOR = accès direct non autorisé — pas mémoire native."},
+  {d:2,e:"medium",s:"Which protocol is commonly exploited in SMB relay attacks against Active Directory?",o:["SMB / NTLM","LDAP","HTTPS","FTP"],c:0,t:["LDAP","HTTPS","FTP"],x:"SMB relay capture l'auth NTLM et la relay à un autre serveur (LDAP/SMB/HTTP) — exploit nécessite SMB signing désactivé.",r:"LDAP est une cible ; HTTPS peut être ciblé ; FTP ne supporte pas NTLM relay natif."},
+  {d:2,e:"hard",s:"Which Windows credential extraction technique dumps hashes from the LSASS process memory?",o:["Mimikatz / comsvcs.dll MiniDump / PPL bypass","SAM file only","NTDS.dit only","Cached domain only"],c:0,t:["SAM file only","NTDS.dit only","Cached domain only"],x:"Mimikatz sekurlsa::logonpasswords lit LSASS — extrait NTLM/Kerberos tickets ; PPL bypass requis sur Windows 10+.",r:"SAM = local accounts ; NTDS.dit = AD database ; cached domain = MSCache v2 — distincts."},
+  {d:2,e:"medium",s:"Which payload type encrypts individual files selectively and threatens to publish them publicly?",o:["Big game hunting ransomware (targeted)","Generic ransomware","Wiper","Spyware"],c:0,t:["Generic ransomware","Wiper","Spyware"],x:"Le big game hunting cible les grandes organisations avec chiffrement + double/triple extortion — plus rentable.",r:"Generic ransomware = spray-and-pray ; wiper = destruction sans rançon ; spyware = surveillance."},
+  {d:2,e:"hard",s:"Which side-channel attack on cryptographic implementations exploits timing variations?",o:["Timing attack","Replay attack","Known-plaintext","Chosen-ciphertext"],c:0,t:["Replay attack","Known-plaintext","Chosen-ciphertext"],x:"Une timing attack mesure les variations de temps d'exécution pour extraire des bits de clé — defeated par constant-time code.",r:"Replay rejoue un message ; known-plaintext compare des paires ; chosen-ciphertext manipule l'oracle."},
+  {d:2,e:"medium",s:"Which OSINT technique collects information about an organization's employees via LinkedIn?",o:["Social media reconnaissance (LinkedIn, Facebook)","Port scanning","Phishing only","DNS enum only"],c:0,t:["Port scanning","Phishing only","DNS enum only"],x:"LinkedIn/FB révèlent noms, postes, technologies — utilisés pour spear phishing ciblé.",r:"Le port scan interroge les ports ; phishing = envoi ; DNS enum = MX/TXT/NS — distincts."},
+  {d:2,e:"hard",s:"Which post-exploitation technique abuses WMI for lateral movement and persistence?",o:["WMI exec / event subscription","PowerShell only","SSH only","RDP only"],c:0,t:["PowerShell only","SSH only","RDP only"],x:"WMI event subscriptions (CommandLineEventConsumer) déclenchent des commandes sur événement — persistance et lateral.",r:"PowerShell est un vecteur ; SSH/RDP sont des protocoles — WMI est une infrastructure COM/DCOM."},
+  {d:2,e:"medium",s:"Which directory traversal attack uses encoded characters to escape a web root?",o:["Path traversal (../, %2e%2e%2f, ..\\)","SQLi only","XSS only","XXE only"],c:0,t:["SQLi only","XSS only","XXE only"],x:"Le path traversal utilise ../ ou encodages (%2e%2e/, %252e%252e%252f, double-decode) pour lire hors webroot.",r:"SQLi/XSS/XXE ciblent DB/JS/XML — pas le filesystem."},
+  {d:2,e:"hard",s:"Which ransomware family uses Elliptic Curve Cryptography (Curve25519) for file encryption?",o:["LockBit / BlackCat (ALPHV) / Cerber","WannaCry only","NotPetya only","ILOVEYOU"],c:0,t:["WannaCry only","NotPetya only","ILOVEYOU"],x:"LockBit 3.0 et BlackCat utilisent Curve25519 (rapide, petites clés) — défie les outils de décryption génériques.",r:"WannaCry = RSA+AES ; NotPetya = wiper déguisé ; ILOVEYOU = ver email VBS — distincts."},
+  {d:2,e:"medium",s:"Which DDoS attack vector targets the application layer with legitimate-looking HTTP requests?",o:["HTTP flood / Slowloris / GET/POST flood","SYN flood","UDP flood","ICMP flood"],c:0,t:["SYN flood","UDP flood","ICMP flood"],x:"L7 flood (HTTP GET/POST, Slowloris, RUDY) consomme les workers applicatifs — difficile à distinguer du trafic légitime.",r:"SYN flood (L4) ; UDP flood (amplification) ; ICMP flood (smurf) — différentes couches."},
+  {d:2,e:"hard",s:"Which cloud-native attack abuses overly permissive IAM roles to pivot across services?",o:["IAM privilege escalation + cross-service trust","SQLi","XSS","DDoS"],c:0,t:["SQLi","XSS","DDoS"],x:"Les rôles IAM trop permissifs (e.g., ec2:* sur tous les resources) permettent de pivoter vers S3, KMS, Lambda, etc.",r:"SQLi/XSS/DDoS ciblent les apps/réseaux — pas le contrôle d'accès cloud."},
+  {d:2,e:"medium",s:"Which social engineering technique impersonates IT support to extract credentials?",o:["Pretexting (IT support / auditor / vendor)","Phishing","Baiting","Tailgating"],c:0,t:["Phishing","Baiting","Tailgating"],x:"Le pretexting invente un scénario (IT support demande MFA reset, auditeur externe demande accès fichier).",r:"Phishing = email de masse ; baiting = appât physique ; tailgating = suivre physiquement."},
+  {d:2,e:"hard",s:"Which firewall evasion technique embeds commands within protocol fields (HTTP headers, SIP)?",o:["Protocol-level evasion / shellcode in protocol fields","Buffer overflow","SQLi","CSRF"],c:0,t:["Buffer overflow","SQLi","CSRF"],x:"L'évasion protocol-level injecte du shellcode dans des champs non standards (User-Agent, X-Forwarded-For étendu).",r:"Buffer overflow = mémoire ; SQLi = base ; CSRF = navigateur — distincts."},
+  {d:2,e:"medium",s:"Which zero-day class targets a previously unknown vulnerability with no patch available?",o:["Zero-day (0-day)","N-day","Patch available","Configuration issue"],c:0,t:["N-day","Patch available","Configuration issue"],x:"Un 0-day est une vulnérabilité inconnue du vendeur — exploit possible avant patch — prime élevée (NSO, broker).",r:"N-day = patché mais non déployé ; patch available = simple retard ; config issue = pas une vulnérabilité logicielle."},
+  {d:2,e:"hard",s:"Which steganographic technique hides data within images, audio, or video files?",o:["Steganography (LSB, DCT, whitespace)","Encryption only","Hashing only","Compression only"],c:0,t:["Encryption only","Hashing only","Compression only"],x:"La stéganographie cache des bits dans des images (LSB, DCT coefficients), audio (LSB), ou texte (whitespace, zero-width chars).",r:"Le chiffrement cache le contenu mais l'existence du message est visible ; hashing = intégrité ; compression = taille."},
+  {d:2,e:"medium",s:"Which ICS protocol is exploited by Stuxnet to reprogram Siemens PLCs?",o:["Siemens S7 (Step 7)","Modbus only","DNP3 only","OPC UA only"],c:0,t:["Modbus only","DNP3 only","OPC UA only"],x:"Stuxnet cible les automates Siemens S7-300/400 via Step 7 — change la fréquence des centrifuges IR-2m.",r:"Modbus/DNP3/OPC UA sont d'autres protocoles ICS — Stuxnet visait spécifiquement S7."},
+  {d:2,e:"hard",s:"Which Active Directory attack exploits ACL misconfigurations to escalate to Domain Admin?",o:["ACL abuse (GenericAll, WriteDACL, ForceChangePassword)","Kerberoasting only","AS-REP Roasting only","LLMNR poisoning"],c:0,t:["Kerberoasting only","AS-REP Roasting only","LLMNR poisoning"],x:"Les ACL AD (GenericAll, GenericWrite, WriteDACL, WriteOwner, AllExtendedRights) permettent DCSync, reset password, etc.",r:"Kerberoasting = crack SPNs ; AS-REP = crack pre-auth ; LLMNR poisoning = intercept credentials — distincts."},
+  {d:2,e:"medium",s:"Which botnet command-and-control channel uses decentralized peer-to-peer communication?",o:["P2P botnet (GameOver Zeus, ZeroAccess)","Centralized HTTP","IRC only","DNS only"],c:0,t:["Centralized HTTP","IRC only","DNS only"],x:"Les botnets P2P (GameOver Zeus, ZeroAccess, Kelihos) résistent au takedown C2 — commandes propagées de peer à peer.",r:"HTTP/IRC/DNS centralisés = single point of failure — sinkhole-able."},
+  {d:2,e:"hard",s:"Which DNS attack caches a malicious response by racing the authoritative server?",o:["DNS cache poisoning (Kaminsky attack)","ARP spoof","MAC flood","DHCP starvation"],c:0,t:["ARP spoof","MAC flood","DHCP starvation"],x:"Kaminsky (2008) randomise le source port + transaction ID pour augmenter la surface de prédiction — poisoning plus rapide.",r:"ARP spoof = L2 ; MAC flood = switch CAM ; DHCP starvation = exhaustion pool DHCP — distincts."},
+  {d:2,e:"medium",s:"Which attack floods the network with broadcast ICMP packets for DDoS?",o:["Smurf attack (ICMP broadcast amplification)","SYN flood","Ping of death","Teardrop"],c:0,t:["SYN flood","Ping of death","Teardrop"],x:"Smurf = ICMP echo vers broadcast avec IP spoof → tous répondent à la victime — amplification ×N hosts.",r:"SYN flood (L4) ; ping of death = fragmentation oversized ; teardrop = overlapping fragments — distincts."},
+  {d:2,e:"hard",s:"Which exploit kit technique fingerprints the victim's browser/plugins to deliver targeted exploits?",o:["Browser fingerprinting + exploit selection","Mass exploit","Drive-by only","Spear phishing"],c:0,t:["Mass exploit","Drive-by only","Spear phishing"],x:"Les exploit kits (Angler, RIG, Fallout) profilent browser/OS/plugins et choisissent l'exploit adapté.",r:"Mass exploit = spray ; drive-by = sans interaction mais pas profilé ; spear phishing = email ciblé."},
+  {d:2,e:"medium",s:"Which social engineering technique abuses a sense of urgency via SMS/text message?",o:["Smishing (SMS phishing)","Phishing","Vishing","Whaling"],c:0,t:["Phishing","Vishing","Whaling"],x:"Smishing = SMS frauduleux (livraison FedEx, compte bancaire bloqué) — clic vers app ou page malveillante.",r:"Phishing = email ; vishing = voix ; whaling = email ciblé sur VIP."},
+  {d:2,e:"hard",s:"Which firmware implant persists across OS reinstalls by hiding in UEFI/BIOS?",o:["UEFI/BIOS implant (LoJax, BlackLotus)","MBR bootkit only","Service only","Scheduled task"],c:0,t:["MBR bootkit only","Service only","Scheduled task"],x:"LoJax (2018), BlackLotus (2023) infectent l'UEFI — survit aux reinstall OS, format, changement disque.",r:"MBR bootkit = un niveau au-dessus OS mais pas aussi profond qu'UEFI ; service/scheduled task = Windows."},
+  {d:2,e:"medium",s:"Which web vulnerability allows an attacker to load external resources via a user-supplied URL?",o:["Server-Side Request Forgery (SSRF)","XSS reflected","CSRF","Clickjacking"],c:0,t:["XSS reflected","CSRF","Clickjacking"],x:"SSRF : le serveur fetch une URL contrôlée par l'attaquant — accès à metadata cloud, services internes.",r:"XSS reflected = JS dans page ; CSRF = action forcée ; clickjacking = iframe transparent."},
+  {d:2,e:"hard",s:"Which Active Directory persistence technique modifies the msDS-AllowedToActOnBehalfOfOtherIdentity?",o:["Resource-based constrained delegation abuse","Golden ticket only","Silver ticket only","SID history"],c:0,t:["Golden ticket only","Silver ticket only","SID history"],x:"Resource-based constrained delegation (RBCD) abuse permet d'usurper n'importe quel utilisateur vers un service.",r:"Golden ticket = TGT forgé ; silver ticket = TGS forgé ; SID history = injecter un SID privilégié."},
+  {d:3,e:"medium",s:"Which secure protocol uses port 22 for remote shell access?",o:["SSH","Telnet","rlogin","FTP"],c:0,t:["Telnet","rlogin","FTP"],x:"SSH (port 22) authentifie serveur et client, chiffre le canal — standard pour administration distante.",r:"Telnet/rlogin = en clair (legacy) ; FTP = port 21 (file transfer, pas shell)."},
+  {d:3,e:"hard",s:"Which TLS extension improves performance by allowing the server to send multiple certificates at once?",o:["GREASE / certificate compression","Session resumption","OCSP must-staple","CT (Certificate Transparency)"],c:0,t:["Session resumption","OCSP must-staple","CT (Certificate Transparency)"],x:"Certificate compression (RFC 8879) réduit la taille du handshake TLS — particulièrement utile pour CT + chain.",r:"Session resumption = tickets ; OCSP must-staple = revocation ; CT = SCT logs — distincts."},
+  {d:3,e:"medium",s:"Which network design principle places sensitive workloads in isolated subnets with strict ACLs?",o:["Network segmentation / tier-based architecture","Flat network","Hub and spoke only","Bus topology"],c:0,t:["Flat network","Hub and spoke only","Bus topology"],x:"La segmentation (DMZ, internal, restricted) limite le mouvement latéral et définit des périmètres de confiance.",r:"Flat network = tous dans le même domaine de broadcast ; hub and spoke = topologie ; bus = legacy Ethernet."},
+  {d:3,e:"hard",s:"Which SDN control plane provides centralized policy enforcement across distributed switches?",o:["OpenFlow / OpenDaylight / Cisco ACI","Static VLANs","Trunk ports","STP"],c:0,t:["Static VLANs","Trunk ports","STP"],x:"Les contrôleurs SDN (OpenFlow, OpenDaylight, ACI) programment les switches via southbound API — policy global.",r:"Les VLANs statiques sont manuels ; trunk = 802.1Q ; STP = loop prevention — distincts."},
+  {d:3,e:"medium",s:"Which cloud networking service provides private connectivity between VPCs across accounts/regions?",o:["VPC peering / Transit Gateway / PrivateLink","Internet gateway","NAT gateway","Public subnet"],c:0,t:["Internet gateway","NAT gateway","Public subnet"],x:"VPC peering connecte deux VPC ; Transit Gateway hub-and-spoke multi-VPC ; PrivateLink expose un service privately.",r:"Internet gateway = accès public ; NAT gateway = egress-only ; public subnet = pas isolé."},
+  {d:3,e:"hard",s:"Which network architecture pattern centralizes egress traffic through a security stack?",o:["Egress filtering / forward proxy + NGFW","Direct internet","BGP only","Anycast only"],c:0,t:["Direct internet","BGP only","Anycast only"],x:"L'egress filtering (proxy + NGFW + IPS + DLP) sur un point centralisé inspecte tout le trafic sortant.",r:"Le direct internet contourne les contrôles ; BGP et anycast sont des mécanismes réseau — pas de sécurité."},
+  {d:3,e:"medium",s:"Which secure protocol replaces telnet for network device administration?",o:["SSH / HTTPS (NETCONF/RESTCONF over TLS)","Telnet","HTTP","FTP"],c:0,t:["Telnet","HTTP","FTP"],x:"SSH (port 22) ou HTTPS (NETCONF/RESTCONF) chiffrent l'accès admin — équipement réseau moderne.",r:"Telnet = en clair ; HTTP = pas chiffré ; FTP = transfert de fichiers — pas shell sécurisé."},
+  {d:3,e:"hard",s:"Which cryptographic protocol provides forward secrecy for HTTPS connections?",o:["TLS 1.3 with (EC)DHE key exchange","RSA key exchange","Static DH","PSK only"],c:0,t:["RSA key exchange","Static DH","PSK only"],x:"TLS 1.3 impose (EC)DHE pour PFS ; TLS 1.2 supporte DHE (ciphersuites à privilégier).",r:"RSA key exchange = pas de PFS (legacy, vulnérable) ; static DH = pas éphémère ; PSK = pas de PFS."},
+  {d:3,e:"medium",s:"Which network access control technology quarantines non-compliant devices?",o:["NAC (Cisco ISE, Aruba ClearPass)","IDS only","Firewall only","WAF only"],c:0,t:["IDS only","Firewall only","WAF only"],x:"NAC évalue la posture (AV, patch, cert) et place les non-conformes dans un VLAN de quarantaine.",r:"IDS = détection ; firewall = L3-L4 ; WAF = applications web — pas posture endpoint."},
+  {d:3,e:"hard",s:"Which authentication protocol relies on a ticket-granting ticket (TGT) issued by the KDC?",o:["Kerberos","NTLM","OAuth2","SAML"],c:0,t:["NTLM","OAuth2","SAML"],x:"Kerberos : AS-REQ/AS-REP (TGT) → TGS-REQ/TGS-REP (service ticket) → AP-REQ (auth).",r:"NTLM = challenge-response sans KDC ; OAuth2/SAML = web."},
+  {d:3,e:"medium",s:"Which SASE component provides cloud-delivered web content filtering?",o:["SWG (Secure Web Gateway)","CASB only","ZTNA only","FWaaS only"],c:0,t:["CASB only","ZTNA only","FWaaS only"],x:"SWG = filtrage URL, malware scanning, SSL inspection — composante principale de SASE.",r:"CASB = SaaS ; ZTNA = accès privé ; FWaaS = firewall as a service — autres composants SASE."},
+  {d:3,e:"hard",s:"Which container runtime security feature restricts syscalls, capabilities, and filesystem access?",o:["Seccomp / AppArmor / SELinux profiles","Image signing only","Network policy","Resource quota"],c:0,t:["Image signing only","Network policy","Resource quota"],x:"Seccomp filtre syscalls ; AppArmor/SELinux = MAC profiles ; capabilities = drop CAP_SYS_ADMIN.",r:"L'image signing vérifie l'origine ; les network policies = trafic ; resource quota = CPU/RAM."},
+  {d:3,e:"medium",s:"Which cloud-native identity service integrates with on-prem Active Directory?",o:["Azure AD Connect / AWS Managed AD / Google Cloud Identity","Local accounts only","OAuth only","SAML only"],c:0,t:["Local accounts only","OAuth only","SAML only"],x:"Azure AD Connect synchronise on-prem AD → Entra ID ; AWS Managed AD = AD géré ; Google Cloud Identity = SSO Google.",r:"Les local accounts restent isolés ; OAuth/SAML sont des protocoles — pas un service d'intégration."},
+  {d:3,e:"hard",s:"Which hybrid cloud networking technology extends an on-prem network into the cloud?",o:["VPN site-to-site / ExpressRoute / Direct Connect / Interconnect","Internet gateway","Public IP","NAT gateway"],c:0,t:["Internet gateway","Public IP","NAT gateway"],x:"VPN IPsec, AWS Direct Connect, Azure ExpressRoute, GCP Interconnect = connectivité hybride privée.",r:"Les autres options routent via Internet public — pas hybride privé."},
+  {d:3,e:"medium",s:"Which load balancer feature terminates TLS to offload the origin servers?",o:["SSL/TLS termination at LB","TCP passthrough","UDP load","Anycast only"],c:0,t:["TCP passthrough","UDP load","Anycast only"],x:"La termination TLS au LB centralise les certs et réduit la charge CPU des backends — risque : TLS interne non chiffré.",r:"TCP passthrough laisse TLS aux backends ; UDP = L4 ; anycast = routing."},
+  {d:3,e:"hard",s:"Which advanced firewall feature detects outbound C2 traffic via TLS fingerprinting?",o:["JA3/JA4 TLS client fingerprinting","URL blocklist","Port block","IP reputation"],c:0,t:["URL blocklist","Port block","IP reputation"],x:"JA3/JA4 fingerprint les hello TLS (cipher order, extensions) — détecte C2 (Cobalt Strike, Sliver) même sur TLS légitime.",r:"URL/IP blocklist et port block sont des contrôles statiques — pas adaptés au C2 dynamique."},
+  {d:3,e:"medium",s:"Which SDN construct provides logical isolation of network services on shared infrastructure?",o:["VRF / overlay network / VPC","VLAN only","Subnet only","Cable"],c:0,t:["VLAN only","Subnet only","Cable"],x:"VRF (Cisco), VRF-lite, overlay (VXLAN, Geneve) créent des tables de routage isolées sur infrastructure partagée.",r:"Les VLANs sont L2 ; les subnets sont L3 ; les câbles sont physiques — pas d'isolation logique."},
+  {d:3,e:"hard",s:"Which data center design distributes power and cooling across redundant paths (no single point of failure)?",o:["Tier III/IV with N+1 or 2N redundancy","Tier I only","Single PSU","No UPS"],c:0,t:["Tier I only","Single PSU","No UPS"],x:"Tier III/IV : concurrently maintainable, fault tolerant, 2N power & cooling — uptime ≥99.982%.",r:"Tier I = basic capacity ; Tier II = redundant components ; Tier III/IV = plus avancés."},
+  {d:3,e:"medium",s:"Which web application firewall deployment sits in front of an API gateway?",o:["Reverse proxy / inline WAF before origin","Sidecar only","Out-of-band","BGP route only"],c:0,t:["Sidecar only","Out-of-band","BGP route only"],x:"Un WAF inline en reverse proxy inspecte les requêtes API avant l'origin — bloque payload malveillante.",r:"Sidecar = par workload ; out-of-band = détection sans blocage ; BGP = routage."},
+  {d:3,e:"hard",s:"Which memory protection technique prevents execution of data regions (stack/heap)?",o:["DEP / NX bit / XD bit","ASLR only","Stack canary only","CFI only"],c:0,t:["ASLR only","Stack canary only","CFI only"],x:"DEP (Data Execution Prevention) / NX (No-Execute) marque les pages comme non-exécutables — bloque shellcode.",r:"ASLR randomise les adresses ; stack canary détecte overflow ; CFI valide les indirections."},
+  {d:3,e:"medium",s:"Which mobile device management feature enforces encryption and remote wipe on lost devices?",o:["MDM with full device encryption + remote wipe","Profile only","PIN only","No control"],c:0,t:["Profile only","PIN only","No control"],x:"MDM (Intune, Jamf, AirWatch) force le chiffrement du stockage, applique les politiques, permet le remote wipe.",r:"Profile = configuration ; PIN = auth simple ; no control = pas de protection."},
+  {d:3,e:"hard",s:"Which secure boot chain verifies each stage from hardware root of trust to OS kernel?",o:["UEFI Secure Boot + TPM measured boot","Legacy BIOS only","MBR only","Single-stage"],c:0,t:["Legacy BIOS only","MBR only","Single-stage"],x:"Secure Boot : firmware ROM → UEFI → bootloader → kernel → drivers — chaque étape signée et vérifiée (PCRs TPM).",r:"Legacy BIOS n'a pas de chain of trust ; MBR = boot sector ; single-stage = pas de racine de confiance."},
+  {d:3,e:"medium",s:"Which API gateway feature rate-limits requests to prevent abuse?",o:["Rate limiting + throttling / quota","CORS only","TLS termination only","Load balancing only"],c:0,t:["CORS only","TLS termination only","Load balancing only"],x:"Rate limiting (token bucket, leaky bucket) protège contre abuse et DDoS L7.",r:"CORS = cross-origin ; TLS termination = HTTPS ; LB = distribution — pas rate limiting."},
+  {d:3,e:"hard",s:"Which confidential computing technology encrypts VM memory with hardware-rooted keys?",o:["AMD SEV / SEV-SNP / Intel TDX","Hypervisor only","Container isolation","VLAN"],c:0,t:["Hypervisor only","Container isolation","VLAN"],x:"SEV/SEV-SNP (AMD) et TDX (Intel) chiffrent la mémoire VM avec une clé gérée par l'AMD Secure Processor / Intel TDX module.",r:"Un hyperviseur compromis voit normalement la mémoire VM ; SEV/SEV-SNP ferment cette faille."},
+  {d:3,e:"medium",s:"Which secure email protocol uses S/MIME or PGP for end-to-end encryption?",o:["S/MIME (X.509) / PGP (web of trust)","SMTP","POP3","IMAP"],c:0,t:["SMTP","POP3","IMAP"],x:"S/MIME signe et chiffre les messages (PKI X.509) ; PGP utilise le web of trust — tous deux end-to-end.",r:"SMTP/POP3/IMAP sont des protocoles de transport sans chiffrement E2E."},
+  {d:3,e:"hard",s:"Which TLS attack exploits weaknesses in the RSA PKCS#1 v1.5 padding of TLS handshake?",o:["Bleichenbacher / ROBOT","BEAST","POODLE","Heartbleed"],c:0,t:["BEAST","POODLE","Heartbleed"],x:"Bleichenbacher 1998 + ROBOT 2017 exploitent PKCS#1 v1.5 padding oracle sur RSA key exchange — déchiffrement.",r:"BEAST = CBC + IV ; POODLE = SSLv3 padding ; Heartbleed = OpenSSL extension parsing."},
+  {d:3,e:"medium",s:"Which architecture pattern decouples authentication from authorization for API access?",o:["OAuth 2.0 with authorization server","Basic auth","NTLM","Kerberos"],c:0,t:["Basic auth","NTLM","Kerberos"],x:"OAuth 2.0 sépare resource server (authz) et authorization server (authn) — flexible pour APIs.",r:"Basic/NTLM/Kerberos couplent authn+authz — moins adaptés aux APIs modernes."},
+  {d:3,e:"hard",s:"Which post-quantum cryptographic algorithm replaces ECDH for key exchange (NIST PQC)?",o:["CRYSTALS-Kyber","RSA","ECC","DH"],c:0,t:["RSA","ECC","DH"],x:"CRYSTALS-Kyber (Module-LWE) est le KEM sélectionné par NIST en 2022 — résistance quantique.",r:"RSA/ECC/DH sont vulnérables à Shor sur QC — à migrer vers Kyber/dilithium."},
+  {d:3,e:"medium",s:"Which secure web architecture uses OAuth2 tokens scoped per application and audience?",o:["Token audience + scope validation","Single global token","Static API key","Basic auth"],c:0,t:["Single global token","Static API key","Basic auth"],x:"L'audience (aud claim) et les scopes restreignent l'usage du token à un service spécifique.",r:"Un global token expose tout ; static API key est opaque ; basic auth est faible."},
+  {d:3,e:"hard",s:"Which container security control prevents lateral movement between pods via network policy?",o:["Kubernetes NetworkPolicy (default-deny + allowlist)","Sidecar only","Image scanning","Resource quotas"],c:0,t:["Sidecar only","Image scanning","Resource quotas"],x:"NetworkPolicy K8s default-deny + allowlist par namespace/pod/port — microsegmentation native K8s.",r:"Les sidecars ne bloquent pas le réseau entrant ; image scan trouve des vulns ; quotas = CPU/RAM."},
+  {d:3,e:"medium",s:"Which API authentication mechanism is MOST appropriate for service-to-service mTLS?",o:["Mutual TLS (client certificate)","API key in header","JWT only","Basic auth"],c:0,t:["API key in header","JWT only","Basic auth"],x:"mTLS authentifie les deux parties par certificat X.509 — idéal pour service mesh (Istio, Linkerd).",r:"Les API keys sont révocables mais pas liées au workload ; JWT stateless mais pas mutuel ; basic = faible."},
+  {d:3,e:"hard",s:"Which advanced evasion technique splits a payload across multiple packets with overlapping fragments?",o:["IP fragmentation overlap (teardrop, Jolt2)","Single packet","SYN flood","UDP flood"],c:0,t:["Single packet","SYN flood","UDP flood"],x:"Teardrop/Jolt2 utilisent des fragments chevauchants qui crashent les stacks IP qui ne gèrent pas le reassembly.",r:"Un single packet n'est pas fragmenté ; SYN/UDP flood = DDoS, pas evasion."},
+  {d:3,e:"medium",s:"Which database security control encrypts specific columns while allowing queries on others?",o:["Column-level encryption / TDE","Whole-DB only","File-level only","Disk only"],c:0,t:["Whole-DB only","File-level only","Disk only"],x:"Le chiffrement column-level protège les données sensibles (PII, PCI) sans handicaper les index/recherches.",r:"Le chiffrement whole-DB / file-level / disk protège tout — au prix de performance et granularité."},
+  {d:3,e:"hard",s:"Which hardware security module (HSM) certification provides FIPS 140-2 Level 4?",o:["FIPS 140-2 Level 4","FIPS 140-3 Level 1","Common Criteria EAL2","No certification"],c:0,t:["FIPS 140-3 Level 1","Common Criteria EAL2","No certification"],x:"FIPS 140-2 Level 4 = protection la plus élevée (tamper evidence + zeroization) — usage gouvernemental/secteur financier.",r:"Level 1 = software only ; Level 2 = tamper evidence ; Level 3 = tamper resistance ; Level 4 = enveloppe + zeroization."},
+  {d:3,e:"medium",s:"Which network access control mechanism enforces 802.1X port-based authentication?",o:["802.1X with EAP-TLS / RADIUS","MAC filtering only","Static VLAN","Port security"],c:0,t:["MAC filtering only","Static VLAN","Port security"],x:"802.1X authentifie chaque device (supplicant ↔ authenticator ↔ RADIUS server) avant accès réseau.",r:"MAC filtering est trivial à usurper ; static VLAN = pas d'auth ; port security = limite le nombre de MAC."},
+  {d:3,e:"hard",s:"Which secure multi-party computation technique allows joint computation without revealing inputs?",o:["Homomorphic encryption / secret sharing / MPC","Public cloud","Hash only","Compression"],c:0,t:["Public cloud","Hash only","Compression"],x:"HE (Paillier, BFV, CKKS), secret sharing (Shamir), MPC permettent calcul sur données chiffrées/partagées.",r:"Le cloud public voit normalement les données ; hash = intégrité ; compression = taille."},
+  {d:3,e:"medium",s:"Which memory tagging extension (MTE) helps detect use-after-free in ARM processors?",o:["ARMv8.5-A MTE (Memory Tagging Extension)","Intel CET","AMD SEV","Software only"],c:0,t:["Intel CET","AMD SEV","Software only"],x:"MTE (ARM) tag les allocations mémoire avec des tags vérifiés à l'accès — détecte UAF et overflow heap.",r:"Intel CET = shadow stack + IBT ; AMD SEV = VM memory encryption ; software only = pas hardware."},
+  {d:3,e:"hard",s:"Which smart contract vulnerability allows reentrancy and drains funds?",o:["Reentrancy (DAO 2016)","Integer overflow","Front-running","Gas limit"],c:0,t:["Integer overflow","Front-running","Gas limit"],x:"Reentrancy = la fonction appelante re-entre avant que l'état ne soit mis à jour — ex: TheDAO 2016 (50M$ perdus).",r:"Integer overflow = Solidity 0.8+ safe math ; front-running = mempool ; gas limit = DoS."},
+  {d:3,e:"medium",s:"Which edge computing architecture pushes computation closer to data sources to reduce latency?",o:["Edge computing / CDN / fog","Centralized cloud","Mainframe","Bare metal"],c:0,t:["Centralized cloud","Mainframe","Bare metal"],x:"L'edge computing (CDN, 5G MEC, IoT gateways) réduit latence + bande passante + centralisation.",r:"Le cloud centralisé ajoute latence ; mainframe/bare metal ne sont pas edge."},
+  {d:3,e:"hard",s:"Which secure boot attestation verifies the integrity of a remote system before granting access?",o:["Remote attestation (TPM quote / TPM2_Certify)","MAC filter","IP allowlist","VPN only"],c:0,t:["MAC filter","IP allowlist","VPN only"],x:"Remote attestation envoie un PCR quote signé par le TPM — vérifie que le boot et l'OS sont intègres.",r:"MAC filter / IP allowlist / VPN ne vérifient pas l'intégrité du système distant."},
+  {d:3,e:"medium",s:"Which cloud-native logging service aggregates logs centrally for analysis?",o:["Cloud-native logging (CloudWatch, Cloud Logging, Azure Monitor)","Local file only","Syslog only","No logging"],c:0,t:["Local file only","Syslog only","No logging"],x:"Les services managés (CloudWatch, GCP Logging, Azure Monitor) collectent, agrègent et indexent les logs.",r:"Local file = non centralisé ; syslog = transport ; no logging = pas de visibilité."},
+  {d:3,e:"hard",s:"Which runtime application self-protection (RASP) instrument works inside the application?",o:["RASP in-app agent / bytecode instrumentation","WAF","NIDS","File scanner"],c:0,t:["WAF","NIDS","File scanner"],x:"RASP instrumente l'app (Java agent, .NET profiler, Node.js module) pour bloquer les attaques en temps réel.",r:"WAF = externe ; NIDS = réseau ; file scanner = statique."},
+  {d:3,e:"medium",s:"Which secure SDLC phase integrates security testing into the build pipeline?",o:["DevSecOps / pipeline security gates","Code freeze only","Manual QA","UAT only"],c:0,t:["Code freeze only","Manual QA","UAT only"],x:"DevSecOps : SAST, SCA, IaC scan, DAST, container scan intégrés au CI/CD avec gates de qualité.",r:"Code freeze bloque les releases ; QA/UAT sont des phases de test — pas d'intégration continue."},
+  {d:3,e:"hard",s:"Which side-channel attack extracts secrets from CPU caches via timing variations?",o:["Meltdown / Spectre / cache-timing attack","DDoS","Brute force","Phishing"],c:0,t:["DDoS","Brute force","Phishing"],x:"Meltdown (2018) lit la mémoire kernel via spéculation CPU ; Spectre exploite la prédiction de branchement.",r:"Les attaques cache-timing mesurent les variations de latence — elles sont sans DDoS/brute force/phishing."},
+  {d:3,e:"medium",s:"Which network segmentation approach isolates a PCI cardholder data environment from the rest of the corporate LAN?",o:["PCI network segmentation (scope reduction)","Flat LAN","VLAN trunk only","Same broadcast domain"],c:0,t:["Flat LAN","VLAN trunk only","Same broadcast domain"],x:"La segmentation PCI-DSS réduit le scope de conformité — contrôles stricts sur le CDE vs LAN général.",r:"Un flat LAN étend le scope ; VLAN trunk = 802.1Q sur tout ; broadcast domain = pas d'isolation."},
+  {d:3,e:"hard",s:"Which trusted execution environment isolates sensitive code from the main OS?",o:["TEE (ARM TrustZone / Intel SGX / Apple Secure Enclave)","Hypervisor","Container","VM"],c:0,t:["Hypervisor","Container","VM"],x:"TEE = enclave isolée cryptographiquement (TrustZone, SGX, SE) — code sensible isolé même du kernel.",r:"Hyperviseur compromis peut lire VM ; container partage kernel ; VM n'est pas isolée cryptographiquement."},
+  {d:3,e:"medium",s:"Which email security extension validates the sending MTA's identity to prevent spoofing?",o:["SPF / DKIM / DMARC","S/MIME only","PGP only","TLS only"],c:0,t:["S/MIME only","PGP only","TLS only"],x:"SPF = IP autorisée ; DKIM = signature des messages ; DMARC = alignement + policy (reject/quarantine).",r:"S/MIME/PGP = E2E body ; TLS = transport — pas d'identité MTA."},
+  {d:3,e:"hard",s:"Which memory corruption exploit technique corrupts heap metadata to achieve arbitrary write?",o:["Heap overflow / use-after-free / double-free","Stack overflow only","Format string","Integer overflow only"],c:0,t:["Stack overflow only","Format string","Integer overflow only"],x:"Heap overflow corrompt les chunks ; UAF réutilise un bloc libéré ; double-free corrompt le freelist — exploitation RCE.",r:"Stack overflow = stack ; format string = printf sans format ; integer overflow = arithmetic."},
+  {d:3,e:"medium",s:"Which cloud control plane API is commonly hardened with least privilege and conditional access?",o:["Cloud control plane (AWS IAM, Azure RBAC, GCP IAM)","User plane","Data plane","Edge"],c:0,t:["User plane","Data plane","Edge"],x:"Les API de management (IAM, EC2, S3, Azure ARM, GCP API) doivent être restreintes (least privilege + MFA + IP).",r:"User plane = data forwarding ; data plane = traffic ; edge = perimeter."},
+  {d:3,e:"hard",s:"Which secure boot process verifies the OS kernel signature using a TPM-based key?",o:["Microsoft Windows Secure Boot + TPM measured boot","Legacy MBR","Single-sector","DOS boot"],c:0,t:["Legacy MBR","Single-sector","DOS boot"],x:"Secure Boot vérifie chaque binaire signé (UEFI → bootloader → kernel) ; TPM mesure et scelle les PCRs.",r:"Legacy MBR n'a pas de signature ; DOS boot = pas sécurisé."},
+  {d:3,e:"medium",s:"Which data-at-rest encryption mode encrypts data without requiring an OS-level module?",o:["Self-encrypting drive (SED) / hardware FDE","BitLocker only","FileVault only","LUKS only"],c:0,t:["BitLocker only","FileVault only","LUKS only"],x:"Les SED (OPAL, eDrive) chiffrent au niveau du contrôleur disque — transparent pour l'OS.",r:"BitLocker/FileVault/LUKS = software FDE — requièrent un module OS."},
+  {d:3,e:"hard",s:"Which WAF rule technique uses machine learning to detect novel SQLi payloads?",o:["Anomaly-based WAF with ML / behavioral scoring","Signature only","Regex only","Blacklist only"],c:0,t:["Signature only","Regex only","Blacklist only"],x:"Un WAF anomaly-based apprend le trafic normal et détecte les déviations (ML score > seuil = block).",r:"Signature/regex/blacklist ne détectent que les IoC connus — bypass facile."},
+  {d:4,e:"medium",s:"Which NIST publication provides the Incident Response Lifecycle?",o:["SP 800-61","SP 800-53","SP 800-63","SP 800-30"],c:0,t:["SP 800-53","SP 800-63","SP 800-30"],x:"NIST SP 800-61r2 : 4 phases (Preparation, Detection & Analysis, Containment/Eradication/Recovery, Post-Incident).",r:"800-53 = controls catalog ; 800-63 = identity ; 800-30 = risk assessment."},
+  {d:4,e:"hard",s:"Which IOC sharing format is widely adopted for threat intelligence exchange?",o:["STIX 2.x with TAXII 2.x","CSV only","Email","PDF"],c:0,t:["CSV only","Email","PDF"],x:"STIX (Structured Threat Information eXpression) modélise threat actors, campaigns, indicators, malware ; TAXII = transport.",r:"CSV/email/PDF ne sont pas structurés — limitent l'automatisation."},
+  {d:4,e:"medium",s:"Which MITRE ATT&CK tactic involves establishing persistent access?",o:["Persistence","Initial Access","Lateral Movement","Exfiltration"],c:0,t:["Initial Access","Lateral Movement","Exfiltration"],x:"Persistence (TA0003) maintient l'accès (services, scheduled tasks, registry Run keys, startup).",r:"Initial Access = vecteur initial ; Lateral Movement = pivoter ; Exfiltration = exfiltrer."},
+  {d:4,e:"hard",s:"Which MITRE ATT&CK technique corresponds to LSASS memory dumping?",o:["T1003 OS Credential Dumping","T1059 Command Execution","T1078 Valid Accounts","T1110 Brute Force"],c:0,t:["T1059 Command Execution","T1078 Valid Accounts","T1110 Brute Force"],x:"T1003.001 LSASS Memory = technique utilisée par Mimikatz pour extraire NTLM hashes et Kerberos tickets.",r:"T1059 = exec ; T1078 = valid accounts ; T1110 = brute force — distincts."},
+  {d:4,e:"medium",s:"Which KPI measures the organization's ability to detect intrusions?",o:["MTTD (Mean Time To Detect)","MTTR","MTTF","MTBF"],c:0,t:["MTTR","MTTF","MTBF"],x:"MTTD = temps moyen entre compromission et détection — indicateur clé de visibilité SOC.",r:"MTTR = repair ; MTTF = failure ; MTBF = entre failures — fiabilité, pas sécurité."},
+  {d:4,e:"hard",s:"Which UEBA capability detects anomalous data downloads by employees?",o:["Behavioral analytics on file access patterns","Signature only","Blocklist","Simple threshold"],c:0,t:["Signature only","Blocklist","Simple threshold"],x:"UEBA profile les habitudes (heures, volumes, destinations) et alerte sur déviations — détecte exfiltration.",r:"Les signatures ne détectent que les IoC connus ; le seuil simple produit du bruit."},
+  {d:4,e:"medium",s:"Which log analysis technique correlates multiple low-severity events into a single incident?",o:["Event correlation / aggregation","Single-event alert","Threshold only","Regex only"],c:0,t:["Single-event alert","Threshold only","Regex only"],x:"La corrélation (multi-event, sequence, kill chain) groupe plusieurs événements en un incident exploitable.",r:"Alert simple = bruit ; threshold seul produit du volume ; regex ne corrèle pas."},
+  {d:4,e:"hard",s:"Which forensic artifact on Windows provides last-shutdown time?",o:["Event ID 6005/6008 (System log)","Prefetch","Registry RunMRU","BAM"],c:0,t:["Prefetch","Registry RunMRU","BAM"],x:"Event ID 6005 (clean shutdown) et 6008 (unexpected shutdown) — forensics timeline power events.",r:"Prefetch = exec history ; RunMRU = recent run commands ; BAM = background activity moderator — distincts."},
+  {d:4,e:"medium",s:"Which file integrity monitoring (FIM) tool detects changes to critical system files?",o:["Tripwire / OSSEC / Wazuh / Microsoft SCOM","AV only","IDS only","WAF only"],c:0,t:["AV only","IDS only","WAF only"],x:"FIM (Tripwire, OSSEC/Wazuh, SCOM) hash les fichiers critiques et alerte sur modification.",r:"AV = malware ; IDS = réseau ; WAF = web — pas file integrity."},
+  {d:4,e:"hard",s:"Which advanced persistent threat (APT) technique uses legitimate remote admin tools for C2?",o:["Dual-use / LOLBin abuse (AnyDesk, TeamViewer, Atera)","Custom RAT only","Phishing","DDoS"],c:0,t:["Custom RAT only","Phishing","DDoS"],x:"Les outils d'admin légitimes (AnyDesk, TeamViewer, Atera, Splashtop) sont détournés en C2 — dur à détecter.",r:"Custom RAT peut être détecté par AV ; phishing = initial access ; DDoS = disponibilité."},
+  {d:4,e:"medium",s:"Which NIST control family covers monitoring and accountability of systems?",o:["AU (Audit and Accountability)","AC (Access Control)","SI (System Integrity)","CM (Configuration Management)"],c:0,t:["AC (Access Control)","SI (System Integrity)","CM (Configuration Management)"],x:"AU-2 (auditable events) + AU-3 (content of audit records) + AU-9 (protection of audit info) — logging et accountability.",r:"AC = accès ; SI = intégrité ; CM = configuration — distincts."},
+  {d:4,e:"hard",s:"Which threat hunting methodology starts with an hypothesis about adversary behavior?",o:["Hypothesis-driven hunting (e.g., MITRE ATT&CK aligned)","Signature only","Alert-driven","Random sampling"],c:0,t:["Signature only","Alert-driven","Random sampling"],x:"Hypothesis-driven : hypothèse (e.g., 'APT29 utilise WMI pour persistence') → recherche d'IoC → investigation.",r:"Signature = IoC connus ; alert-driven = réactif ; random sampling = peu efficace."},
+  {d:4,e:"medium",s:"Which vulnerability remediation metric measures average time from disclosure to patch deployment?",o:["Mean Time To Remediate (MTTR) / Patch latency","MTTD","MTTF","CVSS"],c:0,t:["MTTD","MTTF","CVSS"],x:"MTTR (security) = temps entre disclosure (CVE publié) et patch appliqué en prod — indicateur opérationnel.",r:"MTTD = detection ; MTTF = failure ; CVSS = severity score — distincts."},
+  {d:4,e:"hard",s:"Which log source provides network flow metadata (5-tuple + bytes + duration)?",o:["NetFlow / sFlow / IPFIX","Firewall logs only","IDS alerts","Syslog only"],c:0,t:["Firewall logs only","IDS alerts","Syslog only"],x:"NetFlow (Cisco), sFlow (sampled), IPFIX (standardisé) capture les flux L3-L4 — utile pour forensic et capacity.",r:"Firewall logs = décisions seulement ; IDS = alerts ; syslog = événements — moins riche."},
+  {d:4,e:"medium",s:"Which endpoint detection and response (EDR) capability isolates a host from the network when malicious activity is detected?",o:["Network isolation / quarantine (EDR containment)","Logging only","Signature update","Patch deploy"],c:0,t:["Logging only","Signature update","Patch deploy"],x:"EDR containment isole l'hôte du réseau (VLAN quarantine, host firewall block) — bloque propagation ransomware.",r:"Logging ne bloque rien ; signature update = AV ; patch deploy = Vuln mgmt — distincts."},
+  {d:4,e:"hard",s:"Which ransomware negotiation principle is MOST consistent with industry best practices?",o:["Engage professional negotiators / legal / cyber insurance","Pay immediately","Never pay","Negotiate alone"],c:0,t:["Pay immediately","Never pay","Negotiate alone"],x:"Les négociations via des experts (Arete, Coveware) + legal + assurance cyber optimisent le résultat (clé valide, pas de récidive).",r:"Payer immédiatement finance le cybercrime ; ne jamais payer peut être fatal ; négocier seul = désavantage."},
+  {d:4,e:"medium",s:"Which log retention duration is typically required by HIPAA for healthcare audit logs?",o:["6 years (HIPAA §164.316(b)(2))","30 days","90 days","1 year only"],c:0,t:["30 days","90 days","1 year only"],x:"HIPAA impose 6 ans de rétention pour les politiques, procédures et logs — couvre inspections et litiges.",r:"30/90j/1an sont insuffisants pour HIPAA."},
+  {d:4,e:"hard",s:"Which detection engineering metric measures the reliability of a detection rule?",o:["True positive rate / false positive rate (precision-recall)","MTTD only","CVSS","EPSS"],c:0,t:["MTTD only","CVSS","EPSS"],x:"Précision (TP / (TP+FP)) et rappel (TP / (TP+FN)) mesurent la qualité d'une règle de détection.",r:"MTTD = détection globale ; CVSS/EPSS = vulnérabilité — distincts."},
+  {d:4,e:"medium",s:"Which vulnerability scanning mode identifies services WITHOUT logging in?",o:["Unauthenticated / external scan","Authenticated scan","Agent-based","FIM"],c:0,t:["Authenticated scan","Agent-based","FIM"],x:"Unauthenticated scan simule un attaquant externe — surface visible depuis Internet.",r:"Authenticated scan = vue interne (credentials) ; agent-based = installé sur host ; FIM = intégrité fichiers."},
+  {d:4,e:"hard",s:"Which APT technique exploits default credentials in network devices (routers, VPN, firewall admin)?",o:["Default credential exploitation","Phishing","SQLi","XSS"],c:0,t:["Phishing","SQLi","XSS"],x:"Beaucoup d'APTs (Volt Typhoon, APT28) scannent les appliances exposées avec credentials default — pivot IT.",r:"Phishing/SQLi/XSS ciblent les endpoints ou web — pas les appliances réseau."},
+  {d:4,e:"medium",s:"Which backup verification step ensures data integrity before storage?",o:["Checksums / hash verification (SHA-256)","File size only","Timestamp only","Manual review"],c:0,t:["File size only","Timestamp only","Manual review"],x:"Le hash (SHA-256) garantit l'intégrité bit-à-bit — détecte corruption silencieuse des backups.",r:"File size/timestamp ne garantissent pas l'intégrité ; manual review = sujet à erreur."},
+  {d:4,e:"hard",s:"Which DNS exfiltration technique encodes stolen data into subdomain labels?",o:["DNS tunneling (TXT/CHUNK queries with base64)","Plain HTTP","FTP","SMTP"],c:0,t:["Plain HTTP","FTP","SMTP"],x:"DNS tunneling encode data en sous-domaines (abc123.evil.com) — bypass les firewalls qui ne filtrent pas DNS.",r:"HTTP/FTP/SMTP sont des canaux de sortie directs — souvent bloqués en egress."},
+  {d:4,e:"medium",s:"Which incident severity classification is appropriate for an active ransomware encryption of file servers?",o:["Critical / Severity 1","Low","Informational","Medium only"],c:0,t:["Low","Informational","Medium only"],x:"Un chiffrement en cours = Critical/SEV1 — escalade immédiate, response team activé, leadership notifié.",r:"Low/Info/Medium sous-classifient une urgence ransomware."},
+  {d:4,e:"hard",s:"Which Windows event ID corresponds to a successful logon (interactive)?",o:["4624 (Logon)","4625 (Failure)","4647 (Logoff)","4625 only"],c:0,t:["4625 (Failure)","4647 (Logoff)","4625 only"],x:"Event 4624 = successful logon (LogonType 2 = interactive, 3 = network, 10 = RDP).",r:"4625 = failed ; 4647 = logoff ; 4625 only n'inclut pas les succès."},
+  {d:4,e:"medium",s:"Which vulnerability disclosure process involves coordinated public release after vendor patch?",o:["Coordinated disclosure (90-day + grace)","Full disclosure","Silent","Bug bounty only"],c:0,t:["Full disclosure","Silent","Bug bounty only"],x:"Coordinated disclosure : vendor informe le chercheur + délai (90-120j) + publication après patch — Project Zero.",r:"Full disclosure = publication immédiate (risquée) ; silent = pas de fix ; bug bounty = paiement privé."},
+  {d:4,e:"hard",s:"Which MITRE ATT&CK technique describes scheduled task/job creation for persistence?",o:["T1053 Scheduled Task/Job","T1543 Boot/Logon Autostart","T1547 Registry Run Keys","T1136 Create Account"],c:0,t:["T1543 Boot/Logon Autostart","T1547 Registry Run Keys","T1136 Create Account"],x:"T1053.005 Scheduled Task = création de tâche planifiée pour exécuter du code malveillant — persist + exec.",r:"T1543 = services ; T1547 = registry Run ; T1136 = create account — distincts."},
+  {d:4,e:"medium",s:"Which SIEM rule type correlates events across multiple log sources over a time window?",o:["Correlation rule / composite rule","Single event rule","Threshold rule","Suppression rule"],c:0,t:["Single event rule","Threshold rule","Suppression rule"],x:"Une règle de corrélation composite déclenche sur sequence d'événements (ex: 5x 4625 puis 4624 = password spray).",r:"Single event = une condition ; threshold = compteur ; suppression = anti-spam."},
+  {d:4,e:"hard",s:"Which vulnerability class involves a vulnerable component being used by another (transitive) dependency?",o:["Transitive dependency vulnerability","Direct use","Misconfiguration","Design flaw"],c:0,t:["Direct use","Misconfiguration","Design flaw"],x:"Une dépendance transitive (A→B→C) hérite des vulns de C — souvent non visible par le développeur — SCA critique.",r:"Direct use = dépendance explicite ; misconfiguration = setup ; design = architecture."},
+  {d:4,e:"medium",s:"Which log source captures file creation, modification, and deletion events on Windows?",o:["Sysmon Event ID 1/11/23","Event log only","Prefetch","Registry"],c:0,t:["Event log only","Prefetch","Registry"],x:"Sysmon Event 1 (process create), 11 (FileCreate), 23 (FileDelete) — visibilité détaillée des fichiers.",r:"Event log = événements OS de base ; prefetch = exec history ; registry = clés."},
+  {d:4,e:"hard",s:"Which cloud-native detection technique identifies privilege escalation via AssumeRole chains?",o:["Cloud detection rules (GuardDuty, CloudTrail anomaly)","Manual only","Firewall only","IDS only"],c:0,t:["Manual only","Firewall only","IDS only"],x:"GuardDuty / CloudTrail anomaly detection repère les chaînes AssumeRole inhabituelles — pivot cloud.",r:"Manual = lent ; firewall/IDS = L3-L4 — pas cloud control plane."},
+  {d:4,e:"medium",s:"Which IDS placement sits inside the network on a SPAN port for visibility?",o:["Inline / TAP / SPAN-based IDS","Edge only","DMZ only","Endpoint"],c:0,t:["Edge only","DMZ only","Endpoint"],x:"Un IDS inline (TAP/SPAN) voit le trafic est-ouest — détection de mouvement latéral.",r:"Edge = perimeter ; DMZ = zone ; endpoint = host."},
+  {d:4,e:"hard",s:"Which compliance requirement mandates appointing a senior executive accountable for security?",o:["NIST CSF / ISO 27001 (leadership clause)","PCI-DSS only","GDPR only","SOC 2 only"],c:0,t:["PCI-DSS only","GDPR only","SOC 2 only"],x:"ISO 27001 Clause 5 + NIST CSF Tier 3+ imposent un sponsor exécutif (CISO) accountable au board.",r:"PCI-DSS = technical compliance ; GDPR = DPO ; SOC 2 = audit — pas exec sponsor."},
+  {d:4,e:"medium",s:"Which incident response team structure uses rotating on-call analysts?",o:["Follow-the-sun / on-call rotation","Single dedicated team","Outsourced only","No team"],c:0,t:["Single dedicated team","Outsourced only","No team"],x:"Follow-the-sun couvre 24/7 via rotation entre régions ou équipes — réduit fatigue et MTTR.",r:"Single team = gaps ; outsourced = coût ; no team = pas de réponse."},
+  {d:4,e:"hard",s:"Which advanced logging technique enriches events with threat intelligence context?",o:["Threat intel enrichment (IoC tagging on SIEM events)","Plain logging","Log compression","Sampling only"],c:0,t:["Plain logging","Log compression","Sampling only"],x:"L'enrichissement ajoute contexte (IP → threat actor, hash → malware family) à chaque event — corrélation plus rapide.",r:"Plain logging = pas de contexte ; compression = taille ; sampling = perte."},
+  {d:4,e:"medium",s:"Which vulnerability prioritization score considers CVSS, threat intel, and asset criticality?",o:["Risk-based vulnerability management (RBVM)","CVSS only","Patch Tuesday","Vendor score"],c:0,t:["CVSS only","Patch Tuesday","Vendor score"],x:"RBVM = CVSS × EPSS × asset criticality × exploit availability — tri des patches plus efficace.",r:"CVSS seul ignore probabilité ; Patch Tuesday = calendaire ; vendor score = biaisé."},
+  {d:4,e:"hard",s:"Which sandbox technique detects malware behavior WITHOUT executing it in production?",o:["Static analysis + YARA + emulation","Dynamic execution only","Signature","Network IDS"],c:0,t:["Dynamic execution only","Signature","Network IDS"],x:"Static (strings, PE structure) + YARA + emulation (unicorn, speakeasy) analyse le binaire sans explosion.",r:"Dynamic execution = risques de leak ; signature = IoC ; NIDS = réseau."},
+  {d:4,e:"medium",s:"Which ransomware recovery step is MOST critical to prevent re-infection?",o:["Identify and remediate the initial access vector","Restore from backup","Pay ransom","Wipe everything"],c:0,t:["Restore from backup","Pay ransom","Wipe everything"],x:"Trouver et fermer le vecteur d'accès initial (phishing link, RDP exposé, vuln non patchée) — sinon re-infection.",r:"Restore seul ne change rien au vecteur ; payer finance le crime ; wipe seul ne fixe pas la cause racine."},
+  {d:4,e:"hard",s:"Which TLS interception technique allows a corporate proxy to inspect encrypted traffic?",o:["TLS inspection / SSL inspection (MITM proxy with corporate CA)","SNI filter","Certificate pinning","OCSP"],c:0,t:["SNI filter","Certificate pinning","OCSP"],x:"Le proxy TLS intercepte la session (remplace le cert serveur par un cert signé par le CA corporate) — inspection L7.",r:"SNI = nom de serveur ; pinning = anti-MITM ; OCSP = revocation — distincts."},
+  {d:4,e:"medium",s:"Which monitoring tool captures process execution with command-line arguments on Windows?",o:["Sysmon Event ID 1 (Process Create)","Event 4624 only","Prefetch only","Registry only"],c:0,t:["Event 4624 only","Prefetch only","Registry only"],x:"Sysmon Event 1 capture ProcessId, Image, CommandLine, ParentProcessId, Hashes — visibilité complète.",r:"Event 4624 = logon ; Prefetch = exec history ; Registry = clés."},
+  {d:4,e:"hard",s:"Which detection engineering principle reduces alert fatigue?",o:["Tune FP rate + high-fidelity IoC + correlation","More alerts","Lower threshold","More logs"],c:0,t:["More alerts","Lower threshold","More logs"],x:"Tuning (suppression FPs connus), IoC haute fidélité et corrélation réduisent le bruit — augmente la valeur de l'alerte.",r:"Plus d'alertes = fatigue ; seuil bas = bruit ; plus de logs = coût."},
+  {d:4,e:"medium",s:"Which vulnerability scan reports open ports, services, and OS fingerprint?",o:["Network / unauthenticated scan","Authenticated scan","Web app scan","Source code scan"],c:0,t:["Authenticated scan","Web app scan","Source code scan"],x:"Un scan réseau non-authentifié identifie la surface externe — ports, services, banners, OS guessing.",r:"Authenticated = avec credentials ; web app = vulnérabilités web ; source code = SAST."},
+  {d:4,e:"hard",s:"Which advanced persistent threat uses DLL side-loading for initial execution?",o:["APT29 / APT32 / Mustang Panda","Script kiddies","Hacktivists","Insiders"],c:0,t:["Script kiddies","Hacktivists","Insiders"],x:"APT29 (Cozy Bear) et Mustang Panda utilisent DLL side-loading via des binaires signés légitimes — bypass AV.",r:"Script kiddies = opportunistes ; hacktivists = cibles visibles ; insiders = interne."},
+  {d:4,e:"medium",s:"Which backup rotation pattern is RECOMMENDED for retention beyond 30 days?",o:["3-2-1 rule (3 copies, 2 media, 1 offsite)","Single full","Mirror only","RAID only"],c:0,t:["Single full","Mirror only","RAID only"],x:"3-2-1 = 3 copies, 2 types de média, 1 hors site — protection contre ransomware + disaster + corruption.",r:"Single full = SPOF ; mirror = même risque ; RAID = pas un backup (disques corrélés)."},
+  {d:4,e:"hard",s:"Which threat hunting framework structures hunts by attacker tactics (Recon → Exfil)?",o:["MITRE ATT&CK aligned hunting","CVSS only","EPSS only","Patch management"],c:0,t:["CVSS only","EPSS only","Patch management"],x:"Chasse structurée par tactic (TA0043 Reconnaissance, TA0011 C2, TA0010 Exfil) — coverage gap analysis.",r:"CVSS/EPSS = vulns ; patch management = remediation — distincts."},
+  {d:4,e:"medium",s:"Which containment action IMMEDIATELY limits data exfiltration from a compromised host?",o:["Block egress + isolate network + revoke tokens","Reboot","Wipe","Reboot only"],c:0,t:["Reboot","Wipe","Reboot only"],x:"Bloquer egress + isoler le réseau + révoquer les tokens/IAM coupe la communication C2 immédiatement.",r:"Reboot peut effacer la mémoire (preuve perdue) ; wipe n'arrête pas l'exfiltration en cours."},
+  {d:4,e:"hard",s:"Which cloud detection capability identifies cryptominer infections in VMs?",o:["Cloud workload anomaly (sustained high CPU + network to pool)","Signature only","Firewall only","WAF only"],c:0,t:["Signature only","Firewall only","WAF only"],x:"Les cryptominers (XMRig, etc.) montrent CPU élevé + connexions sortantes vers pools de mining — UEBA cloud.",r:"Signature = IoC connus ; firewall/WAF = pas workload-level."},
+  {d:4,e:"medium",s:"Which security operations metric tracks the total number of incidents per month?",o:["Incident volume / trends","MTTD","MTTR","CVSS"],c:0,t:["MTTD","MTTR","CVSS"],x:"Le volume d'incidents et les tendances permettent de voir l'évolution du paysage de menaces.",r:"MTTD/MTTR = efficacité response ; CVSS = vuln severity — distincts."},
+  {d:4,e:"hard",s:"Which forensic artifact is critical for reconstructing a web browsing session on Windows?",o:["Web browser history (Chrome/Edge SQLite, Firefox places.sqlite)","Prefetch","Registry","BAM"],c:0,t:["Prefetch","Registry","BAM"],x:"Chrome/Edge history (SQLite History), Firefox places.sqlite — URLs, timestamps, download history.",r:"Prefetch = exec ; Registry = clés ; BAM = background apps."},
+  {d:4,e:"medium",s:"Which initial response action BEST preserves volatile evidence on a Windows host?",o:["Acquire memory dump BEFORE reboot","Wipe and reinstall","Reboot first","Pull the plug"],c:0,t:["Wipe and reinstall","Reboot first","Pull the plug"],x:"Mémoire dump (FTK, WinPmem, Magnet) avant reboot — capture processus, network, malwares file-less.",r:"Wipe détruit la preuve ; reboot = perte RAM ; pull the plug = corruption disque possible."},
+  {d:4,e:"hard",s:"Which ATP detection technique uses GPU memory and PCI passthrough to monitor guest VMs?",o:["Virtualization-based security (VBS) / Hypervisor-level introspection","Host AV","Network IDS","WAF"],c:0,t:["Host AV","Network IDS","WAF"],x:"Hypervisor introspection observe la VM depuis l'hyperviseur — invisible pour le malware — Defender for Cloud, VMware NSX.",r:"Host AV = user/kernel ; NIDS = réseau ; WAF = web."},
+  {d:4,e:"medium",s:"Which SOC metric indicates analyst efficiency in handling tickets?",o:["Tickets per analyst per day / alert handling time","MTTD","MTTR","CVSS"],c:0,t:["MTTD","MTTR","CVSS"],x:"Tickets/jour et temps de traitement par analyste mesurent la charge et l'efficacité SOC.",r:"MTTD = temps detection ; MTTR = temps resolution ; CVSS = vuln severity — distincts."},
+  {d:4,e:"hard",s:"Which advanced detection technique uses DNS query analysis to find C2 callbacks?",o:["DNS analytics (NXDOMAIN spikes, rare TLDs, long labels)","IP blocklist","Signature","HTTPS inspection"],c:0,t:["IP blocklist","Signature","HTTPS inspection"],x:"Les C2 génèrent patterns DNS anormaux (NXDOMAIN massifs, TLDs rares, sous-domaines très longs) — détectable sans déchiffrer.",r:"IP blocklist = réactif ; signature = IoC ; HTTPS inspection = MITM TLS lourd."},
+  {d:4,e:"medium",s:"Which vulnerability classification describes an issue in third-party libraries used by an application?",o:["CWE-1395 (Dependency on Vulnerable Third-Party Component)","CWE-79","CWE-89","CWE-22"],c:0,t:["CWE-79","CWE-89","CWE-22"],x:"CWE-1395 = dépendance à un composant tiers vulnérable — catégorie SCA.",r:"CWE-79 = XSS ; CWE-89 = SQLi ; CWE-22 = path traversal — distincts."},
+  {d:4,e:"hard",s:"Which ransomware operator tactic uses stolen data + extortion threat without encryption?",o:["Pure extortion / data leak only","Encryption only","DDoS only","Phishing"],c:0,t:["Encryption only","DDoS only","Phishing"],x:"Les groupes (Lapsus$, Scattered Spider) utilisent parfois seulement l'extorsion (leak only) — sans chiffrement.",r:"Encryption only = ransomware classique ; DDoS = pression ; phishing = vecteur initial."},
+  {d:4,e:"medium",s:"Which incident communication channel is BEST for stakeholder updates during a major incident?",o:["Secure status page + executive bridge call","Public social media","Email blast","No communication"],c:0,t:["Public social media","Email blast","No communication"],x:"Une page de statut sécurisée + bridge call exécutif coordonne les équipes et informe clients sans leak d'info sensible.",r:"Social media public = risqué ; email blast = générique ; no comm = rumeurs."},
+  {d:4,e:"hard",s:"Which analytical technique detects beaconing behavior in C2 traffic?",o:["Jitter / beacon interval analysis + traffic shaping","Signature only","IP blocklist","Port block"],c:0,t:["Signature only","IP blocklist","Port block"],x:"Le beaconing (connexions périodiques à intervalle régulier vers C2) — détecté par analyse des intervalles + faible variance.",r:"Signature = IoC ; blocklists = réactifs ; port block = trop large."},
+  {d:4,e:"medium",s:"Which vulnerability management framework continuously discovers, prioritizes, and remediates?",o:["Continuous Vulnerability Management (NIST CSF DE.CM / RM)","Annual scan only","Quarterly scan","Penetration test only"],c:0,t:["Annual scan only","Quarterly scan","Penetration test only"],x:"La gestion continue (Tenable, Qualys, Rapid7) scanne en continu + priorise + suit remediation.",r:"Scan annuel/quarter = obsolète ; pentest = ponctuel, pas continu."},
+  {d:4,e:"hard",s:"Which APT technique abuses WMI Event Subscription for persistence and lateral movement?",o:["WMI Event Subscription (CommandLineEventConsumer)","Scheduled Task only","Service only","Registry"],c:0,t:["Scheduled Task only","Service only","Registry"],x:"WMI Event Subscription crée des consommateurs (CommandLineEventConsumer / ScriptTextConsumer) sur événement — persistance + exec.",r:"Scheduled Task = tâche planifiée ; Service = Windows service ; Registry = clé."},
+  {d:4,e:"medium",s:"Which log analysis platform provides correlation, dashboards, and alerting for SOC teams?",o:["SIEM (Splunk, QRadar, Elastic, Sentinel)","EDR only","Firewall only","Ticketing only"],c:0,t:["EDR only","Firewall only","Ticketing only"],x:"Un SIEM centralise logs, corrèle événements, alerte et dashboards — cœur du SOC.",r:"EDR = endpoint ; firewall = perimeter ; ticketing = gestion d'incidents — distincts."},
+  {d:4,e:"hard",s:"Which advanced malware persistence technique hides in firmware or boot sector?",o:["UEFI/BIOS implant / MBR bootkit","Scheduled task","Service","Registry Run"],c:0,t:["Scheduled task","Service","Registry Run"],x:"Les implants firmware (LoJax, BlackLotus) survivent aux reinstall OS et disque formaté — très difficile à éradiquer.",r:"Scheduled task / service / registry Run = Windows — détectable et supprimable."},
+  {d:4,e:"medium",s:"Which EDR capability blocks a malicious process at runtime based on behavior?",o:["Behavior-based blocking (e.g., Defender ASR, CrowdStrike IOA)","Signature only","Hash blocklist only","Sandbox"],c:0,t:["Signature only","Hash blocklist only","Sandbox"],x:"Les règles comportementales (ASR, IOA) bloquent les comportements suspects (LSASS read, PSExec exec).",r:"Signature = IoC ; hash blocklist = fichier ; sandbox = pre-execution."},
+  {d:4,e:"hard",s:"Which cloud incident response step is unique compared to on-prem IR?",o:["Revoke IAM credentials + rotate keys + audit CloudTrail","Memory dump","Image","Rebuild"],c:0,t:["Memory dump","Image","Rebuild"],x:"En cloud IR : révoquer les clés IAM compromises + rotation + audit CloudTrail pour déterminer la portée.",r:"Memory dump/image/rebuild existent mais IAM + API est spécifique cloud."},
+  {d:4,e:"medium",s:"Which initial triage action BEST determines the scope of a security incident?",o:["Run containment + identify affected systems + collect logs","Wait","Alert media","Rebuild"],c:0,t:["Wait","Alert media","Rebuild"],x:"Le triage : containment immédiat + identification des systèmes + collecte de logs (3 piliers).",r:"Attendre aggrave ; alerter les médias tôt = fuite ; rebuild sans analyse = perte de cause racine."},
+  {d:4,e:"hard",s:"Which evasion technique modifies malware signature at runtime (per host)?",o:["Polymorphic / metamorphic malware","Static malware","Packer only","Crypter only"],c:0,t:["Static malware","Packer only","Crypter only"],x:"Polymorphic = change signature à chaque infection (encryption + variable key) ; Metamorphic = réécrit son code.",r:"Static malware = signature fixe ; packer/crypter = obfuscation fixe."},
+  {d:4,e:"medium",s:"Which detection engineering principle reduces false negatives for novel attacks?",o:["Behavioral + anomaly detection alongside signatures","More signatures","Lower threshold","Block all"],c:0,t:["More signatures","Lower threshold","Block all"],x:"Les règles comportementales (MITRE ATT&CK aligned) détectent les attaques inconnues — complètent les signatures.",r:"Plus de signatures = plus de FPs ; seuil bas = bruit ; block all = DoS."},
+  {d:4,e:"hard",s:"Which forensic network artifact captures DNS queries made by a host?",o:["Passive DNS capture (from network sensor / Resolver logs)","Firewall logs only","PCAP of HTTPS","HTTP logs only"],c:0,t:["Firewall logs only","PCAP of HTTPS","HTTP logs only"],x:"Passive DNS (capture from network TAP ou resolver logs) reconstruit l'historique des requêtes — pivots C2.",r:"Firewall logs = décisions ; HTTPS PCAP = chiffré ; HTTP logs = ne capture pas DNS."},
+  {d:4,e:"medium",s:"Which security operations review cadence is RECOMMENDED for KPIs and SIEM tuning?",o:["Monthly + post-incident review","Annually only","Never","Daily only"],c:0,t:["Annually only","Never","Daily only"],x:"Monthly review des KPIs (MTTD, MTTR, alert volume, FP rate) + tuning SIEM — amélioration continue.",r:"Annuel = trop tard ; jamais = pas d'amélioration ; daily = trop fréquent (sauf incidents)."},
+  {d:5,e:"medium",s:"Which NIST RMF step involves selecting and implementing security controls?",o:["Step 3: Implement","Step 1: Categorize","Step 2: Select","Step 4: Assess"],c:0,t:["Step 1: Categorize","Step 2: Select","Step 4: Assess"],x:"NIST RMF (SP 800-37r2) : Categorize → Select → Implement → Assess → Authorize → Monitor.",r:"Step 1 = categorize ; 2 = select ; 4 = assess ; 5 = authorize ; 6 = monitor."},
+  {d:5,e:"hard",s:"Which FIPS publication defines minimum security requirements for federal information systems?",o:["FIPS 200","FIPS 140-2","FIPS 199","FIPS 201"],c:0,t:["FIPS 140-2","FIPS 199","FIPS 201"],x:"FIPS 200 = minimum security requirements (17 control families) derived from SP 800-53.",r:"FIPS 140-2 = crypto modules ; FIPS 199 = categorization ; FIPS 201 = PIV — distincts."},
+  {d:5,e:"medium",s:"Which NIST control selection baseline corresponds to HIGH impact systems?",o:["High Baseline (SP 800-53B)","Low","Moderate","None"],c:0,t:["Low","Moderate","None"],x:"NIST 800-53B définit 3 baselines : Low, Moderate, High — High = le plus de contrôles (~421 controls).",r:"Low/Moderate ont moins de contrôles."},
+  {d:5,e:"hard",s:"Which risk treatment strategy eliminates the risk by removing the activity?",o:["Avoid (risk avoidance)","Transfer","Mitigate","Accept"],c:0,t:["Transfer","Mitigate","Accept"],x:"Risk avoidance = arrêter l'activité qui génère le risque (e.g., ne pas collecter la donnée sensible).",r:"Transfer = outsource/insurance ; Mitigate = reduce ; Accept = endure."},
+  {d:5,e:"medium",s:"Which quantitative risk formula calculates Annual Loss Expectancy?",o:["ALE = SLE × ARO","ALE = ARO / SLE","ALE = SLE / ARO","ALE = ARO + SLE"],c:0,t:["ALE = ARO / SLE","ALE = SLE / ARO","ALE = ARO + SLE"],x:"ALE = Single Loss Expectancy × Annualized Rate of Occurrence — perte annuelle attendue.",r:"SLE = AV × EF (Asset Value × Exposure Factor)."},
+  {d:5,e:"hard",s:"Which qualitative risk assessment method uses color-coded heat maps for likelihood vs impact?",o:["Heat map / risk matrix (likelihood × impact)","ALE only","CVSS only","EPSS"],c:0,t:["ALE only","CVSS only","EPSS"],x:"Le heat map (Low/Med/High ou 5×5) classe les risques — communication rapide au management.",r:"ALE = quantitatif ; CVSS/EPSS = vulnérabilités."},
+  {d:5,e:"medium",s:"Which regulatory framework mandates a privacy impact assessment before deploying new processing?",o:["GDPR DPIA (Art. 35)","PCI-DSS","HIPAA","SOC 2"],c:0,t:["PCI-DSS","HIPAA","SOC 2"],x:"GDPR Art. 35 impose une DPIA (Data Protection Impact Assessment) pour les traitements à haut risque.",r:"PCI/HIPAA/SOC 2 ont des assessments mais pas la structure DPIA spécifique au RGPD."},
+  {d:5,e:"hard",s:"Which COBIT 2019 governance principle distinguishes governance from management?",o:["Governance vs Management objectives separated","Risk only","Single layer","Cybersecurity only"],c:0,t:["Risk only","Single layer","Cybersecurity only"],x:"COBIT 2019 sépare gouvernance (évaluation, direction, monitoring — EDM) et management (planifier, construire, exécuter — PBRM).",r:"COBIT ne se limite pas au risque — c'est un framework global IT."},
+  {d:5,e:"medium",s:"Which SOC 2 Trust Services Criterion addresses availability commitments?",o:["Availability","Security only","Confidentiality","Processing Integrity"],c:0,t:["Security only","Confidentiality","Processing Integrity"],x:"TSC A1 = Availability — uptime, disaster recovery, incident management — engagements client.",r:"Security = critères communs ; Confidentiality = C1 ; Processing Integrity = PI1 — distincts."},
+  {d:5,e:"hard",s:"Which audit evidence type provides the strongest support for control effectiveness?",o:["Re-performance (re-execute the control)","Inquiry","Inspection","Observation"],c:0,t:["Inquiry","Inspection","Observation"],x:"Re-performance = l'auditeur exécute la procédure lui-même — preuve la plus forte (vs ce qu'on dit).",r:"Inquiry = interview (faible) ; inspection = documents ; observation = en direct — moins forts."},
+  {d:5,e:"medium",s:"Which compliance obligation requires reporting a breach within 30 days in the EU under GDPR?",o:["GDPR Article 33 (72h to authority) / Article 34 (without undue delay to subjects)","HIPAA","PCI-DSS","SOX"],c:0,t:["HIPAA","PCI-DSS","SOX"],x:"GDPR Art. 33 = 72h à l'autorité ; Art. 34 = sans délai indu aux sujets (high risk).",r:"HIPAA = 60 jours ; PCI = immédiat à marques et acquéreur ; SOX = financial reporting."},
+  {d:5,e:"hard",s:"Which risk acceptance documentation is REQUIRED before accepting a residual high risk?",o:["Formal risk acceptance memo signed by management","Verbal approval","No documentation","Email only"],c:0,t:["Verbal approval","No documentation","Email only"],x:"Un mémo formel signé (CISO + risk owner + executive) documente la décision et la responsabilité.",r:"Verbal/email ne résistent pas à un audit — pas de preuve documentée."},
+  {d:5,e:"medium",s:"Which data subject right allows a user to correct inaccurate personal data?",o:["Rectification (GDPR Art. 16)","Erasure","Portability","Restriction"],c:0,t:["Erasure","Portability","Restriction"],x:"Rectification = corriger des données inexactes ; Erasure = supprimer ; Portability = transférer ; Restriction = limiter.",r:"Chaque droit est distinct sous GDPR."},
+  {d:5,e:"hard",s:"Which factor differentiates a Tier III from Tier IV datacenter?",o:["Tier IV = 2N+1 fully fault tolerant (no concurrent maintenance cap)","Same as Tier III","Tier III = higher","Tier IV = less"],c:0,t:["Same as Tier III","Tier III = higher","Tier IV = less"],x:"Tier IV = 2N+1 (toute panne + maintenance concurrente sans impact) ; Tier III = N+1 maintenance concurrente.",r:"Tier III est en dessous de Tier IV — moins tolérant."},
+  {d:5,e:"medium",s:"Which standard specifies requirements for an Information Security Management System?",o:["ISO/IEC 27001","ISO 9001","ISO 14001","ISO 20000"],c:0,t:["ISO 9001","ISO 14001","ISO 20000"],x:"ISO/IEC 27001 = ISMS requirements (clauses 4-10 + Annex A controls) — certification reconnue.",r:"9001 = QMS ; 14001 = EMS ; 20000 = ITSM — distincts."},
+  {d:5,e:"hard",s:"Which audit report type covers controls at a service organization that may impact user entities' financial reporting?",o:["SOC 1 (ICFR)","SOC 2","SOC 3","None"],c:0,t:["SOC 2","SOC 3","None"],x:"SOC 1 = rapport sur les contrôles ICFR (Internal Control over Financial Reporting) — destiné aux auditeurs du user entity.",r:"SOC 2 = trust services (sécurité, dispo, etc.) ; SOC 3 = public summary."},
+  {d:5,e:"medium",s:"Which privacy framework principle requires collecting only necessary data for the stated purpose?",o:["Data minimization","Storage limitation","Purpose limitation","Lawfulness"],c:0,t:["Storage limitation","Purpose limitation","Lawfulness"],x:"Data minimization = collecter le minimum nécessaire ; GDPR Art. 5(1)(c).",r:"Storage = durée ; Purpose = finalités ; Lawfulness = base légale — distincts."},
+  {d:5,e:"hard",s:"Which vendor risk management process tier categorizes vendors by data access and criticality?",o:["Vendor tiering (Critical / High / Medium / Low)","No tiering","Single tier","Vendor size only"],c:0,t:["No tiering","Single tier","Vendor size only"],x:"Le tiering classe les vendors selon accès aux données et criticité — focus sur les high-risk.",r:"Pas de tiering = tout traiter de la même façon (inefficace)."},
+  {d:5,e:"medium",s:"Which financial regulation mandates internal controls over financial reporting (ICFR)?",o:["SOX Section 404","GDPR","HIPAA","PCI-DSS"],c:0,t:["GDPR","HIPAA","PCI-DSS"],x:"SOX Section 404 = ICFR pour les sociétés cotées US — matérialité, contrôle interne, audit.",r:"GDPR/HIPAA/PCI-DSS ne ciblent pas l'ICFR."},
+  {d:5,e:"hard",s:"Which HIPAA Privacy Rule standard requires minimum necessary disclosure of PHI?",o:["§164.502(b) Minimum necessary","§164.312","§164.308","§164.316"],c:0,t:["§164.312","§164.308","§164.316"],x:"§164.502(b) Minimum necessary = utiliser ou divulguer seulement le minimum nécessaire pour la finalité.",r:"§164.312 = technical safeguards ; §164.308 = administrative ; §164.316 = documentation."},
+  {d:5,e:"medium",s:"Which control objective covers user access provisioning and deprovisioning?",o:["Account lifecycle management","Detection only","Encryption only","Network only"],c:0,t:["Detection only","Encryption only","Network only"],x:"Le account lifecycle (joiner, mover, leaver) couvre provisioning, modification et deprovisioning — base RBAC.",r:"Detection = audit ; encryption = data ; network = perimeter."},
+  {d:5,e:"hard",s:"Which contractual clause requires a vendor to maintain specific security controls and pass audits?",o:["Security exhibit / Security Schedule","NDA only","MSA only","SOW"],c:0,t:["NDA only","MSA only","SOW"],x:"Le security exhibit annexé au MSA précise les contrôles (encryption, MFA, audit rights, breach notification).",r:"NDA = confidentialité ; MSA = cadre commercial ; SOW = périmètre projet."},
+  {d:5,e:"medium",s:"Which risk register field quantifies the risk AFTER controls are applied?",o:["Residual risk","Inherent risk","Impact","Likelihood"],c:0,t:["Inherent risk","Impact","Likelihood"],x:"Residual risk = risque après contrôles (ce qui reste) — basis pour acceptance ou further treatment.",r:"Inherent = avant contrôles ; Impact et Likelihood sont des composantes."},
+  {d:5,e:"hard",s:"Which legal framework holds processors accountable for sub-processor security?",o:["GDPR Art. 28 (processor obligations)","HIPAA BAA only","PCI-DSS only","SOX"],c:0,t:["HIPAA BAA only","PCI-DSS only","SOX"],x:"GDPR Art. 28 impose au processor des obligations (instructions documentées, confidentiality, sub-processors).",r:"HIPAA BAA = healthcare only ; PCI-DSS = cartes ; SOX = financial reporting."},
+  {d:5,e:"medium",s:"Which control assessment method tests whether a control operates as designed at a point in time?",o:["Design effectiveness testing","Operating effectiveness","Re-performance","Walkthrough"],c:0,t:["Operating effectiveness","Re-performance","Walkthrough"],x:"Design effectiveness = test ponctuel que la conception couvre le risque — fait une fois par audit.",r:"Operating effectiveness = sur la période ; re-performance = re-exécution ; walkthrough = visualisation."},
+  {d:5,e:"hard",s:"Which factor MOST influences the prioritization of a remediation action?",o:["Risk reduction × effort / cost","CVSS only","Vendor advisory","Date"],c:0,t:["CVSS only","Vendor advisory","Date"],x:"Risk reduction (residual risk reduction × impact) × effort/cost = ROI de la remédiation — focus sur le plus efficace.",r:"CVSS seul ignore l'effort ; vendor advisory = biaisé ; date = pas de valeur."},
+  {d:5,e:"medium",s:"Which business continuity document identifies critical functions and their dependencies?",o:["Business Impact Analysis (BIA)","DRP","Risk register","Asset inventory"],c:0,t:["DRP","Risk register","Asset inventory"],x:"BIA identifie les processus métiers, leurs dépendances, RTO/RPO — base du BCP et DRP.",r:"DRP = recovery tech ; Risk register = risques ; Asset inventory = actifs."},
+  {d:5,e:"hard",s:"Which cloud provider responsibility model applies to SaaS for the customer?",o:["Customer: data, access, user behavior; Provider: everything else","All customer","All provider","Shared 50/50"],c:0,t:["All customer","All provider","Shared 50/50"],x:"En SaaS (e.g., Microsoft 365, Salesforce), le client gère données, identités, accès ; le provider gère le reste.",r:"Le client ne gère pas l'infra SaaS ; le provider ne gère pas la donnée client."},
+  {d:5,e:"medium",s:"Which auditing standard provides assurance on compliance with laws and regulations?",o:["Compliance audit (financial, regulatory)","Performance audit only","Operational audit","Financial audit only"],c:0,t:["Performance audit only","Operational audit","Financial audit only"],x:"Un compliance audit vérifie la conformité aux lois/régulations (SOX, GDPR, PCI-DSS, HIPAA).",r:"Performance = efficiency ; operational = operations ; financial = états financiers — distincts."},
+  {d:5,e:"hard",s:"Which risk assessment technique uses expert judgment through anonymous iteration (Delphi)?",o:["Delphi method","Monte Carlo","FAIR","OCTAVE"],c:0,t:["Monte Carlo","FAIR","OCTAVE"],x:"Delphi = itération anonyme d'experts (1ère ronde → consensus → 2e ronde → ...) — évite groupthink.",r:"Monte Carlo = simulation probabiliste ; FAIR = Factor Analysis of Information Risk ; OCTAVE = Operationally Critical Threat, Asset, and Vulnerability Evaluation."},
+  {d:5,e:"medium",s:"Which control type BEST addresses the risk of unauthorized physical access to a server room?",o:["Preventive physical control (mantrap, badge, biometric)","Detective only","Deterrent only","Administrative only"],c:0,t:["Detective only","Deterrent only","Administrative only"],x:"Un contrôle physique préventif (badge, mantrap, biometric, fence) bloque l'accès non autorisé avant.",r:"Detective = détecte après ; deterrent = dissuade (panneau) ; admin = politique."},
+  {d:5,e:"hard",s:"Which factor MOST influences the choice between preventive and detective controls?",o:["Cost vs risk magnitude","CVSS only","Vendor preference","Date"],c:0,t:["CVSS only","Vendor preference","Date"],x:"Preventive = plus coûteux (implémentation) mais empêche ; Detective = moins coûteux mais réagit — ROI dépend du risque.",r:"CVSS ne s'applique pas directement aux contrôles ; vendor/date ne sont pas facteurs."},
+  {d:5,e:"medium",s:"Which data subject notification timeline applies to a HIPAA breach affecting 500+ individuals?",o:["60 days from discovery (notify media + HHS)","30 days","24 hours","7 days"],c:0,t:["30 days","24 hours","7 days"],x:"HIPAA Breach Notification Rule : 60 jours aux individus ; si ≥500 : aussi média + HHS secretary dans 60 jours.",r:"30j/24h/7j sont trop courts — HIPAA n'impose pas ces délais."},
+  {d:5,e:"hard",s:"Which GDPR lawful basis is MOST appropriate for processing employee payroll data?",o:["Contract (Art. 6(1)(b))","Consent only","Legitimate interest","Public task"],c:0,t:["Consent only","Legitimate interest","Public task"],x:"Le contrat de travail justifie le traitement payroll — basis contractuelle claire.",r:"Consent = retirable (pas idéal pour payroll) ; legitimate interest = moins solide ; public task = secteur public."},
+  {d:5,e:"medium",s:"Which audit opinion type indicates the financial statements are materially misstated?",o:["Adverse opinion","Unqualified","Qualified","Disclaimer"],c:0,t:["Unqualified","Qualified","Disclaimer"],x:"Adverse = refus de certifier, états financiers trompeurs ; Unqualified = sans réserve ; Qualified = exception ; Disclaimer = impossible.",r:"Adverse est le pire cas — révèle des problèmes majeurs."},
+  {d:5,e:"hard",s:"Which control implementation gap indicates a control is designed but not operating?",o:["Control gap / design vs operating deficiency","Control satisfied","Material weakness","Significant deficiency"],c:0,t:["Control satisfied","Material weakness","Significant deficiency"],x:"Une control deficiency existe quand un control est mal conçu ou ne fonctionne pas — material si impact significatif.",r:"Significant deficiency = moins sévère que material weakness."},
+  {d:5,e:"medium",s:"Which regulatory mandate requires breach notification to the regulator within 72 hours?",o:["GDPR Art. 33","HIPAA","PCI-DSS","SOX"],c:0,t:["HIPAA","PCI-DSS","SOX"],x:"GDPR Art. 33 = 72h à l'autorité de contrôle (CNIL, BfDI, etc.) — notification rapide.",r:"HIPAA = 60 jours ; PCI = marques + acquéreur ; SOX = material weakness."},
+  {d:5,e:"hard",s:"Which factor MOST contributes to vendor risk in the supply chain?",o:["Access to data/systems + criticality + 4th-party risk","Vendor size","Vendor age","Logo"],c:0,t:["Vendor size","Vendor age","Logo"],x:"L'accès aux données/systèmes, la criticité du service et le risque de sous-traitants (4th party) dominent.",r:"Taille/âge/logo sont des indicateurs faibles de risque réel."},
+  {d:5,e:"medium",s:"Which ISO 27001 Annex A control category covers physical security?",o:["A.11 Physical and environmental security","A.5","A.7","A.12"],c:0,t:["A.5","A.7","A.12"],x:"Annex A.11 (old) / A.7 (newer grouping) = Physical and environmental — fences, CCTV, HVAC, secure areas.",r:"A.5 = organizational ; A.12 = operations ; A.7 = physical (restructured)."},
+  {d:5,e:"hard",s:"Which governance body is PRIMARILY responsible for cyber risk oversight?",o:["Board of Directors / Risk Committee","IT team","Help desk","Marketing"],c:0,t:["IT team","Help desk","Marketing"],x:"Le board / Risk Committee a l'oversight ultime — accountable pour la stratégie cyber et le risk appetite.",r:"IT/Help desk/Marketing = opérationnels — pas de gouvernance stratégique."},
+  {d:5,e:"medium",s:"Which NIST control family covers identification and authentication?",o:["IA (Identification and Authentication)","AC (Access Control)","AU (Audit)","SC (System and Communications Protection)"],c:0,t:["AC (Access Control)","AU (Audit)","SC (System and Communications Protection)"],x:"IA = identification (ID unique) + authentication (vérification identité) — base du contrôle d'accès.",r:"AC = access control (autorisation) ; AU = audit logs ; SC = comms protection — distincts."},
+  {d:5,e:"hard",s:"Which risk treatment approach reduces the likelihood of a threat exploiting a vulnerability?",o:["Mitigation (apply controls to reduce likelihood or impact)","Transfer","Avoid","Accept"],c:0,t:["Transfer","Avoid","Accept"],x:"Mitigation = appliquer des contrôles pour réduire likelihood (e.g., patch) ou impact (e.g., backup).",r:"Transfer = outsource/insurance ; Avoid = stop activity ; Accept = endure risk."},
+  {d:5,e:"medium",s:"Which business continuity metric represents acceptable data loss after a disaster?",o:["RPO (Recovery Point Objective)","RTO","MTTR","SLA"],c:0,t:["RTO","MTTR","SLA"],x:"RPO = perte de données max tolérée (e.g., 1 heure de transactions) — détermine la fréquence de backup.",r:"RTO = temps d'arrêt max ; MTTR = repair ; SLA = engagement contractuel."},
+  {d:5,e:"hard",s:"Which factor MOST influences the cost of a data breach?",o:["Time to detect and contain + industry + remote work","Vendor size","Region only","Color of logo"],c:0,t:["Vendor size","Region only","Color of logo"],x:"IBM Cost of a Data Breach Report : MTTD/MTTR + industrie + remote work + zero trust adoption dominent le coût.",r:"Vendor size/logo/region sont des facteurs mineurs."},
+  {d:5,e:"medium",s:"Which control type BEST addresses vendor non-compliance with security requirements?",o:["Detective + Corrective + Penalty clause","Preventive only","Deterrent only","No control"],c:0,t:["Preventive only","Deterrent only","No control"],x:"Detection (audit, monitoring) + corrective (remediation, penalty) protège contre la non-conformité persistante.",r:"Preventive seul ne détecte pas la dérive ; deterrent n'a pas d'effet mesurable."},
+  {d:5,e:"hard",s:"Which international data transfer mechanism replaces Privacy Shield after its invalidation?",o:["Standard Contractual Clauses (SCCs) / EU-US DPF","Privacy Shield","Safe Harbor","No mechanism"],c:0,t:["Privacy Shield","Safe Harbor","No mechanism"],x:"Les SCCs (2021) + EU-US Data Privacy Framework (2023) sont les mécanismes valides post-Privacy Shield.",r:"Privacy Shield = invalidé (Schrems II) ; Safe Harbor = invalidé (Schrems I)."},
+  {d:5,e:"medium",s:"Which compliance framework mandates vendor security questionnaires for third parties handling PHI?",o:["HIPAA Business Associate Agreement (BAA) requirements","GDPR only","PCI-DSS only","SOX"],c:0,t:["GDPR only","PCI-DSS only","SOX"],x:"HIPAA impose des BAAs avec security obligations pour les vendors (Business Associates) traitant PHI.",r:"GDPR impose des accords (Art. 28) ; PCI/SOX ont d'autres mécanismes."},
+  {d:5,e:"hard",s:"Which factor MOST influences the success of a phishing simulation campaign?",o:["Frequency + realism + just-in-time training","Annual only","Generic email","No follow-up"],c:0,t:["Annual only","Generic email","No follow-up"],x:"Campagnes fréquentes + emails réalistes + micro-learning au clic produisent la meilleure réduction (>80%).",r:"Annuel/générique sans suivi = effet transitoire (<20% à 3 mois)."},
+  {d:5,e:"medium",s:"Which audit deliverable provides a detailed report for management with findings and recommendations?",o:["Detailed audit report","Executive summary only","Public report","Verbal"],c:0,t:["Executive summary only","Public report","Verbal"],x:"Un rapport détaillé d'audit documente findings, criteria, condition, cause, effect, recommendation — guide la remediation.",r:"Executive summary = top management ; public = stakeholders externes ; verbal = pas d'archive."},
+  {d:5,e:"hard",s:"Which regulatory mandate requires data minimization by default in product design?",o:["Privacy by Design (GDPR Art. 25)","PCI-DSS only","HIPAA only","SOX"],c:0,t:["PCI-DSS only","HIPAA only","SOX"],x:"GDPR Art. 25 impose privacy by design and by default — minimisation, purpose limitation, transparency dans le design.",r:"PCI/HIPAA/SOX ont d'autres obligations spécifiques."},
+  {d:5,e:"medium",s:"Which governance framework defines RACI (Responsible, Accountable, Consulted, Informed) for security roles?",o:["RACI matrix","Single role","No model","ITIL only"],c:0,t:["Single role","No model","ITIL only"],x:"RACI = matrice des rôles — R (fait), A (responsable), C (consulté), I (informé) — clarifie accountability.",r:"Single role/no model = ambiguïté ; ITIL est un framework de services."},
+  {d:5,e:"hard",s:"Which security metric BEST indicates the effectiveness of security awareness training?",o:["Phishing click rate reduction over time + incident correlation","Annual test only","Survey only","Completion rate only"],c:0,t:["Annual test only","Survey only","Completion rate only"],x:"Le phishing click rate (mesuré avant/après) est l'indicateur le plus fiable — corrélé à baisse d'incidents.",r:"Test annuel/survey/completion sont des proxies faibles."},
+  {d:5,e:"hard",s:"Which factor MOST influences the success of a SOC 2 audit?",o:["Maturity of controls + documentation + sampling","Vendor size","Logo","Date"],c:0,t:["Vendor size","Logo","Date"],x:"Maturité des contrôles + documentation complète + échantillonnage statistique cohérent = succès SOC 2.",r:"Vendor size/logo/date ne sont pas des facteurs d'audit."}
+];
+</script>
+
+<!-- ====== Application logic ====== -->
+<script>
+"use strict";
+
+const DOMAINS = {
+  1: { name: "General Security Concepts", weight: 12 },
+  2: { name: "Threats, Vulnerabilities & Mitigations", weight: 22 },
+  3: { name: "Security Architecture", weight: 18 },
+  4: { name: "Security Operations", weight: 28 },
+  5: { name: "Security Program Management & Oversight", weight: 20 }
+};
+
+const LS_KEY_Q   = "sy0701_questions_user";
+const LS_KEY_HIS = "sy0701_history";
+
+let revisionMode = false;
+let quizState = null;
+
+// ---- Helpers ----
+function getUserQuestions(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY_Q) || "[]"); }
+  catch(e){ return []; }
+}
+function saveUserQuestions(arr){
+  localStorage.setItem(LS_KEY_Q, JSON.stringify(arr));
+}
+function getHistory(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY_HIS) || "[]"); }
+  catch(e){ return []; }
+}
+function pushHistory(entry){
+  const h = getHistory();
+  h.unshift(entry);
+  localStorage.setItem(LS_KEY_HIS, JSON.stringify(h.slice(0, 50)));
+}
+function allQuestions(){
+  return QUESTIONS.concat(getUserQuestions());
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// ---- Tabs ----
+document.getElementById("tabs").addEventListener("click", e => {
+  const t = e.target.closest(".tab");
+  if(!t) return;
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  t.classList.add("active");
+  document.querySelectorAll("section[id^=view-]").forEach(s => s.classList.add("hide"));
+  document.getElementById("view-" + t.dataset.view).classList.remove("hide");
+  if(t.dataset.view === "history") renderHistory();
+});
+
+// ---- Browse / filters ----
+function filteredQuestions(){
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const diff = document.getElementById("difficulty").value;
+  const allowed = Array.from(document.querySelectorAll(".dfilt:checked")).map(c => +c.value);
+  return allQuestions().filter(it => {
+    if(!allowed.includes(it.d)) return false;
+    if(diff && it.e !== diff) return false;
+    if(q){
+      const blob = (it.s + " " + it.o.join(" ") + " " + it.x + " " + (it.r||"")).toLowerCase();
+      if(!blob.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function renderBrowse(){
+  const list = filteredQuestions();
+  const root = document.getElementById("qlist");
+  if(list.length === 0){
+    root.innerHTML = '<p style="color:var(--muted)">No questions match your filters.</p>';
+    return;
+  }
+  root.innerHTML = '<p style="color:var(--muted);margin:4px 0 10px">' + list.length + ' question(s)</p>' +
+    list.map((it,idx) => renderCard(it, idx, "b")).join("");
+}
+
+function renderCard(it, idx, mode){
+  // mode: 'b' browse, 'q' quiz
+  const d = DOMAINS[it.d] || {name:"?"};
+  const meta = '<span class="badge">D' + it.d + ' — ' + d.name + ' (' + (d.weight||0) + '%)</span>' +
+               '<span class="badge">' + (it.e||"medium") + '</span>';
+  const optsHtml = it.o.map((o,i) =>
+    '<div class="opt" data-idx="' + idx + '" data-opt="' + i + '">' +
+      String.fromCharCode(65+i) + '. ' + escapeHtml(o) +
+    '</div>'
+  ).join("");
+
+  const explainHtml = (mode === "b" && revisionMode) || (mode === "q" && quizState && quizState.reveal)
+    ? '<div class="explain"><b>Explanation :</b> ' + escapeHtml(it.x) + '</div>' +
+      (it.r ? '<div class="trap"><b>Piège :</b> ' + escapeHtml(it.r) + '</div>' : '')
+    : '';
+
+  return '<div class="q" data-mode="' + mode + '" data-idx="' + idx + '">' +
+    '<h3>Q' + (idx+1) + '. ' + escapeHtml(it.s) + '</h3>' +
+    '<div class="meta">' + meta + '</div>' +
+    '<div class="opts">' + optsHtml + '</div>' +
+    explainHtml +
+  '</div>';
+}
+
+function escapeHtml(s){
+  return String(s||"").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+// Browse option clicks
+document.getElementById("qlist").addEventListener("click", e => {
+  const opt = e.target.closest(".opt");
+  if(!opt) return;
+  const card = opt.closest(".q");
+  if(card.dataset.mode !== "b") return;
+  const idx = +card.dataset.idx;
+  const list = filteredQuestions();
+  const it = list[idx];
+  if(!it) return;
+  if(!revisionMode) return; // only reveal in revision mode
+  card.querySelectorAll(".opt").forEach(o => o.classList.remove("sel","correct","wrong"));
+  opt.classList.add("sel");
+  if(+opt.dataset.opt === it.c){ opt.classList.add("correct"); }
+  else{
+    opt.classList.add("wrong");
+    const good = card.querySelector('.opt[data-opt="' + it.c + '"]');
+    if(good) good.classList.add("correct");
+  }
+  // append explanation
+  if(!card.querySelector(".explain")){
+    const div = document.createElement("div");
+    div.innerHTML = '<div class="explain"><b>Explanation :</b> ' + escapeHtml(it.x) + '</div>' +
+      (it.r ? '<div class="trap"><b>Piège :</b> ' + escapeHtml(it.r) + '</div>' : '');
+    card.appendChild(div);
+  }
+});
+
+["search","difficulty"].forEach(id =>
+  document.getElementById(id).addEventListener("input", renderBrowse));
+document.querySelectorAll(".dfilt").forEach(c => c.addEventListener("change", renderBrowse));
+
+document.getElementById("revBtn").addEventListener("click", () => {
+  revisionMode = !revisionMode;
+  document.getElementById("revState").textContent = revisionMode ? "ON" : "OFF";
+  renderBrowse();
+});
+
+// ---- Quiz ----
+document.getElementById("quizStart").addEventListener("click", () => {
+  const size = +document.getElementById("quizSize").value;
+  const allowed = Array.from(document.getElementById("quizDomains").selectedOptions).map(o => +o.value);
+  const pool = allQuestions().filter(q => allowed.includes(q.d));
+  const picked = shuffle(pool).slice(0, Math.min(size, pool.length));
+  quizState = { pool: picked, answers: {}, reveal: false, startedAt: Date.now() };
+  renderQuiz();
+});
+
+function renderQuiz(){
+  const root = document.getElementById("quizArea");
+  if(!quizState){
+    root.innerHTML = '<p style="color:var(--muted)">Configure your quiz and click Start.</p>';
+    return;
+  }
+  const cards = quizState.pool.map((it,i) => renderCard(it, i, "q")).join("");
+  root.innerHTML =
+    '<div class="row" style="margin-top:10px">' +
+      '<button id="quizSubmit" class="secondary">Submit &amp; score</button>' +
+      '<button id="quizReset" class="secondary">Reset</button>' +
+      '<span class="badge">' + quizState.pool.length + ' questions</span>' +
+    '</div>' +
+    '<div id="quizCards">' + cards + '</div>' +
+    '<div id="quizScore"></div>';
+}
+
+document.addEventListener("click", e => {
+  if(!quizState) return;
+  const opt = e.target.closest("#view-quiz .opt");
+  if(!opt) return;
+  const card = opt.closest(".q");
+  const idx = +card.dataset.idx;
+  const iopt = +opt.dataset.opt;
+  card.querySelectorAll(".opt").forEach(o => o.classList.remove("sel"));
+  opt.classList.add("sel");
+  quizState.answers[idx] = iopt;
+});
+
+document.addEventListener("click", e => {
+  if(e.target && e.target.id === "quizSubmit"){
+    if(!quizState) return;
+    let correct = 0;
+    const perDomain = {};
+    quizState.pool.forEach((it,i) => {
+      perDomain[it.d] = perDomain[it.d] || {c:0,t:0};
+      perDomain[it.d].t++;
+      if(quizState.answers[i] === it.c){
+        correct++; perDomain[it.d].c++;
+      }
+    });
+    quizState.reveal = true;
+    // Render reveal state
+    const cards = quizState.pool.map((it,i) => {
+      const html = renderCard(it, i, "q");
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      const cardEl = div.firstElementChild;
+      const user = quizState.answers[i];
+      cardEl.querySelectorAll(".opt").forEach(o => {
+        const oi = +o.dataset.opt;
+        if(oi === it.c) o.classList.add("correct");
+        if(oi === user && user !== it.c) o.classList.add("wrong");
+      });
+      return cardEl.outerHTML;
+    }).join("");
+    document.getElementById("quizCards").innerHTML = cards;
+
+    const perCard = Object.keys(perDomain).sort().map(d => {
+      const x = perDomain[d];
+      const nm = (DOMAINS[d]||{name:"?"}).name;
+      const pct = x.t ? Math.round(100*x.c/x.t) : 0;
+      return '<div class="cell"><div class="l">D'+d+' — '+escapeHtml(nm)+'</div>' +
+             '<div class="v">'+x.c+'/'+x.t+' ('+pct+'%)</div></div>';
+    }).join("");
+    const totalPct = quizState.pool.length ? Math.round(100*correct/quizState.pool.length) : 0;
+    document.getElementById("quizScore").innerHTML =
+      '<h3>Score : '+correct+' / '+quizState.pool.length+' ('+totalPct+'%)</h3>' +
+      '<div class="score-card">'+perCard+'</div>';
+
+    pushHistory({
+      at: new Date().toISOString(),
+      total: quizState.pool.length,
+      correct: correct,
+      pct: totalPct,
+      perDomain: perDomain
+    });
+  }
+  if(e.target && e.target.id === "quizReset"){
+    quizState = null;
+    renderQuiz();
+  }
+});
+
+// ---- Add Question ----
+document.getElementById("addSave").addEventListener("click", () => {
+  const q = {
+    d: +document.getElementById("addDomain").value,
+    e: document.getElementById("addDiff").value,
+    s: document.getElementById("addStem").value.trim(),
+    o: [
+      document.getElementById("addO0").value.trim(),
+      document.getElementById("addO1").value.trim(),
+      document.getElementById("addO2").value.trim(),
+      document.getElementById("addO3").value.trim()
+    ],
+    c: +document.getElementById("addCorrect").value,
+    x: document.getElementById("addExplain").value.trim(),
+    r: document.getElementById("addTrap").value.trim()
+  };
+  const errs = [];
+  if(!q.s) errs.push("stem required");
+  if(q.o.some(o=>!o)) errs.push("4 options required");
+  if(!(q.c>=0 && q.c<=3)) errs.push("correctIndex must be 0-3");
+  if(!q.x) errs.push("explanation required");
+  if(errs.length){
+    document.getElementById("addStatus").textContent = "ERROR: " + errs.join(", ");
+    return;
+  }
+  const arr = getUserQuestions();
+  arr.push(q);
+  saveUserQuestions(arr);
+  document.getElementById("addStatus").textContent = "Saved (#" + arr.length + ")";
+  // clear non-required
+  ["addStem","addO0","addO1","addO2","addO3","addExplain","addTrap"].forEach(id =>
+    document.getElementById(id).value = "");
+});
+
+// ---- History ----
+function renderHistory(){
+  const root = document.getElementById("historyList");
+  const h = getHistory();
+  if(h.length === 0){ root.innerHTML = '<p style="color:var(--muted)">No history yet.</p>'; return; }
+  root.innerHTML = h.map(entry => {
+    const dt = new Date(entry.at).toLocaleString();
+    const pd = Object.entries(entry.perDomain||{}).map(([d,v]) =>
+      'D'+d+': '+v.c+'/'+v.t
+    ).join(" • ");
+    return '<div class="panel" style="margin-top:8px"><b>'+dt+'</b> — ' +
+           entry.correct+'/'+entry.total+' ('+entry.pct+'%)<br>' +
+           '<span style="color:var(--muted);font-size:13px">'+pd+'</span></div>';
+  }).join("");
+}
+
+// ---- Export / Import ----
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    builtIn: QUESTIONS,
+    user: getUserQuestions(),
+    history: getHistory()
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "sy0-701-tracker-export.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById("dataStatus").textContent = "Exported.";
+});
+document.getElementById("importFile").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const fr = new FileReader();
+  fr.onload = () => {
+    try{
+      const data = JSON.parse(fr.result);
+      if(data.user && Array.isArray(data.user)) saveUserQuestions(data.user);
+      if(data.history && Array.isArray(data.history)) localStorage.setItem(LS_KEY_HIS, JSON.stringify(data.history));
+      document.getElementById("dataStatus").textContent = "Imported.";
+      renderBrowse();
+    }catch(err){
+      document.getElementById("dataStatus").textContent = "Import failed: " + err.message;
+    }
+  };
+  fr.readAsText(file);
+});
+
+// ---- Init ----
+renderBrowse();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

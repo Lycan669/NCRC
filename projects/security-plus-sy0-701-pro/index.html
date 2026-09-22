@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NCRC Security+ SY0-701 Pro Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>NCRC Security+ SY0-701 <span>Pro Tracker</span></h1>
+      <p class="subtitle">Medium • Hard • Really Hard • 40-day readiness path</p>
+    </div>
+  </header>
+
+  <main>
+    <nav class="tabs">
+      <button class="tab active" data-view="browse">Browse & Revise</button>
+      <button class="tab" data-view="quiz">Quiz Mode</button>
+      <button class="tab" data-view="plan">40-Day Plan</button>
+      <button class="tab" data-view="stats">Stats</button>
+      <button class="tab" data-view="data">Data</button>
+    </nav>
+
+    <!-- BROWSE -->
+    <section id="view-browse" class="panel">
+      <div class="controls">
+        <input type="search" id="search" placeholder="Search stems, options, explanations…">
+        <select id="difficulty">
+          <option value="">All difficulties</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+          <option value="really-hard">Really Hard (~7%)</option>
+        </select>
+        <div class="domain-filters">
+          <label><input type="checkbox" class="dfilt" value="1" checked> D1 12%</label>
+          <label><input type="checkbox" class="dfilt" value="2" checked> D2 22%</label>
+          <label><input type="checkbox" class="dfilt" value="3" checked> D3 18%</label>
+          <label><input type="checkbox" class="dfilt" value="4" checked> D4 28%</label>
+          <label><input type="checkbox" class="dfilt" value="5" checked> D5 20%</label>
+        </div>
+        <button id="revBtn" class="secondary">Revision mode OFF</button>
+      </div>
+      <div id="qlist"></div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="view-quiz" class="panel hide">
+      <div class="controls">
+        <label>Size
+          <select id="quizSize">
+            <option>15</option>
+            <option selected>25</option>
+            <option>40</option>
+            <option>60</option>
+          </select>
+        </label>
+        <label>Difficulty focus
+          <select id="quizDiff">
+            <option value="">Mixed (recommended)</option>
+            <option value="medium">Medium only</option>
+            <option value="hard">Hard only</option>
+            <option value="really-hard">Really Hard only</option>
+          </select>
+        </label>
+        <button id="quizStart">Start Quiz</button>
+      </div>
+      <div id="quizArea"></div>
+    </section>
+
+    <!-- 40-DAY PLAN -->
+    <section id="view-plan" class="panel hide">
+      <h2>40-Day Security+ Battle Plan</h2>
+      <div class="plan-grid">
+        <div class="plan-card">
+          <h3>Days 1-10</h3>
+          <p>Foundation + Domain 1 & 2<br>Target: 80–100 questions/day<br>Focus: Medium → Hard</p>
+        </div>
+        <div class="plan-card">
+          <h3>Days 11-20</h3>
+          <p>Domain 3 & 4 heavy<br>Target: 100–120 questions/day<br>Start mixing Really Hard</p>
+        </div>
+        <div class="plan-card">
+          <h3>Days 21-30</h3>
+          <p>Domain 4 & 5 + weak areas<br>Target: 120+ questions/day<br>Full mixed hard quizzes</p>
+        </div>
+        <div class="plan-card">
+          <h3>Days 31-40</h3>
+          <p>Full mock exams + Really Hard<br>Review every wrong answer<br>Final polish</p>
+        </div>
+      </div>
+      <div class="progress-box">
+        <label>Current day (1-40)</label>
+        <input type="number" id="currentDay" min="1" max="40" value="1">
+        <div class="progress-bar"><div id="progressFill"></div></div>
+        <p id="progressText">Day 1 / 40</p>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section id="view-stats" class="panel hide">
+      <h2>Your Stats</h2>
+      <div id="statsArea" class="score-card"></div>
+    </section>
+
+    <!-- DATA -->
+    <section id="view-data" class="panel hide">
+      <h2>Export / Import</h2>
+      <button id="exportBtn">Export full JSON</button>
+      <input type="file" id="importFile" accept=".json">
+      <p class="note">Exports include all questions + your history.</p>
+    </section>
+  </main>
+
+  <script src="js/questions.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
