@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCRC PCAP Analyzer - Real-Time Network Forensics</title>
+    
+    <!-- STYLESHEETS -->
+    <link rel="stylesheet" href="css/pcap-analyzer.css">
+    <link rel="stylesheet" href="css/tabs.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <!-- CHART.JS -->
+    <script src="libs/chart.min.js"></script>
+    <!-- PAPA PARSE -->
+    <script src="libs/papaparse.min.js"></script>
+    <!-- PDF -->
+    <script src="libs/jspdf.min.js"></script>
+    <script src="libs/html2canvas.min.js"></script>
+    <!-- XLSX -->
+    <script src="libs/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- MATRIX BACKGROUND -->
+    <canvas id="matrix-bg" class="matrix-background"></canvas>
+    
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <h1 class="logo">
+                    <span class="logo-icon">⚔️</span>
+                    <span class="logo-text">NCRC PCAP</span>
+                    <span class="logo-subtitle">Forensics Engine</span>
+                </h1>
+            </div>
+            
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Status:</span>
+                    <span class="stat-value" id="status">Ready</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Packets:</span>
+                    <span class="stat-value" id="packet-count">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">File:</span>
+                    <span class="stat-value" id="file-name">None</span>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button id="theme-toggle" class="btn-icon" title="Toggle Theme">
+                    <span>🌙</span>
+                </button>
+                <button id="help-btn" class="btn-icon" title="Help">
+                    <span>❓</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="container">
+        
+        <!-- UPLOAD SECTION -->
+        <section class="upload-section" id="upload-section">
+            <div class="upload-card">
+                <div class="upload-header">
+                    <h2>📁 Load PCAP File</h2>
+                    <p>Drag & drop your .pcap or .pcapng file or click to browse</p>
+                </div>
+                
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">📦</div>
+                    <div class="upload-text">
+                        <p class="upload-main">Drag PCAP files here</p>
+                        <p class="upload-sub">or click to select</p>
+                    </div>
+                    <input type="file" id="file-input" accept=".pcap,.pcapng" hidden>
+                </div>
+                
+                <div class="upload-info">
+                    <p>Max file size: <strong>500 MB</strong></p>
+                    <p>Supported formats: <strong>.pcap, .pcapng</strong></p>
+                </div>
+                
+                <div class="sample-files">
+                    <h3>Quick Load Samples:</h3>
+                    <div class="sample-buttons">
+                        <button class="btn-sample" data-sample="samples/sample1.pcap">
+                            Sample 1: HTTP
+                        </button>
+                        <button class="btn-sample" data-sample="samples/sample2.pcap">
+                            Sample 2: Mixed
+                        </button>
+                        <button class="btn-sample" data-sample="samples/sample3.pcap">
+                            Sample 3: DNS
+                        </button>
+                        <button class="btn-sample" data-sample="samples/sample4.pcap">
+                            Sample 4: Security
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PROGRESS BAR -->
+            <div class="progress-section" id="progress-section" style="display: none;">
+                <div class="progress-info">
+                    <span id="progress-text">Parsing file...</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-details">
+                    <span id="progress-parsed">Parsed: 0 packets</span>
+                    <span id="progress-time">Time: 0.00s</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUICK STATS -->
+        <section class="stats-section" id="stats-section" style="display: none;">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon">📊</div>
+                    <div class="stat-card-content">
+                        <div class="stat-card-label">Total Packets</div>
+                        <div class="stat-card-value" id="stat-packets">0</div>
+                        <div class="stat-card-sub" id="stat-packets-rate">0 pps</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon">💾</div>
+                    <div class="stat-card-content">
+                        <div class="stat-card-label">Total Data</div>
+                        <div class="stat-card-value" id="stat-bytes">0 B</div>
+                        <div class="stat-card-sub" id="stat-throughput">0 Mbps</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon">⏱️</div>
+                    <div class="stat-card-content">
+                        <div class="stat-card-label">Duration</div>
+                        <div class="stat-card-value" id="stat-duration">0.00s</div>
+                        <div class="stat-card-sub" id="stat-start-time">--:--:--</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon">🔌</div>
+                    <div class="stat-card-content">
+                        <div class="stat-card-label">Unique IPs</div>
+                        <div class="stat-card-value" id="stat-ips">0</div>
+                        <div class="stat-card-sub" id="stat-conversations">0 conversations</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TABS NAVIGATION -->
+        <section class="tabs-section" id="tabs-section" style="display: none;">
+            <div class="tabs-header">
+                <div class="tabs-navigation">
+                    <button class="tab-btn active" data-tab="overview">
+                        <span class="tab-icon">📈</span>
+                        <span>Overview</span>
+                    </button>
+                    <button class="tab-btn" data-tab="protocols">
+                        <span class="tab-icon">📡</span>
+                        <span>Protocols</span>
+                    </button>
+                    <button class="tab-btn" data-tab="ips">
+                        <span class="tab-icon">🌐</span>
+                        <span>IPs</span>
+                    </button>
+                    <button class="tab-btn" data-tab="ports">
+                        <span class="tab-icon">🔌</span>
+                        <span>Ports</span>
+                    </button>
+                    <button class="tab-btn" data-tab="conversations">
+                        <span class="tab-icon">🔄</span>
+                        <span>Conversations</span>
+                    </button>
+                    <button class="tab-btn" data-tab="packets">
+                        <span class="tab-icon">📦</span>
+                        <span>Packets</span>
+                    </button>
+                    <button class="tab-btn" data-tab="dns">
+                        <span class="tab-icon">🔍</span>
+                        <span>DNS</span>
+                    </button>
+                    <button class="tab-btn" data-tab="http">
+                        <span class="tab-icon">🌐</span>
+                        <span>HTTP</span>
+                    </button>
+                    <button class="tab-btn" data-tab="security">
+                        <span class="tab-icon">⚠️</span>
+                        <span>Security</span>
+                    </button>
+                    <button class="tab-btn" data-tab="export">
+                        <span class="tab-icon">💾</span>
+                        <span>Export</span>
+                    </button>
+                </div>
+                
+                <div class="tabs-controls">
+                    <button id="reset-filters" class="btn-secondary">🔄 Reset Filters</button>
+                    <button id="refresh-btn" class="btn-secondary">🔃 Refresh</button>
+                </div>
+            </div>
+
+            <!-- TAB CONTENTS -->
+            <div class="tabs-content">
+                
+                <!-- OVERVIEW TAB -->
+                <div class="tab-content active" id="tab-overview">
+                    <div class="overview-grid">
+                        <div class="chart-container">
+                            <h3>Protocol Distribution</h3>
+                            <canvas id="chart-protocols"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Top Source IPs</h3>
+                            <canvas id="chart-top-src-ips"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Top Destination IPs</h3>
+                            <canvas id="chart-top-dst-ips"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Top Destination Ports</h3>
+                            <canvas id="chart-top-dst-ports"></canvas>
+                        </div>
+                        <div class="chart-container full-width">
+                            <h3>Traffic Timeline</h3>
+                            <canvas id="chart-timeline"></canvas>
+                        </div>
+                        <div class="chart-container full-width">
+                            <h3>Packet Size Distribution</h3>
+                            <canvas id="chart-packet-sizes"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROTOCOLS TAB -->
+                <div class="tab-content" id="tab-protocols">
+                    <div class="filter-bar">
+                        <input type="search" id="filter-protocol" placeholder="Search protocols...">
+                        <select id="filter-protocol-type">
+                            <option value="">All Protocols</option>
+                            <option value="tcp">TCP</option>
+                            <option value="udp">UDP</option>
+                            <option value="icmp">ICMP</option>
+                            <option value="dns">DNS</option>
+                            <option value="http">HTTP</option>
+                            <option value="https">HTTPS</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Protocol</th>
+                                    <th>Packets</th>
+                                    <th>Percentage</th>
+                                    <th>Bytes</th>
+                                    <th>Avg Size</th>
+                                </tr>
+                            </thead>
+                            <tbody id="protocols-tbody">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- IPS TAB -->
+                <div class="tab-content" id="tab-ips">
+                    <div class="ips-grid">
+                        <div class="ips-section">
+                            <h3>Source IPs</h3>
+                            <div class="filter-bar">
+                                <input type="search" id="filter-src-ip" placeholder="Search source IPs...">
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>IP Address</th>
+                                            <th>Packets</th>
+                                            <th>Bytes</th>
+                                            <th>Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="src-ips-tbody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="ips-section">
+                            <h3>Destination IPs</h3>
+                            <div class="filter-bar">
+                                <input type="search" id="filter-dst-ip" placeholder="Search destination IPs...">
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>IP Address</th>
+                                            <th>Packets</th>
+                                            <th>Bytes</th>
+                                            <th>Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dst-ips-tbody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PORTS TAB -->
+                <div class="tab-content" id="tab-ports">
+                    <div class="ports-grid">
+                        <div class="ports-section">
+                            <h3>Source Ports</h3>
+                            <div class="filter-bar">
+                                <input type="search" id="filter-src-port" placeholder="Search source ports...">
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Port</th>
+                                            <th>Service</th>
+                                            <th>Packets</th>
+                                            <th>Protocol</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="src-ports-tbody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="ports-section">
+                            <h3>Destination Ports</h3>
+                            <div class="filter-bar">
+                                <input type="search" id="filter-dst-port" placeholder="Search destination ports...">
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Port</th>
+                                            <th>Service</th>
+                                            <th>Packets</th>
+                                            <th>Protocol</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dst-ports-tbody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONVERSATIONS TAB -->
+                <div class="tab-content" id="tab-conversations">
+                    <div class="filter-bar">
+                        <input type="search" id="filter-conversation" placeholder="Search conversations...">
+                        <select id="filter-conversation-protocol">
+                            <option value="">All Protocols</option>
+                            <option value="tcp">TCP</option>
+                            <option value="udp">UDP</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Source IP</th>
+                                    <th>Src Port</th>
+                                    <th>Destination IP</th>
+                                    <th>Dst Port</th>
+                                    <th>Protocol</th>
+                                    <th>Packets</th>
+                                    <th>Bytes</th>
+                                    <th>Duration</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="conversations-tbody">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PACKETS TAB -->
+                <div class="tab-content" id="tab-packets">
+                    <div class="packets-filters">
+                        <div class="filter-row">
+                            <div class="filter-item">
+                                <label>Protocol:</label>
+                                <select id="filter-packet-protocol">
+                                    <option value="">All</option>
+                                    <option value="tcp">TCP</option>
+                                    <option value="udp">UDP</option>
+                                    <option value="icmp">ICMP</option>
+                                    <option value="dns">DNS</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="filter-item">
+                                <label>Source IP:</label>
+                                <input type="text" id="filter-packet-src-ip" placeholder="e.g., 192.168.1.0">
+                            </div>
+                            <div class="filter-item">
+                                <label>Destination IP:</label>
+                                <input type="text" id="filter-packet-dst-ip" placeholder="e.g., 8.8.8.8">
+                            </div>
+                            <div class="filter-item">
+                                <label>Port Range:</label>
+                                <input type="text" id="filter-packet-port" placeholder="e.g., 80,443">
+                            </div>
+                        </div>
+                        <div class="filter-row">
+                            <div class="filter-item">
+                                <label>Packet Size:</label>
+                                <input type="text" id="filter-packet-size" placeholder="e.g., 100-1500">
+                            </div>
+                            <div class="filter-item">
+                                <label>Search Info:</label>
+                                <input type="search" id="filter-packet-search" placeholder="Search packet info...">
+                            </div>
+                            <button id="apply-packet-filters" class="btn-primary">Apply Filters</button>
+                            <button id="clear-packet-filters" class="btn-secondary">Clear</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table packets-table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Time</th>
+                                    <th>Source</th>
+                                    <th>Destination</th>
+                                    <th>Protocol</th>
+                                    <th>Length</th>
+                                    <th>Info</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="packets-tbody">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination">
+                        <button id="prev-page" class="btn-secondary">← Previous</button>
+                        <span id="page-info">Page 1 of 1</span>
+                        <button id="next-page" class="btn-secondary">Next →</button>
+                    </div>
+                </div>
+
+                <!-- DNS TAB -->
+                <div class="tab-content" id="tab-dns">
+                    <div class="dns-stats">
+                        <div class="dns-stat">
+                            <span>Total Queries:</span>
+                            <strong id="dns-total-queries">0</strong>
+                        </div>
+                        <div class="dns-stat">
+                            <span>Successful Responses:</span>
+                            <strong id="dns-successful">0</strong>
+                        </div>
+                        <div class="dns-stat">
+                            <span>Failed Responses:</span>
+                            <strong id="dns-failed">0</strong>
+                        </div>
+                        <div class="dns-stat">
+                            <span>Unique Domains:</span>
+                            <strong id="dns-unique-domains">0</strong>
+                        </div>
+                    </div>
+                    
+                    <h3>DNS Queries</h3>
+                    <div class="filter-bar">
+                        <input type="search" id="filter-dns" placeholder="Search domains...">
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Source IP</th>
+                                    <th>Domain</th>
+                                    <th>Type</th>
+                                    <th>Response</th>
+                                    <th>Response Code</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dns-tbody">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- HTTP TAB -->
+                <div class="tab-content" id="tab-http">
+                    <div class="http-stats">
+                        <div class="http-stat">
+                            <span>Total Requests:</span>
+                            <strong id="http-total-requests">0</strong>
+                        </div>
+                        <div class="http-stat">
+                            <span>Unique Hosts:</span>
+                            <strong id="http-unique-hosts">0</strong>
+                        </div>
+                        <div class="http-stat">
+                            <span>Success Responses:</span>
+                            <strong id="http-success">0</strong>
+                        </div>
+                        <div class="http-stat">
+                            <span>Error Responses:</span>
+                            <strong id="http-errors">0</strong>
+                        </div>
+                    </div>
+                    
+                    <h3>HTTP Requests</h3>
+                    <div class="filter-bar">
+                        <input type="search" id="filter-http" placeholder="Search HTTP requests...">
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Source IP</th>
+                                    <th>Method</th>
+                                    <th>URI</th>
+                                    <th>Status</th>
+                                    <th>User-Agent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="http-tbody">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECURITY TAB -->
+                <div class="tab-content" id="tab-security">
+                    <div class="security-alerts">
+                        <h3>🚨 Detected Threats & Anomalies</h3>
+                        <div id="security-alerts-container" class="alerts-list">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                    
+                    <div class="security-analysis">
+                        <div class="analysis-section">
+                            <h3>Port Scan Detection</h3>
+                            <div id="port-scan-results">No port scans detected</div>
+                        </div>
+                        
+                        <div class="analysis-section">
+                            <h3>Suspicious Patterns</h3>
+                            <div id="suspicious-patterns">No suspicious patterns detected</div>
+                        </div>
+                        
+                        <div class="analysis-section">
+                            <h3>Data Exfiltration Indicators</h3>
+                            <div id="exfiltration-indicators">No exfiltration indicators detected</div>
+                        </div>
+                        
+                        <div class="analysis-section">
+                            <h3>Brute Force Attempts</h3>
+                            <div id="brute-force-results">No brute force attempts detected</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPORT TAB -->
+                <div class="tab-content" id="tab-export">
+                    <div class="export-container">
+                        <h2>Export Analysis Results</h2>
+                        
+                        <div class="export-grid">
+                            <div class="export-option">
+                                <div class="export-icon">📄</div>
+                                <h3>Export to JSON</h3>
+                                <p>Full analysis data in JSON format</p>
+                                <button id="export-json" class="btn-primary">
+                                    Download JSON
+                                </button>
+                            </div>
+                            
+                            <div class="export-option">
+                                <div class="export-icon">📊</div>
+                                <h3>Export to CSV</h3>
+                                <p>Packets and statistics as CSV</p>
+                                <button id="export-csv" class="btn-primary">
+                                    Download CSV
+                                </button>
+                            </div>
+                            
+                            <div class="export-option">
+                                <div class="export-icon">📋</div>
+                                <h3>Export to PDF</h3>
+                                <p>Formatted report with charts</p>
+                                <button id="export-pdf" class="btn-primary">
+                                    Download PDF
+                                </button>
+                            </div>
+                            
+                            <div class="export-option">
+                                <div class="export-icon">📈</div>
+                                <h3>Export to Excel</h3>
+                                <p>Multi-sheet Excel workbook</p>
+                                <button id="export-xlsx" class="btn-primary">
+                                    Download XLSX
+                                </button>
+                            </div>
+                            
+                            <div class="export-option">
+                                <div class="export-icon">📄</div>
+                                <h3>Generate HTML Report</h3>
+                                <p>Standalone HTML analysis report</p>
+                                <button id="export-html" class="btn-primary">
+                                    Download HTML
+                                </button>
+                            </div>
+                            
+                            <div class="export-option">
+                                <div class="export-icon">🔗</div>
+                                <h3>Share Report</h3>
+                                <p>Create shareable link (base64)</p>
+                                <button id="export-share" class="btn-primary">
+                                    Generate Share Link
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="export-options-section">
+                            <h3>Export Options</h3>
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="export-include-packets" checked>
+                                    Include all packets
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="export-include-charts" checked>
+                                    Include charts (PDF/HTML)
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="export-include-security" checked>
+                                    Include security analysis
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="export-include-metadata">
+                                    Include metadata
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PACKET DETAIL MODAL -->
+    <div id="packet-detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Packet Details</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="packet-detail-body">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- HELP MODAL -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>NCRC PCAP Analyzer Help</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>Getting Started</h3>
+                <ol>
+                    <li>Load a PCAP file by dragging & dropping or clicking upload</li>
+                    <li>The analyzer will parse and dissect all packets</li>
+                    <li>Browse different tabs to analyze specific aspects</li>
+                    <li>Use filters to focus on specific traffic</li>
+                    <li>Export results in your preferred format</li>
+                </ol>
+                
+                <h3>Features</h3>
+                <ul>
+                    <li><strong>Overview:</strong> Visual summary of traffic</li>
+                    <li><strong>Protocols:</strong> Protocol distribution analysis</li>
+                    <li><strong>IPs:</strong> Source and destination IP analysis</li>
+                    <li><strong>Ports:</strong> Port and service analysis</li>
+                    <li><strong>Conversations:</strong> Traffic flow between IPs</li>
+                    <li><strong>Packets:</strong> Detailed packet inspection</li>
+                    <li><strong>DNS:</strong> DNS query and response analysis</li>
+                    <li><strong>HTTP:</strong> HTTP request and response analysis</li>
+                    <li><strong>Security:</strong> Threat detection and anomalies</li>
+                    <li><strong>Export:</strong> Export results in multiple formats</li>
+                </ul>
+                
+                <h3>Keyboard Shortcuts</h3>
+                <table class="shortcuts-table">
+                    <tr><td><kbd>Ctrl+O</kbd></td><td>Open file</td></tr>
+                    <tr><td><kbd>Ctrl+E</kbd></td><td>Export</td></tr>
+                    <tr><td><kbd>Ctrl+/</kbd></td><td>Show/hide this help</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>&copy; 2024 NCRC - Network Cybersecurity Research Center | PCAP Forensics Engine v1.0</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="js/utils.js"></script>
+    <script src="js/pcap-parser.js"></script>
+    <script src="js/packet-dissector.js"></script>
+    <script src="js/statistics.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/security-detector.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/pcap-analyzer.js"></script>
+</body>
+</html>

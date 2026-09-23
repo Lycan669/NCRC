@@ -1,0 +1,45 @@
+structure 
+lycan669.github.io/NCRC/tools/pcap-analyzer/
+│
+├── index.html (🔥 MAIN UI - 500+ lines)
+│
+├── css/
+│   ├── pcap-analyzer.css (🔥 STYLING - 1500+ lines)
+│   ├── tabs.css (🔥 Tab system)
+│   ├── charts.css (🔥 Chart styling)
+│   └── animations.css (🔥 Effects)
+│
+├── js/
+│   ├── pcap-analyzer.js (🔥 MAIN LOGIC - 2000+ lines)
+│   ├── pcap-parser.js (🔥 PCAP FORMAT PARSER - 1500+ lines)
+│   ├── packet-dissector.js (🔥 LAYER DISSECTION - 1000+ lines)
+│   ├── statistics.js (🔥 ANALYSIS ENGINE - 800+ lines)
+│   ├── visualization.js (🔥 CHARTS & GRAPHS - 1200+ lines)
+│   ├── filters.js (🔥 FILTERING SYSTEM - 600+ lines)
+│   ├── export.js (🔥 EXPORT FUNCTIONS - 500+ lines)
+│   ├── security-detector.js (🔥 THREAT ANALYSIS - 700+ lines)
+│   └── utils.js (🔥 HELPERS - 400+ lines)
+│
+├── libs/
+│   ├── chart.min.js (📦 Chart.js library)
+│   ├── papaparse.min.js (📦 CSV parsing)
+│   ├── jspdf.min.js (📦 PDF export)
+│   ├── html2canvas.min.js (📦 Screenshot)
+│   └── xlsx.full.min.js (📦 Excel export)
+│
+├── data/
+│   ├── geoip-database.json (📍 IP Geolocation - optional)
+│   ├── port-database.json (🔌 Known ports)
+│   └── protocol-colors.json (🎨 Color mapping)
+│
+├── samples/
+│   ├── sample1.pcap (📦 Simple HTTP traffic)
+│   ├── sample2.pcap (📦 DNS + HTTPS)
+│   ├── sample3.pcap (📦 Mixed protocols)
+│   ├── sample4.pcap (📦 Suspicious activity)
+│   └── README.md
+│
+└── docs/
+    ├── PCAP_FORMAT.md (📖 Technical docs)
+    ├── FEATURES.md (📖 What it does)
+    └── USAGE.md (📖 How to use)

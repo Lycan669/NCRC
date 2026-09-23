@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <radialGradient id="bg" cx="30%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#0b1a33"/>
+      <stop offset="55%" stop-color="#060b16"/>
+      <stop offset="100%" stop-color="#03050a"/>
+    </radialGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7af0ff"/>
+      <stop offset="100%" stop-color="#2b7cff"/>
+    </linearGradient>
+    <linearGradient id="amber" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffb020"/>
+      <stop offset="100%" stop-color="#ff6a00"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#1a3a5c" stroke-width="0.6" opacity="0.35"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <circle cx="280" cy="430" r="260" fill="#00e5ff" opacity="0.05"/>
+  <circle cx="280" cy="430" r="180" fill="none" stroke="#2ee6ff" stroke-width="2" opacity="0.25"/>
+  <circle cx="280" cy="430" r="220" fill="none" stroke="#2ee6ff" stroke-width="1" opacity="0.12" stroke-dasharray="6 10"/>
+
+  <!-- Shield -->
+  <g transform="translate(280,430)" filter="url(#glow)">
+    <path d="M0,-150 L130,-90 L115,40 C100,110 40,150 0,175 C-40,150 -100,110 -115,40 L-130,-90 Z"
+          fill="#071422" stroke="url(#cyan)" stroke-width="6"/>
+    <path d="M0,-95 L70,-55 L62,25 C54,75 22,100 0,118 C-22,100 -54,75 -62,25 L-70,-55 Z"
+          fill="none" stroke="#7af0ff" stroke-width="3" opacity="0.85"/>
+    <rect x="-18" y="-18" width="36" height="42" rx="6" fill="none" stroke="#7af0ff" stroke-width="4"/>
+    <path d="M-10,-18 V-32 A10,10 0 0 1 10,-32 V-18" fill="none" stroke="#7af0ff" stroke-width="4"/>
+    <text x="0" y="70" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="22" fill="#7af0ff">SY0-701</text>
+  </g>
+
+  <!-- Copy -->
+  <text x="560" y="175" font-family="Arial, sans-serif" font-size="22" fill="#7af0ff" letter-spacing="6">NCRC  ·  BLUE TEAM READY</text>
+  <text x="560" y="265" font-family="Arial Black, sans-serif" font-size="72" fill="#f4fbff">SECURITY+</text>
+  <text x="560" y="345" font-family="Arial Black, sans-serif" font-size="58" fill="url(#cyan)">STUDY TRACKER</text>
+  <text x="560" y="405" font-family="Arial, sans-serif" font-size="26" fill="#9bb4c9">500+ questions  ·  explanations  ·  score tracking  ·  40-day battle plan</text>
+
+  <!-- Pills -->
+  <g font-family="Arial Black, sans-serif" font-size="18" fill="#041018">
+    <rect x="560" y="450" width="210" height="48" rx="24" fill="#7af0ff"/>
+    <text x="665" y="481" text-anchor="middle">500+ QUESTIONS</text>
+    <rect x="785" y="450" width="160" height="48" rx="24" fill="#2b7cff"/>
+    <text x="865" y="481" text-anchor="middle" fill="#fff">5 DOMAINS</text>
+    <rect x="960" y="450" width="200" height="48" rx="24" fill="url(#amber)"/>
+    <text x="1060" y="481" text-anchor="middle">REALLY HARD</text>
+    <rect x="1175" y="450" width="180" height="48" rx="24" fill="#12c48b"/>
+    <text x="1265" y="481" text-anchor="middle">TRACK SCORES</text>
+  </g>
+
+  <text x="560" y="560" font-family="Arial, sans-serif" font-size="20" fill="#c9d7e6">D1 Concepts  ·  D2 Threats  ·  D3 Architecture  ·  D4 Operations  ·  D5 Oversight</text>
+  <text x="560" y="620" font-family="Arial, sans-serif" font-size="28" fill="#ffffff">Train like a SOC. Pass like it’s Day 40.</text>
+  <text x="560" y="780" font-family="Consolas, monospace" font-size="22" fill="#7af0ff">lycan669.github.io/NCRC</text>
+  <text x="1320" y="840" font-family="Arial, sans-serif" font-size="16" fill="#5e7a93" text-anchor="end">#SY0701  #SecurityPlus  #BlueTeam</text>
+</svg>
