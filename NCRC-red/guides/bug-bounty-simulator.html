@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐛 Bug Bounty Simulator - Hack Ton Lycée</title>
+    <link rel="stylesheet" href="../css/dark-cyber.css">
+    <style>
+        .simulator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .target-panel {
+            background: var(--bg-panel);
+            border: 2px solid var(--color-secondary);
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .vulnerability-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .vuln-item {
+            background: var(--bg-input);
+            border-left: 4px solid var(--color-danger);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .vuln-item:hover {
+            background: var(--bg-panel);
+            border-left-color: var(--color-secondary);
+            box-shadow: 0 0 15px var(--color-secondary);
+        }
+
+        .vuln-item.high { border-left-color: var(--color-warning); }
+        .vuln-item.medium { border-left-color: #ffaa00; }
+        .vuln-item.low { border-left-color: var(--color-primary); }
+
+        .vuln-title {
+            color: var(--color-secondary);
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .vuln-details {
+            font-size: 12px;
+            color: #aaa;
+            margin: 8px 0;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .severity-badge.critical { background: var(--color-danger); color: white; }
+        .severity-badge.high { background: var(--color-warning); color: black; }
+        .severity-badge.medium { background: #ffaa00; color: black; }
+        .severity-badge.low { background: var(--color-primary); color: black; }
+
+        .report-panel {
+            background: var(--bg-panel);
+            border: 2px solid var(--color-secondary);
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .report-section {
+            margin: 20px 0;
+        }
+
+        .report-section h3 {
+            color: var(--color-secondary);
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .report-textarea {
+            width: 100%;
+            height: 120px;
+            background: var(--bg-input);
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary);
+            padding: 10px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        .report-textarea:focus {
+            outline: none;
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 10px var(--color-secondary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .button-group button {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .scoring-panel {
+            background: var(--bg-input);
+            border: 2px solid var(--color-primary);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid var(--color-primary);
+        }
+
+        .score-total {
+            font-size: 24px;
+            color: var(--color-secondary);
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: var(--color-primary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .tab-btn.active {
+            color: var(--color-secondary);
+            border-bottom-color: var(--color-secondary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .hints-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--color-secondary);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .hints-box h4 {
+            color: var(--color-secondary);
+            margin-bottom: 10px;
+        }
+
+        .hint-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: var(--bg-input);
+            border-left: 3px solid var(--color-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hint-item:hover {
+            background: var(--bg-panel);
+        }
+
+        .hint-revealed {
+            color: var(--color-primary);
+            font-size: 12px;
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--bg-input);
+            border-radius: 3px;
+        }
+
+        .poc-code {
+            background: var(--bg-input);
+            color: var(--color-primary);
+            padding: 12px;
+            border-radius: 3px;
+            overflow-x: auto;
+            margin: 10px 0;
+            cursor: pointer;
+            border: 1px solid var(--color-primary);
+        }
+
+        .poc-code:hover {
+            border-color: var(--color-secondary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .stat-box {
+            background: var(--bg-input);
+            border: 1px solid var(--color-secondary);
+            padding: 15px;
+            border-radius: 3px;
+            text-align: center;
+        }
+
+        .stat-value {
+            color: var(--color-secondary);
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: var(--color-primary);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .practice-mode {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-panel);
+            border: 2px solid var(--color-secondary);
+            padding: 15px;
+            border-radius: 5px;
+            min-width: 200px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1s infinite;
+        }
+
+        .status-indicator.active { background: var(--color-primary); }
+        .status-indicator.success { background: var(--color-success); }
+        .status-indicator.warning { background: var(--color-warning); }
+
+        @media (max-width: 768px) {
+            .simulator-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .practice-mode {
+                position: static;
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="practice-mode">
+        <h3>📊 Mode Pratique</h3>
+        <p>
+            <span class="status-indicator active"></span>
+            <span id="status-text">Sélectionne une faille</span>
+        </p>
+        <div class="stats-grid" style="grid-template-columns: 1fr;">
+            <div class="stat-box">
+                <div class="stat-value" id="vuln-count">0</div>
+                <div class="stat-label">Failles Trouvées</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="reports-done">0</div>
+                <div class="stat-label">Rapports</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="score-display">0 pts</div>
+                <div class="stat-label">Score</div>
+            </div>
+        </div>
+        <button onclick="resetSimulator()" style="width: 100%; margin-top: 10px;">🔄 Reset</button>
+    </div>
+
+    <div class="simulator-container">
+        <!-- LEFT: Target Application -->
+        <div>
+            <div class="target-panel">
+                <h2>🎯 Application Cible: "EduPortal"</h2>
+                <p style="color: #aaa; margin-top: 10px;">Plateforme de gestion scolaire fictive</p>
+
+                <div style="background: var(--bg-input); padding: 10px; margin: 15px 0; border-radius: 3px;">
+                    <strong>URL:</strong> https://eduportal-demo.local<br>
+                    <strong>Type:</strong> Web Application (PHP)<br>
+                    <strong>Version:</strong> 2.3.1<br>
+                    <strong>Authentification:</strong> Email/Password
+                </div>
+
+                <h3 style="margin-top: 30px; color: var(--color-secondary);">Failles Découvertes</h3>
+
+                <ul class="vulnerability-list" id="vuln-list"></ul>
+            </div>
+        </div>
+
+        <!-- RIGHT: Report & Scoring -->
+        <div>
+            <div class="report-panel">
+                <h2>📋 Rédiger le Rapport</h2>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('report-tab')">📝 Rapport</button>
+                    <button class="tab-btn" onclick="switchTab('scoring-tab')">📊 Scoring</button>
+                    <button class="tab-btn" onclick="switchTab('guide-tab')">📖 Guide</button>
+                </div>
+
+                <!-- TAB 1: Report -->
+                <div id="report-tab" class="tab-content active">
+                    <div class="report-section">
+                        <h3>Titre de la Faille</h3>
+                        <input type="text" id="report-title" placeholder="Ex: Injection SQL dans formulaire de login" style="width: 100%;">
+                    </div>
+
+                    <div class="report-section">
+                        <h3>Sévérité</h3>
+                        <select id="report-severity" style="width: 100%;">
+                            <option value="Critical">🔴 Critical</option>
+                            <option value="High">🟠 High</option>
+                            <option value="Medium">🟡 Medium</option>
+                            <option value="Low">🟢 Low</option>
+                        </select>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>Description (QU'EST-CE?)</h3>
+                        <textarea class="report-textarea" id="report-desc" placeholder="Explique CLAIREMENT ce qu'est la faille:&#10;- Type de vulnérabilité&#10;- Composant affecté&#10;- Cause racine"></textarea>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>Étapes de Reproduction</h3>
+                        <textarea class="report-textarea" id="report-steps" placeholder="1. Aller sur /login&#10;2. Entrer: admin' OR '1'='1&#10;3. Cliquer Submit&#10;4. [Résultat anormal]"></textarea>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>Proof of Concept</h3>
+                        <textarea class="report-textarea" id="report-poc" placeholder="Payload: admin' OR '1'='1' --&#10;Résultat: Bypass authentication, accès non autorisé"></textarea>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>Correction Proposée</h3>
+                        <textarea class="report-textarea" id="report-fix" placeholder="- Utiliser prepared statements&#10;- Valider les inputs&#10;- Implémenter WAF&#10;- Code exemple: $stmt->prepare(...)"></textarea>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>Impact</h3>
+                        <textarea class="report-textarea" id="report-impact" placeholder="- Accès non autorisé aux données&#10;- Vol de credentials&#10;- Violation de confidentialité&#10;- Non-conformité RGPD"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button onclick="saveReport()">💾 Sauvegarder Rapport</button>
+                        <button onclick="copyReportYogoshaFormat()">📋 Copier Format Yogosha</button>
+                    </div>
+
+                    <div id="saved-reports" style="margin-top: 30px;"></div>
+                </div>
+
+                <!-- TAB 2: Scoring -->
+                <div id="scoring-tab" class="tab-content">
+                    <h3>📊 Système de Scoring</h3>
+
+                    <div class="scoring-panel">
+                        <div class="score-item">
+                            <span>Critical (Trouvée)</span>
+                            <span style="color: var(--color-danger);">+50 pts</span>
+                        </div>
+                        <div class="score-item">
+                            <span>High (Trouvée)</span>
+                            <span style="color: var(--color-warning);">+25 pts</span>
+                        </div>
+                        <div class="score-item">
+                            <span>Medium (Trouvée)</span>
+                            <span style="color: #ffaa00;">+15 pts</span>
+                        </div>
+                        <div class="score-item">
+                            <span>Low (Trouvée)</span>
+                            <span style="color: var(--color-primary);">+5 pts</span>
+                        </div>
+                        <div class="score-item">
+                            <span>Rapport Complet</span>
+                            <span style="color: var(--color-secondary);">+20 pts</span>
+                        </div>
+                        <div class="score-item">
+                            <span>Fix Proposé (Utile)</span>
+                            <span style="color: var(--color-success);">+10 pts</span>
+                        </div>
+                        <div class="score-total" id="final-score">TOTAL: 0 pts</div>
+                    </div>
+
+                    <h3 style="margin-top: 30px;">🎯 Stratégie de Scoring</h3>
+                    <div class="hints-box">
+                        <h4>Comment Maximiser tes Points:</h4>
+                        <div class="hint-item">
+                            ✅ Trouver 1-2 Critical = +100 pts (base)
+                        </div>
+                        <div class="hint-item">
+                            ✅ Ajouter 3-4 High/Medium = +70 pts
+                        </div>
+                        <div class="hint-item">
+                            ✅ Rédiger des rapports COMPLETS = +80 pts bonus
+                        </div>
+                        <div class="hint-item">
+                            ✅ Proposer des fixes = +40 pts bonus
+                        </div>
+                        <div class="hint-item">
+                            🎯 TOTAL POSSIBLE = 290+ pts
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: Guide -->
+                <div id="guide-tab" class="tab-content">
+                    <h3>📖 Guide Rédaction Yogosha</h3>
+
+                    <div class="hints-box">
+                        <h4>🔴 Critical Vulnerabilities</h4>
+                        <div class="hint-item">❌ ÉVITER: "Y'a une faille XSS"</div>
+                        <div class="hint-item">✅ FAIRE: "Injection XSS Stockée dans le champ 'Nom' du profil utilisateur, permettant l'exécution de code JavaScript arbitraire"</div>
+                    </div>
+
+                    <div class="hints-box">
+                        <h4>🎯 Étapes de Reproduction (Spécifiques!)</h4>
+                        <div class="hint-item">❌ VAGUE: "Envoyer du SQL"</div>
+                        <div class="hint-item">✅ PRÉCIS: "GET /search.php?q=' OR '1'='1 -- yields 500+ users instead of filtered results"</div>
+                    </div>
+
+                    <div class="hints-box">
+                        <h4>🛠️ Fixes (Doivent être Utiles!)</h4>
+                        <div class="hint-item">❌ GÉNÉRIQUE: "Valider les inputs"</div>
+                        <div class="hint-item">✅ TECHNIQUE: "Utiliser mysqli_prepare() avec prepared statements + htmlspecialchars() pour l'output"</div>
+                    </div>
+
+                    <div class="hints-box">
+                        <h4>📸 Proof of Concept</h4>
+                        <div class="hint-item">Toujours inclure: Payload EXACT + Résultat Démontré + Timestamp</div>
+                    </div>
+
+                    <h3 style="margin-top: 30px; color: var(--color-secondary);">Checklist Avant Soumission</h3>
+                    <ul style="list-style: none;">
+                        <li>✅ Titre clair et descriptif</li>
+                        <li>✅ Description: Quoi + Où + Pourquoi c'est grave</li>
+                        <li>✅ Étapes reproducibles (un enfant peut les suivre)</li>
+                        <li>✅ POC authentique (payload + output)</li>
+                        <li>✅ Fix technique (pas générique)</li>
+                        <li>✅ Impact business ($$$ ou données)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Vulnerabilities Database (Simulator)
+        const vulnerabilities = [
+            {
+                id: 1,
+                title: "Injection SQL - Formulaire Login",
+                severity: "critical",
+                endpoint: "POST /api/login",
+                description: "Le paramètre 'email' n'est pas échappé, permettant une injection SQL complète.",
+                poc: "admin' OR '1'='1' --",
+                hint1: "Essaie avec: admin' OR '1'='1",
+                hint2: "Le formulaire accepte les requêtes SQL brutes",
+                hint3: "Résultat: Bypass d'authentification, accès à tous les comptes"
+            },
+            {
+                id: 2,
+                title: "XSS Stockée - Champ Bio Profil",
+                severity: "high",
+                endpoint: "PUT /api/profile/bio",
+                description: "Le champ 'bio' du profil n'échappe pas les balises HTML/JS.",
+                poc: "<img src=x onerror='alert(\"XSS\")'>",
+                hint1: "Le champ bio accepte les balises HTML",
+                hint2: "Les balises <script> et <img> ne sont pas filtrées",
+                hint3: "N'importe quel utilisateur peut exécuter du JS en visitant le profil"
+            },
+            {
+                id: 3,
+                title: "IDOR - Accès Fichiers Autres Utilisateurs",
+                severity: "high",
+                endpoint: "GET /api/documents/{id}",
+                description: "Pas de vérification d'autorisation, on peut changer l'ID pour voir les docs d'autres users.",
+                poc: "/api/documents/2 (accès au doc de l'user 2)",
+                hint1: "Change le paramètre 'id' dans l'URL",
+                hint2: "Pas de vérification d'ownership",
+                hint3: "L'app retourne les documents d'autres utilisateurs"
+            },
+            {
+                id: 4,
+                title: "Path Traversal - Téléchargement Fichiers",
+                severity: "high",
+                endpoint: "GET /download?file=",
+                description: "Le paramètre 'file' permet de télécharger n'importe quel fichier du serveur.",
+                poc: "download?file=../../../../etc/passwd",
+                hint1: "Essaie avec ../ pour remonter les répertoires",
+                hint2: "Pas de validation du chemin",
+                hint3: "Accès à des fichiers sensibles"
+            },
+            {
+                id: 5,
+                title: "Missing CSRF Token - Changement Mot de Passe",
+                severity: "high",
+                endpoint: "POST /api/change-password",
+                description: "L'endpoint de changement de password n'a pas de CSRF token.",
+                poc: "POST sans token CSRF, attaque via image sur autre site",
+                hint1: "Il n'y a pas de vérification de CSRF token",
+                hint2: "Un attaquant peut changer le password via une image malveillante",
+                hint3: "Impact: Account Takeover"
+            },
+            {
+                id: 6,
+                title: "Information Disclosure - Erreurs Détaillées",
+                severity: "medium",
+                endpoint: "Tous les endpoints",
+                description: "Les messages d'erreur révèlent des infos sensibles (chemin système, version DB).",
+                poc: "Forcer une erreur: GET /api/users/abc",
+                hint1: "Les erreurs affichent le chemin complet du fichier",
+                hint2: "Version MySQL et PHP sont exposées",
+                hint3: "Utile pour reconnaissance/reconnaissance"
+            },
+            {
+                id: 7,
+                title: "Weak Password Policy",
+                severity: "medium",
+                endpoint: "POST /api/register",
+                description: "Les passwords de 3 caractères sont acceptés, pas de règles de complexité.",
+                poc: "Password: '123' accepté sans validation",
+                hint1: "Pas de validation de longueur minimum",
+                hint2: "Pas de vérification de complexité",
+                hint3: "Brute force facilité"
+            },
+            {
+                id: 8,
+                title: "Insecure Direct Object Reference - Admin Panel",
+                severity: "high",
+                endpoint: "GET /admin/users/{id}",
+                description: "On peut accéder au panel admin juste en visitant /admin/ sans auth spéciale.",
+                poc: "GET /admin/users/1 (accès sans permission spéciale)",
+                hint1: "Le panel admin est accessible sans vérification de rôle",
+                hint2: "Il y a une vérification de session mais pas de vérification de rôle admin",
+                hint3: "N'importe quel utilisateur connecté peut voir les users"
+            },
+            {
+                id: 9,
+                title: "Sensitive Data Exposure - Tokens en Clair",
+                severity: "critical",
+                endpoint: "GET /api/settings",
+                description: "Les tokens d'authentification sont retournés en clair dans les réponses API.",
+                poc: "La réponse API contient: 'token': 'abc123xyz...'",
+                hint1: "Les tokens sont en clair dans les réponses",
+                hint2: "Pas de chiffrement des données sensibles",
+                hint3: "Un attaquant peut réutiliser les tokens"
+            },
+            {
+                id: 10,
+                title: "Default Credentials - Admin Account",
+                severity: "critical",
+                endpoint: "POST /login",
+                description: "Le compte admin par défaut existe avec password 'admin123'.",
+                poc: "Email: admin@eduportal.local, Password: admin123",
+                hint1: "Essaie les credentials par défaut",
+                hint2: "Admin account non supprimé après installation",
+                hint3: "Accès complet au système"
+            }
+        ];
+
+        let foundVulnerabilities = [];
+        let reports = [];
+
+        // Initialize
+        function renderVulnerabilities() {
+            const list = document.getElementById('vuln-list');
+            list.innerHTML = vulnerabilities.map((v, i) => `
+                <li class="vuln-item ${v.severity}" onclick="selectVulnerability(${i}, '${v.title}')">
+                    <div class="severity-badge ${v.severity}">${v.severity.toUpperCase()}</div>
+                    <div class="vuln-title">${v.title}</div>
+                    <div class="vuln-details">
+                        <strong>Endpoint:</strong> ${v.endpoint}<br>
+                        <strong>Description:</strong> ${v.description}
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        // Select Vulnerability
+        function selectVulnerability(index, title) {
+            const vuln = vulnerabilities[index];
+
+            // Auto-fill the report
+            document.getElementById('report-title').value = vuln.title;
+            document.getElementById('report-severity').value = vuln.severity.charAt(0).toUpperCase() + vuln.severity.slice(1);
+            document.getElementById('report-desc').value = `Type: ${vuln.severity.toUpperCase()}\nEndpoint: ${vuln.endpoint}\n\n${vuln.description}`;
+            document.getElementById('report-steps').value = `1. Accéder à: ${vuln.endpoint}\n2. Envoyer: ${vuln.poc}\n3. Observer le résultat anormal\n\n[Continue avec les détails...]`;
+            document.getElementById('report-poc').value = `Payload: ${vuln.poc}\n\nRésultat: ${vuln.hint3}`;
+
+            // Mark as found
+            if (!foundVulnerabilities.includes(index)) {
+                foundVulnerabilities.push(index);
+                updateStats();
+            }
+
+            switchTab('report-tab');
+            document.getElementById('status-text').innerHTML = `<span class="status-indicator success"></span> Faille: ${title.substring(0, 30)}...`;
+        }
+
+        // Save Report
+        function saveReport() {
+            const report = {
+                title: document.getElementById('report-title').value,
+                severity: document.getElementById('report-severity').value,
+                description: document.getElementById('report-desc').value,
+                steps: document.getElementById('report-steps').value,
+                poc: document.getElementById('report-poc').value,
+                fix: document.getElementById('report-fix').value,
+                impact: document.getElementById('report-impact').value,
+                timestamp: new Date().toLocaleString()
+            };
+
+            if (!report.title || !report.description) {
+                alert('❌ Remplis au moins le titre et la description!');
+                return;
+            }
+
+            reports.push(report);
+            localStorage.setItem('bb-reports', JSON.stringify(reports));
+
+            alert('✅ Rapport sauvegardé!');
+            renderSavedReports();
+            updateStats();
+
+            // Clear form
+            document.getElementById('report-title').value = '';
+            document.getElementById('report-description').value = '';
+        }
+
+        // Render Saved Reports
+        function renderSavedReports() {
+            const container = document.getElementById('saved-reports');
+            if (reports.length === 0) {
+                container.innerHTML = '<p style="color: #aaa; font-style: italic;">Aucun rapport sauvegardé</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <h3 style="color: var(--color-secondary); margin-top: 30px;">✅ Rapports Sauvegardés (${reports.length})</h3>
+                ${reports.map((r, i) => `
+                    <div style="background: var(--bg-input); padding: 12px; margin: 8px 0; border-radius: 3px; border-left: 4px solid var(--color-secondary);">
+                        <strong>${r.title}</strong><br>
+                        <small style="color: #aaa;">${r.timestamp}</small><br>
+                        <span class="badge ${r.severity.toLowerCase()}">${r.severity}</span>
+                        <button onclick="deleteReport(${i})" style="margin-top: 8px; padding: 5px 10px; background: var(--color-danger); font-size: 11px;">❌</button>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Delete Report
+        function deleteReport(i) {
+            reports.splice(i, 1);
+            localStorage.setItem('bb-reports', JSON.stringify(reports));
+            renderSavedReports();
+            updateStats();
+        }
+
+        // Copy Yogosha Format
+        function copyReportYogoshaTemplate() {
+            const template = `[RAPPORT YOGOSHA]
+
+Titre: ${document.getElementById('report-title').value || 'Titre de la faille'}
+
+Sévérité: ${document.getElementById('report-severity').value}
+
+DESCRIPTION (QU'EST-CE?):
+${document.getElementById('report-desc').value || '[À remplir]'}
+
+ÉTAPES DE REPRODUCTION:
+${document.getElementById('report-steps').value || '[À remplir]'}
+
+PROOF OF CONCEPT:
+${document.getElementById('report-poc').value || '[À remplir]'}
+
+CORRECTION PROPOSÉE:
+${document.getElementById('report-fix').value || '[À remplir]'}
+
+IMPACT BUSINESS/SÉCURITÉ:
+${document.getElementById('report-impact').value || '[À remplir]'}
+
+---
+Généré: ${new Date().toLocaleString()}`;
+
+            navigator.clipboard.writeText(template);
+            alert('✅ Template Yogosha copié!\n\nColle-le sur https://platform.yogosha.com');
+        }
+
+        // Switch Tabs
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Update Stats
+        function updateStats() {
+            const criticalFound = foundVulnerabilities.filter(i => vulnerabilities[i].severity === 'critical').length;
+            const highFound = foundVulnerabilities.filter(i => vulnerabilities[i].severity === 'high').length;
+            const mediumFound = foundVulnerabilities.filter(i => vulnerabilities[i].severity === 'medium').length;
+
+            document.getElementById('vuln-count').innerText = foundVulnerabilities.length;
+            document.getElementById('reports-done').innerText = reports.length;
+
+            // Calculate Score
+            let score = (criticalFound * 50) + (highFound * 25) + (mediumFound * 15);
+            score += reports.length * 20; // Bonus for complete reports
+
+            document.getElementById('score-display').innerText = score + ' pts';
+            document.getElementById('final-score').innerText = `TOTAL: ${score} pts`;
+        }
+
+        // Reset Simulator
+        function resetSimulator() {
+            if (confirm('🔄 Réinitialiser le simulateur? (Tous les rapports seront perdus)')) {
+                foundVulnerabilities = [];
+                reports = [];
+                localStorage.removeItem('bb-reports');
+                document.getElementById('report-title').value = '';
+                document.getElementById('report-desc').value = '';
+                document.getElementById('report-steps').value = '';
+                document.getElementById('report-poc').value = '';
+                document.getElementById('report-fix').value = '';
+                document.getElementById('report-impact').value = '';
+                renderSavedReports();
+                updateStats();
+                alert('✅ Réinitialisé!');
+            }
+        }
+
+        // Load saved reports
+        const saved = localStorage.getItem('bb-reports');
+        if (saved) {
+            reports = JSON.parse(saved);
+            renderSavedReports();
+        }
+
+        // Initialize
+        renderVulnerabilities();
+        updateStats();
+    </script>
+</body>
+</html>

