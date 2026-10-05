@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuclei Interactive Guide | Cyber Arsenal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@500;700&display=swap');
+
+    :root {
+      --bg: #0a0e17;
+      --panel: #111827;
+      --card: #0f172a;
+      --blue: #38bdf8;
+      --gold: #fbbf24;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --success: #34d399;
+      --danger: #f87171;
+      --border: #1e293b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 12% 18%, rgba(56, 189, 248, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 88% 78%, rgba(251, 191, 36, 0.05) 0%, transparent 45%);
+    }
+
+    header {
+      background: linear-gradient(135deg, #0b1228, #1e1b4b);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--gold), transparent);
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.7rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--blue), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-btn {
+      padding: 9px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.86rem;
+      transition: all 0.25s;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      border-color: var(--blue);
+      color: var(--blue);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px 80px;
+    }
+
+    .section { display: none; animation: fadeIn 0.35s ease; }
+    .section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.7rem;
+      color: var(--gold);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2::before { content: '> '; color: var(--blue); }
+
+    h3 {
+      color: var(--blue);
+      margin: 24px 0 12px;
+      font-size: 1.15rem;
+    }
+
+    p { color: var(--muted); margin-bottom: 14px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 18px;
+      transition: all 0.25s;
+    }
+
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.08);
+    }
+
+    .card-title {
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .code-block {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 14px 0;
+      position: relative;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+
+    .code-block pre { margin: 0; color: #e2e8f0; }
+    .cmd { color: var(--blue); }
+    .flag { color: var(--gold); }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 4px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-family: inherit;
+    }
+
+    .copy-btn:hover { color: var(--gold); border-color: var(--gold); }
+    .copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #1e293b;
+      color: var(--gold);
+      text-align: left;
+      padding: 11px 14px;
+      border-bottom: 2px solid var(--blue);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:hover td { background: rgba(56, 189, 248, 0.04); }
+    .flag-name { color: var(--blue); font-weight: 600; }
+
+    .tip {
+      background: rgba(56, 189, 248, 0.07);
+      border-left: 4px solid var(--blue);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .warning {
+      background: rgba(251, 191, 36, 0.07);
+      border-left: 4px solid var(--gold);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .danger-box {
+      background: rgba(248, 113, 113, 0.08);
+      border-left: 4px solid var(--danger);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer span { color: var(--gold); }
+
+    ul { color: var(--muted); margin: 10px 0 10px 22px; }
+    li { margin-bottom: 6px; }
+
+    @media (max-width: 700px) {
+      .logo { font-size: 2.1rem; }
+      h2 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">NUCLEI</div>
+  <div class="tagline">TEMPLATE-BASED VULNERABILITY SCANNER • FAST • POWERFUL • BUG BOUNTY WEAPON</div>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showSection('intro')">Introduction</button>
+  <button class="nav-btn" onclick="showSection('install')">Installation</button>
+  <button class="nav-btn" onclick="showSection('basic')">Usage Basique</button>
+  <button class="nav-btn" onclick="showSection('templates')">Templates</button>
+  <button class="nav-btn" onclick="showSection('flags')">Flags</button>
+  <button class="nav-btn" onclick="showSection('examples')">Exemples</button>
+  <button class="nav-btn" onclick="showSection('pipelines')">Pipelines</button>
+  <button class="nav-btn" onclick="showSection('tips')">Tips Guerre</button>
+</nav>
+
+<main>
+
+  <!-- INTRODUCTION -->
+  <section id="intro" class="section active">
+    <h2>Introduction</h2>
+
+    <div class="card">
+      <div class="card-title">Qu'est-ce que Nuclei ?</div>
+      <p><strong>Nuclei</strong> est un scanner de vulnérabilités ultra-rapide basé sur des templates YAML. C’est actuellement l’une des armes les plus puissantes en bug bounty.</p>
+      
+      <p>Il permet de détecter automatiquement :</p>
+      <ul>
+        <li>CVEs connues</li>
+        <li>Misconfigurations</li>
+        <li>Exposures (fichiers sensibles, panels, etc.)</li>
+        <li>Default credentials</li>
+        <li>Subdomain takeovers</li>
+        <li>Technologies vulnérables</li>
+        <li>Et des milliers d’autres checks</li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <strong style="color:var(--blue)">Pourquoi Nuclei est obligatoire dans ton arsenal ?</strong><br>
+      Tu peux scanner des centaines de cibles en quelques minutes avec des milliers de checks. C’est le meilleur rapport vitesse / résultats actuellement.
+    </div>
+  </section>
+
+  <!-- INSTALLATION -->
+  <section id="install" class="section">
+    <h2>Installation</h2>
+
+    <h3>Méthode recommandée (Go)</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">go</span> install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest</pre>
+    </div>
+
+    <h3>Avec pdtm</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">pdtm</span> -i nuclei</pre>
+    </div>
+
+    <h3>Mise à jour des templates (très important)</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">nuclei</span> <span class="flag">-update-templates</span></pre>
+    </div>
+
+    <div class="warning">
+      <strong style="color:var(--gold)">Important :</strong> Toujours mettre à jour les templates avant un concours ou un scan important.
+    </div>
+  </section>
+
+  <!-- BASIC USAGE -->
+  <section id="basic" class="section">
+    <h2>Usage Basique</h2>
+
+    <div class="card">
+      <div class="card-title">Scanner une cible unique</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-u</span> https://target.com</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Scanner une liste de cibles</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live-hosts.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Mode silencieux + sauvegarde</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live-hosts.txt <span class="flag">-silent</span> <span class="flag">-o</span> results.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Lire depuis stdin (pipeline)</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">cat</span> live-hosts.txt | <span class="cmd">nuclei</span> <span class="flag">-silent</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMPLATES -->
+  <section id="templates" class="section">
+    <h2>Templates (le cœur de Nuclei)</h2>
+
+    <div class="card">
+      <div class="card-title">Catégories de templates les plus utiles</div>
+      <table>
+        <tr>
+          <th>Dossier / Tag</th>
+          <th>Utilité</th>
+        </tr>
+        <tr>
+          <td><span class="flag-name">cves/</span></td>
+          <td>Vulnérabilités CVE connues</td>
+        </tr>
+        <tr>
+          <td><span class="flag-name">vulnerabilities/</span></td>
+          <td>Vulns diverses</td>
+        </tr>
+        <tr>
+          <td><span class="flag-name">exposures/</span></td>
+          <td>Fichiers et panels exposés</td>
+        </tr>
+        <tr>
+          <td><span class="flag-name">misconfiguration/</span></td>
+          <td>Mauvaise configuration</td>
+        </tr>
+        <tr>
+          <td><span class="flag-name">takeovers/</span></td>
+          <td>Subdomain takeover</td>
+        </tr>
+        <tr>
+          <td><span class="flag-name">default-logins/</span></td>
+          <td>Identifiants par défaut</td>
+        </tr>
+        <tr>
+          <td><span class="flag-name">technologies/</span></td>
+          <td>Détection de technologies</td>
+        </tr>
+        <tr>
+          <td><span class="flag-name">fuzzing/</span></td>
+          <td>Fuzzing basique</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Lancer des templates spécifiques</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> hosts.txt <span class="flag">-t</span> cves/ <span class="flag">-t</span> exposures/ <span class="flag">-t</span> misconfiguration/</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Utiliser des tags</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> hosts.txt <span class="flag">-tags</span> cve,exposure,config,panel</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Exclure certains templates</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> hosts.txt <span class="flag">-exclude-tags</span> dos,fuzz</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLAGS -->
+  <section id="flags" class="section">
+    <h2>Flags les plus importants</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Flag</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="flag-name">-u</span></td><td>Cible unique</td></tr>
+        <tr><td><span class="flag-name">-l</span></td><td>Liste de cibles</td></tr>
+        <tr><td><span class="flag-name">-t</span></td><td>Templates à utiliser</td></tr>
+        <tr><td><span class="flag-name">-tags</span></td><td>Filtrer par tags</td></tr>
+        <tr><td><span class="flag-name">-exclude-tags</span></td><td>Exclure des tags</td></tr>
+        <tr><td><span class="flag-name">-severity</span></td><td>Filtrer par sévérité (critical,high,medium...)</td></tr>
+        <tr><td><span class="flag-name">-silent</span></td><td>Mode silencieux</td></tr>
+        <tr><td><span class="flag-name">-o</span></td><td>Fichier de sortie</td></tr>
+        <tr><td><span class="flag-name">-json</span></td><td>Sortie JSON</td></tr>
+        <tr><td><span class="flag-name">-c</span></td><td>Nombre de templates en parallèle</td></tr>
+        <tr><td><span class="flag-name">-bs</span></td><td>Bulk size (requêtes parallèles)</td></tr>
+        <tr><td><span class="flag-name">-rate-limit</span></td><td>Limite de requêtes par seconde</td></tr>
+        <tr><td><span class="flag-name">-timeout</span></td><td>Timeout</td></tr>
+        <tr><td><span class="flag-name">-retries</span></td><td>Nombre de retries</td></tr>
+        <tr><td><span class="flag-name">-stats</span></td><td>Affiche les statistiques</td></tr>
+        <tr><td><span class="flag-name">-update-templates</span></td><td>Met à jour les templates</td></tr>
+        <tr><td><span class="flag-name">-as</span></td><td>Automatic scan (technologie détectée)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- EXAMPLES -->
+  <section id="examples" class="section">
+    <h2>Exemples de Guerre</h2>
+
+    <div class="card">
+      <div class="card-title">1. Scan rapide critique + high</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live.txt <span class="flag">-severity</span> critical,high <span class="flag">-silent</span> <span class="flag">-o</span> critical-findings.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Scan CVEs + Exposures + Misconfigurations</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live.txt <span class="flag">-t</span> cves/ <span class="flag">-t</span> exposures/ <span class="flag">-t</span> misconfiguration/ <span class="flag">-silent</span> <span class="flag">-o</span> results.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Scan automatique selon les technologies</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live.txt <span class="flag">-as</span> <span class="flag">-silent</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Scan très agressif (beaucoup de templates)</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live.txt <span class="flag">-t</span> cves/,vulnerabilities/,exposures/,misconfiguration/,default-logins/ <span class="flag">-c</span> 50 <span class="flag">-bs</span> 25 <span class="flag">-silent</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5. Seulement les panels / login pages</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live.txt <span class="flag">-tags</span> panel,login,admin <span class="flag">-silent</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINES -->
+  <section id="pipelines" class="section">
+    <h2>Pipelines Complets (Arsenal)</h2>
+
+    <div class="card">
+      <div class="card-title">Pipeline classique ultra efficace</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">subfinder</span> <span class="flag">-d</span> target.com <span class="flag">-silent</span> | <span class="cmd">httpx</span> <span class="flag">-silent</span> | <span class="cmd">nuclei</span> <span class="flag">-severity</span> critical,high,medium <span class="flag">-silent</span> <span class="flag">-o</span> findings.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pipeline avec sauvegarde intermédiaire</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">subfinder</span> <span class="flag">-d</span> target.com <span class="flag">-silent</span> -o subs.txt
+<span class="cmd">cat</span> subs.txt | <span class="cmd">httpx</span> <span class="flag">-silent</span> -o live.txt
+<span class="cmd">nuclei</span> <span class="flag">-l</span> live.txt <span class="flag">-t</span> cves/,exposures/,misconfiguration/ <span class="flag">-silent</span> -o nuclei.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pipeline rapide pour concours</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">subfinder</span> <span class="flag">-d</span> target.com <span class="flag">-silent</span> | \
+<span class="cmd">httpx</span> <span class="flag">-silent</span> -title -status-code | \
+<span class="cmd">nuclei</span> <span class="flag">-severity</span> critical,high <span class="flag">-c</span> 40 <span class="flag">-silent</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIPS -->
+  <section id="tips" class="section">
+    <h2>Tips de Guerre (Hack ton lycée)</h2>
+
+    <div class="card">
+      <div class="card-title">1. Toujours mettre à jour les templates avant le concours</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-update-templates</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Commence toujours par critical + high</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live.txt <span class="flag">-severity</span> critical,high <span class="flag">-silent</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Utilise -as pour scanner selon les technologies détectées</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live.txt <span class="flag">-as</span> <span class="flag">-silent</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Augmente la vitesse (attention à ne pas te faire ban)</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">nuclei</span> <span class="flag">-l</span> live.txt <span class="flag">-c</span> 50 <span class="flag">-bs</span> 25 <span class="flag">-rate-limit</span> 150</pre>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong style="color:var(--blue)">Stratégie recommandée pour le concours :</strong><br>
+      1. subfinder → httpx (live hosts)<br>
+      2. nuclei (critical + high + exposures)<br>
+      3. ffuf sur les cibles intéressantes<br>
+      4. Analyse manuelle des findings
+    </div>
+
+    <div class="danger-box">
+      <strong style="color:var(--danger)">Rappel important :</strong> Utilise Nuclei uniquement sur les cibles autorisées du concours.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Nuclei Interactive Guide • Made for <span>NCRC</span> Cyber Arsenal</p>
+  <p style="margin-top:5px; font-size:0.8rem;">ProjectDiscovery • Bug Bounty • Hack ton lycée</p>
+</footer>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function copyCode(btn) {
+    const code = btn.nextElementSibling.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

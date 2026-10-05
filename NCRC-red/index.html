@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Numidia Cyber Resilience Corporation | Red Team • Pentest • Bug Bounty</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+    :root {
+      --bg: #070b14;
+      --panel: #0d1424;
+      --card: #101a2e;
+      --line: #1c2a44;
+      --text: #e6eefc;
+      --muted: #8fa3c2;
+      --blue: #38bdf8;
+      --gold: #fbbf24;
+      --red: #f43f5e;
+      --green: #34d399;
+      --purple: #818cf8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(56,189,248,.08), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(244,63,94,.08), transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(251,191,36,.06), transparent 35%);
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      background: rgba(7, 11, 20, 0.85);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, var(--red), #7f1d1d);
+      box-shadow: 0 0 20px rgba(244,63,94,.35);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .brand-text strong {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-text span {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .2s ease;
+      font-size: 0.86rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--blue);
+      border-color: rgba(56,189,248,.35);
+      background: rgba(56,189,248,.08);
+    }
+
+    .nav-cta {
+      text-decoration: none;
+      color: #fff !important;
+      background: linear-gradient(135deg, var(--red), #be123c);
+      border: none !important;
+      padding: 9px 16px !important;
+      border-radius: 10px !important;
+      font-weight: 700;
+      box-shadow: 0 0 18px rgba(244,63,94,.25);
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px 30px;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-left h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero-left h1 span {
+      background: linear-gradient(90deg, var(--blue), var(--gold), var(--red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-left p {
+      color: var(--muted);
+      max-width: 620px;
+      margin-bottom: 24px;
+      font-size: 0.98rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: .2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--red), #9f1239);
+      box-shadow: 0 10px 30px rgba(244,63,94,.2);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); }
+
+    .btn-secondary {
+      color: var(--blue);
+      background: rgba(56,189,248,.08);
+      border-color: rgba(56,189,248,.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(56,189,248,.14);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 0.78rem;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(16,26,46,.7);
+    }
+
+    .hero-right {
+      background: linear-gradient(180deg, rgba(16,26,46,.95), rgba(13,20,36,.95));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent, rgba(56,189,248,.08), transparent);
+      transform: translateX(-100%);
+      animation: scan 3.5s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green);
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat-box {
+      background: rgba(7,11,20,.55);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .stat-box .label {
+      color: var(--muted);
+      font-size: 0.75rem;
+      margin-bottom: 6px;
+    }
+
+    .stat-box .value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+
+    /* SECTIONS */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .section-header h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+    }
+
+    .section-header h2 span { color: var(--blue); }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      text-decoration: none;
+      color: inherit;
+      transition: .22s ease;
+      position: relative;
+      overflow: hidden;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56,189,248,.45);
+      box-shadow: 0 12px 30px rgba(56,189,248,.08);
+    }
+
+    .card .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .card .icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(56,189,248,.1);
+      border: 1px solid rgba(56,189,248,.2);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .card.red .icon {
+      background: rgba(244,63,94,.1);
+      border-color: rgba(244,63,94,.25);
+      color: var(--red);
+    }
+
+    .card.gold .icon {
+      background: rgba(251,191,36,.1);
+      border-color: rgba(251,191,36,.25);
+      color: var(--gold);
+    }
+
+    .card.purple .icon {
+      background: rgba(129,140,248,.1);
+      border-color: rgba(129,140,248,.25);
+      color: var(--purple);
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .card .meta {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--blue);
+      font-size: 0.8rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .badge.hot {
+      color: #fecaca;
+      border-color: rgba(244,63,94,.35);
+      background: rgba(244,63,94,.1);
+    }
+
+    .badge.new {
+      color: #bbf7d0;
+      border-color: rgba(52,211,153,.35);
+      background: rgba(52,211,153,.1);
+    }
+
+    /* SPECIAL BLOCK */
+    .cta-panel {
+      margin-top: 20px;
+      background: linear-gradient(135deg, rgba(244,63,94,.12), rgba(56,189,248,.08));
+      border: 1px solid rgba(244,63,94,.25);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-panel h3 {
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 8px;
+    }
+
+    .cta-panel p { color: var(--muted); max-width: 700px; }
+
+    footer {
+      max-width: 1200px;
+      margin: 20px auto 40px;
+      padding: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 0.84rem;
+    }
+
+    footer strong { color: var(--gold); }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 35px; }
+      .navbar { padding: 12px 16px; }
+      .brand-text strong { font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a class="brand" href="index.html">
+      <div class="brand-badge">N</div>
+      <div class="brand-text">
+        <strong>NUMIDIA CRC</strong>
+        <span>Cyber Resilience Corporation</span>
+      </div>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="#tools">Tools</a>
+      <a href="#projects">Projects</a>
+      <a href="#arsenal">Arsenal</a>
+      <a href="#about">About</a>
+      <a class="nav-cta" href="#jourj">Jour J Mode</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-left">
+      <h1>
+        Numidia Cyber<br />
+        <span>Resilience Corporation</span>
+      </h1>
+      <p>
+        Structure spécialisée <strong style="color:#fff;">Red Team</strong>,
+        <strong style="color:#fff;">Pentest</strong> et
+        <strong style="color:#fff;">Bug Bounty</strong>.
+        Arsenal offensif, guides interactifs, pipelines automatisés et préparation concours.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#tools">Ouvrir les Tools</a>
+        <a class="btn btn-secondary" href="projects/security-plus-sy0-701-tracker.html">Security+ Tracker</a>
+      </div>
+
+      <div class="tags">
+        <div class="tag">Red Team</div>
+        <div class="tag">Bug Bounty</div>
+        <div class="tag">Pentest Web</div>
+        <div class="tag">Recon Automation</div>
+        <div class="tag">Hack ton lycée</div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="status-line">
+        <div><span class="pulse"></span>SYSTEM ONLINE</div>
+        <div>OPS // BLUE-GOLD-RED</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="label">Focus</div>
+          <div class="value">OFFENSE</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Mode</div>
+          <div class="value">HUNT</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Stack</div>
+          <div class="value">PD + SQLi</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Status</div>
+          <div class="value" style="color:var(--green)">READY</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; color:var(--muted); font-size:0.84rem;">
+        Pipeline recommandé :<br />
+        <span style="color:var(--blue)">subfinder → httpx → nuclei → dalfox → sqlmap</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOOLS -->
+  <section class="section" id="tools">
+    <div class="section-header">
+      <div>
+        <h2><span>01.</span> Tools</h2>
+        <p>Guides interactifs offensifs prêts pour le terrain</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <a class="card" href="tools/gobuster.html">
+        <div>
+          <div class="top">
+            <div class="icon">GB</div>
+            <span class="badge">Recon</span>
+          </div>
+          <h3>Gobuster</h3>
+          <p>Directory, DNS et VHost brute-force. Guide interactif complet.</p>
+        </div>
+        <div class="meta"><span>Ouvrir</span><span>→</span></div>
+      </a>
+
+      <a class="card" href="tools/ffuf.html">
+        <div>
+          <div class="top">
+            <div class="icon">FF</div>
+            <span class="badge">Fuzzing</span>
+          </div>
+          <h3>ffuf</h3>
+          <p>Fuzzer web ultra rapide. Content discovery, vhost, params.</p>
+        </div>
+        <div class="meta"><span>Ouvrir</span><span>→</span></div>
+      </a>
+
+      <a class="card" href="tools/httpx.html">
+        <div>
+          <div class="top">
+            <div class="icon">HX</div>
+            <span class="badge">Probe</span>
+          </div>
+          <h3>httpx</h3>
+          <p>Probe HTTP, tech detect, title, status. Base du pipeline live hosts.</p>
+        </div>
+        <div class="meta"><span>Ouvrir</span><span>→</span></div>
+      </a>
+
+      <a class="card" href="tools/subfinder.html">
+        <div>
+          <div class="top">
+            <div class="icon">SF</div>
+            <span class="badge">Subdomains</span>
+          </div>
+          <h3>subfinder</h3>
+          <p>Enumération passive de sous-domaines. Point de départ recon.</p>
+        </div>
+        <div class="meta"><span>Ouvrir</span><span>→</span></div>
+      </a>
+
+      <a class="card red" href="tools/nuclei.html">
+        <div>
+          <div class="top">
+            <div class="icon">NC</div>
+            <span class="badge hot">HOT</span>
+          </div>
+          <h3>Nuclei</h3>
+          <p>Scanner de vulnérabilités template-based. Arme principale Jour J.</p>
+        </div>
+        <div class="meta"><span>Ouvrir</span><span>→</span></div>
+      </a>
+
+      <a class="card gold" href="tools/dalfox.html">
+        <div>
+          <div class="top">
+            <div class="icon">DX</div>
+            <span class="badge">XSS</span>
+          </div>
+          <h3>dalfox</h3>
+          <p>Scanner XSS avancé, parameter mining et pipelines bug bounty.</p>
+        </div>
+        <div class="meta"><span>Ouvrir</span><span>→</span></div>
+      </a>
+
+      <a class="card purple" href="tools/sqlmap.html">
+        <div>
+          <div class="top">
+            <div class="icon">SQ</div>
+            <span class="badge new">NEW</span>
+          </div>
+          <h3>sqlmap</h3>
+          <p>Automatisation SQLi : détection, enum, dump. Guide Jour J inclus.</p>
+        </div>
+        <div class="meta"><span>Ouvrir</span><span>→</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <div class="section-header">
+      <div>
+        <h2><span>02.</span> Projects</h2>
+        <p>Projets actifs de la corporation</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <a class="card red" href="projects/security-plus-sy0-701-tracker.html">
+        <div>
+          <div class="top">
+            <div class="icon">S+</div>
+            <span class="badge hot">ACTIVE</span>
+          </div>
+          <h3>Security+ SY0-701 Tracker</h3>
+          <p>Banque de questions, quiz mode, correction détaillée, progression 40 jours.</p>
+        </div>
+        <div class="meta"><span>Lancer</span><span>→</span></div>
+      </a>
+
+      <a class="card" href="#arsenal">
+        <div>
+          <div class="top">
+            <div class="icon">AR</div>
+            <span class="badge">OPS</span>
+          </div>
+          <h3>Jour J Arsenal Script</h3>
+          <p>Pipeline automatisé subfinder → httpx → nuclei → xss → sqli.</p>
+        </div>
+        <div class="meta"><span>Voir workflow</span><span>→</span></div>
+      </a>
+
+      <a class="card gold" href="#about">
+        <div>
+          <div class="top">
+            <div class="icon">RT</div>
+            <span class="badge">VISION</span>
+          </div>
+          <h3>Red Team Roadmap</h3>
+          <p>Construction progressive d’un profil Blue-to-Red / Bug Bounty hunter.</p>
+        </div>
+        <div class="meta"><span>Details</span><span>→</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ARSENAL / JOUR J -->
+  <section class="section" id="arsenal">
+    <div class="section-header">
+      <div>
+        <h2><span>03.</span> Arsenal Workflow</h2>
+        <p>Stack offensive optimisée pour perdre 0 temps</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div>
+          <div class="top"><div class="icon">01</div></div>
+          <h3>Recon</h3>
+          <p>subfinder + httpx pour mapper la surface d’attaque live.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div>
+          <div class="top"><div class="icon">02</div></div>
+          <h3>Vuln Auto</h3>
+          <p>nuclei critical/high/medium pour les gains rapides.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div>
+          <div class="top"><div class="icon">03</div></div>
+          <h3>Content + XSS</h3>
+          <p>ffuf/gobuster + dalfox sur les endpoints paramétrés.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div>
+          <div class="top"><div class="icon">04</div></div>
+          <h3>SQLi</h3>
+          <p>sqlmap sur les cibles filtrées (id, page, cat, user...).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-panel" id="jourj">
+      <div>
+        <h3>JOUR J MODE</h3>
+        <p>
+          Objectif : automatiser la recon et la détection, puis valider manuellement
+          uniquement les findings à fort impact. Priorité = vitesse + précision.
+        </p>
+      </div>
+      <a class="btn btn-primary" href="tools/nuclei.html">Start with Nuclei</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="section-header">
+      <div>
+        <h2><span>04.</span> About NCRC</h2>
+        <p>Numidia Cyber Resilience Corporation</p>
+      </div>
+    </div>
+
+    <div class="card" style="min-height:auto;">
+      <h3 style="margin-bottom:10px;">Mission</h3>
+      <p style="margin-bottom:12px;">
+        Construire une force offensive disciplinée : Red Team, pentest web, bug bounty hunting,
+        automation et montée en compétences continue.
+      </p>
+      <div class="tags">
+        <div class="tag">Offense-oriented</div>
+        <div class="tag">Tool mastery</div>
+        <div class="tag">Operational speed</div>
+        <div class="tag">Practical learning</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>© <strong>Numidia Cyber Resilience Corporation</strong> — Red Team • Pentest • Bug Bounty</div>
+    <div>Status: <span style="color:var(--green)">Operational</span></div>
+  </footer>
+
+</body>
+</html>

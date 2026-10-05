@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>httpx Interactive Guide | Cyber Arsenal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@500;700&display=swap');
+
+    :root {
+      --bg: #0a0e17;
+      --panel: #111827;
+      --card: #0f172a;
+      --blue: #38bdf8;
+      --gold: #fbbf24;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --success: #34d399;
+      --border: #1e293b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 12% 18%, rgba(56, 189, 248, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 88% 78%, rgba(251, 191, 36, 0.05) 0%, transparent 45%);
+    }
+
+    header {
+      background: linear-gradient(135deg, #0b1228, #1e1b4b);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--gold), transparent);
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--blue), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 3px;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(15, 23, 42, 0.88);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-btn {
+      padding: 9px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.87rem;
+      transition: all 0.25s;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      border-color: var(--blue);
+      color: var(--blue);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px 80px;
+    }
+
+    .section { display: none; animation: fadeIn 0.35s ease; }
+    .section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.7rem;
+      color: var(--gold);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2::before { content: '> '; color: var(--blue); }
+
+    h3 {
+      color: var(--blue);
+      margin: 24px 0 12px;
+      font-size: 1.15rem;
+    }
+
+    p { color: var(--muted); margin-bottom: 14px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 18px;
+      transition: all 0.25s;
+    }
+
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.08);
+    }
+
+    .card-title {
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .code-block {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 14px 0;
+      position: relative;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+
+    .code-block pre { margin: 0; color: #e2e8f0; }
+    .cmd { color: var(--blue); }
+    .flag { color: var(--gold); }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 4px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-family: inherit;
+    }
+
+    .copy-btn:hover { color: var(--gold); border-color: var(--gold); }
+    .copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #1e293b;
+      color: var(--gold);
+      text-align: left;
+      padding: 11px 14px;
+      border-bottom: 2px solid var(--blue);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:hover td { background: rgba(56, 189, 248, 0.04); }
+    .flag-name { color: var(--blue); font-weight: 600; }
+
+    .tip {
+      background: rgba(56, 189, 248, 0.07);
+      border-left: 4px solid var(--blue);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .warning {
+      background: rgba(251, 191, 36, 0.07);
+      border-left: 4px solid var(--gold);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer span { color: var(--gold); }
+
+    ul { color: var(--muted); margin: 10px 0 10px 22px; }
+    li { margin-bottom: 6px; }
+
+    @media (max-width: 700px) {
+      .logo { font-size: 2.1rem; }
+      h2 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">httpx</div>
+  <div class="tagline">FAST HTTP TOOLKIT • PROBE • TECH DETECT • TITLE • STATUS</div>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showSection('intro')">Introduction</button>
+  <button class="nav-btn" onclick="showSection('install')">Installation</button>
+  <button class="nav-btn" onclick="showSection('basic')">Usage Basique</button>
+  <button class="nav-btn" onclick="showSection('flags')">Flags</button>
+  <button class="nav-btn" onclick="showSection('examples')">Exemples</button>
+  <button class="nav-btn" onclick="showSection('pipelines')">Pipelines</button>
+  <button class="nav-btn" onclick="showSection('tips')">Tips Pro</button>
+</nav>
+
+<main>
+
+  <!-- ========== INTRODUCTION ========== -->
+  <section id="intro" class="section active">
+    <h2>Introduction</h2>
+
+    <div class="card">
+      <div class="card-title">Qu'est-ce que httpx ?</div>
+      <p><strong>httpx</strong> est un toolkit HTTP ultra-rapide développé par ProjectDiscovery. Il est devenu indispensable en bug bounty et en recon moderne.</p>
+      
+      <p>Il permet de :</p>
+      <ul>
+        <li>Prober rapidement des milliers d’hôtes</li>
+        <li>Récupérer le status code, le titre, la techno, les headers...</li>
+        <li>Détecter les technologies (tech-detect)</li>
+        <li>Suivre les redirections</li>
+        <li>Filtrer intelligemment les résultats</li>
+        <li>S’intégrer parfaitement dans des pipelines (subfinder → httpx → nuclei)</li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <strong style="color:var(--blue)">💡 Pourquoi httpx est si populaire ?</strong><br>
+      Très rapide, faible consommation mémoire, excellent en pipe avec d’autres outils ProjectDiscovery (subfinder, nuclei, katana...).
+    </div>
+  </section>
+
+  <!-- ========== INSTALLATION ========== -->
+  <section id="install" class="section">
+    <h2>Installation</h2>
+
+    <h3>Méthode recommandée (Go)</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">go</span> install -v github.com/projectdiscovery/httpx/cmd/httpx@latest</pre>
+    </div>
+
+    <h3>Avec pdtm (ProjectDiscovery Tool Manager)</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">pdtm</span> -i httpx</pre>
+    </div>
+
+    <h3>Via apt (Kali)</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">sudo apt</span> install httpx-toolkit</pre>
+    </div>
+
+    <div class="warning">
+      <strong style="color:var(--gold)">Note :</strong> Sur Kali le paquet s’appelle parfois <code>httpx-toolkit</code> pour éviter le conflit avec le module Python httpx.
+    </div>
+  </section>
+
+  <!-- ========== BASIC USAGE ========== -->
+  <section id="basic" class="section">
+    <h2>Usage Basique</h2>
+
+    <div class="card">
+      <div class="card-title">Prober une seule cible</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-u</span> https://target.com</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Prober une liste de domaines</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Lire depuis stdin (très courant)</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">cat</span> domains.txt | <span class="cmd">httpx</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Afficher plus d’informations</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-title</span> <span class="flag">-tech-detect</span> <span class="flag">-status-code</span> <span class="flag">-web-server</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FLAGS ========== -->
+  <section id="flags" class="section">
+    <h2>Flags les plus utiles</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Flag</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="flag-name">-u</span></td><td>Cible unique</td></tr>
+        <tr><td><span class="flag-name">-l</span></td><td>Fichier de cibles</td></tr>
+        <tr><td><span class="flag-name">-title</span></td><td>Affiche le titre de la page</td></tr>
+        <tr><td><span class="flag-name">-status-code</span></td><td>Affiche le code HTTP</td></tr>
+        <tr><td><span class="flag-name">-tech-detect</span></td><td>Détecte les technologies</td></tr>
+        <tr><td><span class="flag-name">-web-server</span></td><td>Affiche le serveur web</td></tr>
+        <tr><td><span class="flag-name">-content-length</span></td><td>Affiche la taille de la réponse</td></tr>
+        <tr><td><span class="flag-name">-follow-redirects</span></td><td>Suit les redirections</td></tr>
+        <tr><td><span class="flag-name">-follow-host-redirects</span></td><td>Suit les redirections du même host</td></tr>
+        <tr><td><span class="flag-name">-mc</span></td><td>Match status codes (ex: 200,301,302)</td></tr>
+        <tr><td><span class="flag-name">-fc</span></td><td>Filter status codes</td></tr>
+        <tr><td><span class="flag-name">-t</span></td><td>Nombre de threads</td></tr>
+        <tr><td><span class="flag-name">-timeout</span></td><td>Timeout (secondes)</td></tr>
+        <tr><td><span class="flag-name">-retries</span></td><td>Nombre de retries</td></tr>
+        <tr><td><span class="flag-name">-silent</span></td><td>Mode silencieux (seulement les résultats)</td></tr>
+        <tr><td><span class="flag-name">-o</span></td><td>Fichier de sortie</td></tr>
+        <tr><td><span class="flag-name">-json</span></td><td>Sortie en JSON</td></tr>
+        <tr><td><span class="flag-name">-cdn</span></td><td>Affiche les informations CDN</td></tr>
+        <tr><td><span class="flag-name">-probe</span></td><td>Force le probe même sur les non-HTTP</td></tr>
+        <tr><td><span class="flag-name">-ports</span></td><td>Ports à scanner (ex: 80,443,8080)</td></tr>
+        <tr><td><span class="flag-name">-path</span></td><td>Chemin à ajouter (ex: /admin)</td></tr>
+        <tr><td><span class="flag-name">-http2</span></td><td>Force HTTP/2</td></tr>
+        <tr><td><span class="flag-name">-no-color</span></td><td>Désactive les couleurs</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ========== EXAMPLES ========== -->
+  <section id="examples" class="section">
+    <h2>Exemples Détaillés</h2>
+
+    <div class="card">
+      <div class="card-title">1. Scan basique + titre + status + techno</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-title</span> <span class="flag">-status-code</span> <span class="flag">-tech-detect</span> <span class="flag">-web-server</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Seulement les hosts qui répondent 200</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-mc</span> 200 <span class="flag">-silent</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Suivre les redirections + afficher le titre final</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-follow-redirects</span> <span class="flag">-title</span> <span class="flag">-status-code</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Scanner plusieurs ports</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> ips.txt <span class="flag">-ports</span> 80,443,8080,8443,8000 <span class="flag">-title</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5. Ajouter un chemin spécifique</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-path</span> /admin <span class="flag">-mc</span> 200,301,302,403</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">6. Sortie JSON propre</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-title</span> <span class="flag">-tech-detect</span> <span class="flag">-json</span> <span class="flag">-o</span> results.json</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">7. Filtrer les CDN (Cloudflare, Akamai...)</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-cdn</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PIPELINES ========== -->
+  <section id="pipelines" class="section">
+    <h2>Pipelines Bug Bounty</h2>
+    <p>httpx brille particulièrement dans les chaînes d’outils.</p>
+
+    <div class="card">
+      <div class="card-title">Pipeline classique Subdomain → httpx</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">subfinder</span> <span class="flag">-d</span> target.com <span class="flag">-silent</span> | <span class="cmd">httpx</span> <span class="flag">-silent</span> <span class="flag">-title</span> <span class="flag">-status-code</span> <span class="flag">-tech-detect</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Subfinder → httpx → nuclei</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">subfinder</span> <span class="flag">-d</span> target.com <span class="flag">-silent</span> | <span class="cmd">httpx</span> <span class="flag">-silent</span> | <span class="cmd">nuclei</span> <span class="flag">-t</span> cves/ <span class="flag">-silent</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Récupérer uniquement les hosts vivants</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">cat</span> all-subs.txt | <span class="cmd">httpx</span> <span class="flag">-silent</span> > live-hosts.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pipeline avec Katana + httpx</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">katana</span> <span class="flag">-u</span> https://target.com <span class="flag">-silent</span> | <span class="cmd">httpx</span> <span class="flag">-silent</span> <span class="flag">-title</span> <span class="flag">-mc</span> 200</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Filtrer les applications intéressantes</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">cat</span> domains.txt | <span class="cmd">httpx</span> <span class="flag">-title</span> <span class="flag">-tech-detect</span> <span class="flag">-status-code</span> | <span class="cmd">grep</span> -i "wordpress\|laravel\|django\|admin"</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TIPS ========== -->
+  <section id="tips" class="section">
+    <h2>Tips Pro</h2>
+
+    <div class="card">
+      <div class="card-title">1. Mode silencieux + threads élevés</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-silent</span> <span class="flag">-t</span> 100</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Détecter les technologies + sauvegarder</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-tech-detect</span> <span class="flag">-title</span> <span class="flag">-status-code</span> <span class="flag">-o</span> tech-results.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Scanner rapidement + suivre les redirections</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-follow-redirects</span> <span class="flag">-title</span> <span class="flag">-mc</span> 200,301,302</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Utiliser avec une wordlist de chemins</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">httpx</span> <span class="flag">-l</span> domains.txt <span class="flag">-path</span> /robots.txt,/sitemap.xml,/admin <span class="flag">-mc</span> 200</pre>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong style="color:var(--blue)">Astuce Bug Bounty :</strong> Combine toujours <code>subfinder</code> → <code>httpx</code> → <code>nuclei</code>. C’est l’un des pipelines les plus efficaces actuellement.
+    </div>
+
+    <div class="warning">
+      <strong style="color:var(--gold)">Rappel :</strong> Utilise httpx uniquement sur des cibles autorisées.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>httpx Interactive Guide • Made for <span>NCRC</span> Cyber Range</p>
+  <p style="margin-top:5px; font-size:0.8rem;">ProjectDiscovery • Bug Bounty • Recon</p>
+</footer>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function copyCode(btn) {
+    const code = btn.nextElementSibling.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dalfox Advanced Guide | Cyber Arsenal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@500;700&display=swap');
+
+    :root {
+      --bg: #0a0e17;
+      --panel: #111827;
+      --card: #0f172a;
+      --blue: #38bdf8;
+      --gold: #fbbf24;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --success: #34d399;
+      --danger: #f87171;
+      --border: #1e293b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(56, 189, 248, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 88% 78%, rgba(251, 191, 36, 0.05) 0%, transparent 45%);
+    }
+
+    header {
+      background: linear-gradient(135deg, #0b1228, #1e1b4b);
+      border-bottom: 1px solid var(--border);
+      padding: 34px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--gold), transparent);
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.7rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--blue), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.92);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-btn {
+      padding: 9px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.84rem;
+      transition: all 0.25s;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      border-color: var(--blue);
+      color: var(--blue);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px 80px;
+    }
+
+    .section { display: none; animation: fadeIn 0.35s ease; }
+    .section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.65rem;
+      color: var(--gold);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2::before { content: '> '; color: var(--blue); }
+
+    h3 {
+      color: var(--blue);
+      margin: 24px 0 12px;
+      font-size: 1.12rem;
+    }
+
+    p { color: var(--muted); margin-bottom: 14px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 18px;
+      transition: all 0.25s;
+    }
+
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.08);
+    }
+
+    .card-title {
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .code-block {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 14px 0;
+      position: relative;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+
+    .code-block pre { margin: 0; color: #e2e8f0; white-space: pre-wrap; }
+    .cmd { color: var(--blue); }
+    .flag { color: var(--gold); }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 4px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-family: inherit;
+    }
+
+    .copy-btn:hover { color: var(--gold); border-color: var(--gold); }
+    .copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #1e293b;
+      color: var(--gold);
+      text-align: left;
+      padding: 11px 14px;
+      border-bottom: 2px solid var(--blue);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:hover td { background: rgba(56, 189, 248, 0.04); }
+    .flag-name { color: var(--blue); font-weight: 600; }
+
+    .tip {
+      background: rgba(56, 189, 248, 0.07);
+      border-left: 4px solid var(--blue);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .warning {
+      background: rgba(251, 191, 36, 0.07);
+      border-left: 4px solid var(--gold);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .danger-box {
+      background: rgba(248, 113, 113, 0.08);
+      border-left: 4px solid var(--danger);
+      padding: 13px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    ul, ol { color: var(--muted); margin: 10px 0 10px 22px; }
+    li { margin-bottom: 7px; }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer span { color: var(--gold); }
+
+    @media (max-width: 700px) {
+      .logo { font-size: 2rem; }
+      h2 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">DALFOX</div>
+  <div class="tagline">ADVANCED XSS ARSENAL • PARAMETER MINING • PIPELINES • BUG BOUNTY READY</div>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showSection('intro')">Introduction</button>
+  <button class="nav-btn" onclick="showSection('install')">Installation</button>
+  <button class="nav-btn" onclick="showSection('concepts')">Concepts XSS</button>
+  <button class="nav-btn" onclick="showSection('basic')">Usage</button>
+  <button class="nav-btn" onclick="showSection('flags')">Flags</button>
+  <button class="nav-btn" onclick="showSection('examples')">Exemples</button>
+  <button class="nav-btn" onclick="showSection('pipelines')">Pipelines</button>
+  <button class="nav-btn" onclick="showSection('workflow')">Jour J</button>
+  <button class="nav-btn" onclick="showSection('tips')">Tips Pro</button>
+</nav>
+
+<main>
+
+  <!-- INTRODUCTION -->
+  <section id="intro" class="section active">
+    <h2>Introduction</h2>
+
+    <div class="card">
+      <div class="card-title">Qu'est-ce que dalfox ?</div>
+      <p><strong>dalfox</strong> est un scanner XSS avancé, rapide et orienté paramètre. Il est particulièrement fort pour :</p>
+      <ul>
+        <li>Détecter les XSS reflétées</li>
+        <li>Tester automatiquement beaucoup de payloads</li>
+        <li>Miner des paramètres intéressants</li>
+        <li>Travailler en pipeline avec gau, katana, waybackurls, gf...</li>
+        <li>Accélérer la chasse XSS en bug bounty / CTF</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Quand l’utiliser ?</div>
+      <ul>
+        <li>Après la recon (subfinder / httpx / katana / gau)</li>
+        <li>Quand tu as une liste d’URLs avec paramètres</li>
+        <li>Quand tu veux tester vite search, redirect, filter, q, id, page, callback...</li>
+        <li>Quand Nuclei n’a rien donné d’évident et que tu passes en phase manuelle assistée</li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <strong style="color:var(--blue)">Position dans ton arsenal :</strong>
+      subfinder → httpx → katana/gau → <strong>dalfox</strong> → validation manuelle
+    </div>
+  </section>
+
+  <!-- INSTALLATION -->
+  <section id="install" class="section">
+    <h2>Installation</h2>
+
+    <h3>Méthode recommandée (Go)</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">go</span> install github.com/hahwul/dalfox/v2@latest</pre>
+    </div>
+
+    <h3>Vérifier l’installation</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">dalfox</span> version</pre>
+    </div>
+
+    <h3>Outils complémentaires recommandés</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">go</span> install github.com/lc/gau/v2/cmd/gau@latest
+<span class="cmd">go</span> install github.com/projectdiscovery/katana/cmd/katana@latest
+<span class="cmd">go</span> install github.com/tomnomnom/qsreplace@latest
+<span class="cmd">go</span> install github.com/tomnomnom/gf@latest</pre>
+    </div>
+
+    <div class="warning">
+      <strong style="color:var(--gold)">Conseil :</strong> dalfox devient beaucoup plus fort quand il est alimenté par de bonnes listes d’URLs (gau/katana) et un pré-filtre (`grep "="` / `gf xss`).
+    </div>
+  </section>
+
+  <!-- CONCEPTS -->
+  <section id="concepts" class="section">
+    <h2>Concepts XSS utiles</h2>
+
+    <div class="card">
+      <div class="card-title">Types de XSS à connaître</div>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+          <th>dalfox est fort ?</th>
+        </tr>
+        <tr>
+          <td>Reflected XSS</td>
+          <td>Le payload revient dans la réponse immédiatement</td>
+          <td>Oui, très fort</td>
+        </tr>
+        <tr>
+          <td>Stored XSS</td>
+          <td>Le payload est stocké puis réaffiché plus tard</td>
+          <td>Partiellement</td>
+        </tr>
+        <tr>
+          <td>DOM XSS</td>
+          <td>Le problème vient du JavaScript côté client</td>
+          <td>Moyen / selon options</td>
+        </tr>
+        <tr>
+          <td>Blind XSS</td>
+          <td>L’exécution se voit ailleurs (admin panel, logs...)</td>
+          <td>Oui avec callback `-b`</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Paramètres souvent intéressants</div>
+      <ul>
+        <li><code>q</code>, <code>search</code>, <code>query</code>, <code>s</code></li>
+        <li><code>redirect</code>, <code>url</code>, <code>next</code>, <code>return</code>, <code>callback</code></li>
+        <li><code>name</code>, <code>id</code>, <code>page</code>, <code>cat</code>, <code>filter</code></li>
+        <li><code>message</code>, <code>error</code>, <code>msg</code>, <code>text</code></li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <strong style="color:var(--blue)">Réflexe Jour J :</strong> priorise toujours les paramètres de recherche, redirection et affichage de messages.
+    </div>
+  </section>
+
+  <!-- BASIC USAGE -->
+  <section id="basic" class="section">
+    <h2>Usage de base</h2>
+
+    <div class="card">
+      <div class="card-title">1. Tester une URL unique</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">dalfox</span> url "https://target.com/search?q=test"</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Tester un fichier d’URLs</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">dalfox</span> file urls.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Mode pipeline (le plus utile)</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">cat</span> urls.txt | <span class="cmd">dalfox</span> pipe</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Mode silencieux + output</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">dalfox</span> file urls.txt --silence -o xss-results.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5. Activer le mining de paramètres</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">dalfox</span> file urls.txt --mining-dict --mining-dom</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLAGS -->
+  <section id="flags" class="section">
+    <h2>Flags importants (détaillés)</h2>
+
+    <table>
+      <tr>
+        <th>Flag</th>
+        <th>Rôle</th>
+        <th>Quand l’utiliser</th>
+      </tr>
+      <tr>
+        <td><span class="flag-name">url</span></td>
+        <td>Scan d’une seule URL</td>
+        <td>Test manuel rapide</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">file</span></td>
+        <td>Scan d’un fichier</td>
+        <td>Liste préparée</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">pipe</span></td>
+        <td>Lit depuis stdin</td>
+        <td>Pipelines bug bounty</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--mining-dict</span></td>
+        <td>Parameter mining via dictionnaire</td>
+        <td>Quand tu veux découvrir plus de params</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--mining-dom</span></td>
+        <td>Cherche des params dans le DOM</td>
+        <td>Pages JS riches</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--deep-domxss</span></td>
+        <td>Analyse DOM plus poussée</td>
+        <td>Si tu suspectes du DOM XSS</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">-b</span></td>
+        <td>Blind XSS callback/collaborator</td>
+        <td>Forms, profils, tickets, feedback</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">-o</span></td>
+        <td>Output file</td>
+        <td>Toujours utile</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--silence</span></td>
+        <td>Moins de bruit</td>
+        <td>Pendant les gros scans</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">-w</span></td>
+        <td>Workers / parallélisme</td>
+        <td>Pour accélérer</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--skip-bav</span></td>
+        <td>Skip certaines vérifs basiques</td>
+        <td>Scan plus agressif / rapide</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--waf-evasion</span></td>
+        <td>Tentatives d’évasion WAF</td>
+        <td>Si tu te fais bloquer</td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--custom-payload</span></td>
+        <td>Payloads perso</td>
+        <td>Quand tu as ta wordlist XSS</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- EXAMPLES -->
+  <section id="examples" class="section">
+    <h2>Exemples avancés</h2>
+
+    <div class="card">
+      <div class="card-title">1. Scan standard d’une liste</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">dalfox</span> file urls.txt --mining-dict --mining-dom -o dalfox.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Pipeline gau → dalfox</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">gau</span> target.com | <span class="cmd">grep</span> "=" | <span class="cmd">dalfox</span> pipe --silence -o xss.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Pipeline katana → dalfox</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">katana</span> -u https://target.com -silent | <span class="cmd">grep</span> "=" | <span class="cmd">dalfox</span> pipe</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Avec gf xss</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">cat</span> all-urls.txt | <span class="cmd">gf</span> xss | <span class="cmd">dalfox</span> pipe --silence -o gf-xss.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5. Mode plus agressif</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">dalfox</span> file urls.txt --mining-dict --mining-dom --deep-domxss -w 20 --waf-evasion</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">6. Blind XSS (si tu as un callback)</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">dalfox</span> url "https://target.com/contact?msg=test" -b https://TON-CALLBACK</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINES -->
+  <section id="pipelines" class="section">
+    <h2>Pipelines Bug Bounty</h2>
+
+    <div class="card">
+      <div class="card-title">Pipeline XSS rapide (recommandé)</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">gau</span> target.com | \
+<span class="cmd">grep</span> "=" | \
+<span class="cmd">uro</span> | \
+<span class="cmd">dalfox</span> pipe --mining-dict --silence -o xss-fast.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pipeline recon complète → XSS</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">subfinder</span> -d target.com -silent | \
+<span class="cmd">httpx</span> -silent | \
+<span class="cmd">katana</span> -silent | \
+<span class="cmd">grep</span> "=" | \
+<span class="cmd">dalfox</span> pipe -o xss.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pipeline “qualité > quantité”</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">cat</span> all-urls.txt | \
+<span class="cmd">gf</span> xss | \
+<span class="cmd">qsreplace</span> "FUZZ" | \
+<span class="cmd">dalfox</span> pipe --silence</pre>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong style="color:var(--blue)">Astuce :</strong> filtre d’abord les URLs. dalfox est puissant, mais il devient excellent quand tu lui donnes moins de bruit et de meilleurs candidats.
+    </div>
+  </section>
+
+  <!-- JOUR J -->
+  <section id="workflow" class="section">
+    <h2>Plan Jour J (Hack ton lycée)</h2>
+
+    <div class="card">
+      <div class="card-title">Méthode simple et efficace</div>
+      <ol>
+        <li><strong>Recon</strong> : subfinder + httpx</li>
+        <li><strong>Auto vulns</strong> : nuclei (critical/high)</li>
+        <li><strong>Collecte d’URLs</strong> : gau / katana</li>
+        <li><strong>Filtre params</strong> : <code>grep "="</code> ou <code>gf xss</code></li>
+        <li><strong>XSS auto</strong> : dalfox</li>
+        <li><strong>Validation manuelle</strong> des vrais poplog / alert</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Commandes prêtes pour le jour J</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre># 1) Live hosts
+subfinder -d CIBLE -silent | httpx -silent -o live.txt
+
+# 2) Nuclei fast
+nuclei -l live.txt -severity critical,high -silent -o nuclei.txt
+
+# 3) XSS candidates
+gau CIBLE | grep "=" | tee xss-candidates.txt
+
+# 4) dalfox
+cat xss-candidates.txt | dalfox pipe --mining-dict --silence -o xss-found.txt</pre>
+      </div>
+    </div>
+
+    <div class="warning">
+      <strong style="color:var(--gold)">Priorité le jour J :</strong> ne perds pas 1h sur une XSS douteuse si Nuclei t’a déjà trouvé un panel exposé ou une CVE claire.
+    </div>
+  </section>
+
+  <!-- TIPS -->
+  <section id="tips" class="section">
+    <h2>Tips Pro</h2>
+
+    <div class="card">
+      <div class="card-title">1. Toujours pré-filtrer</div>
+      <p>Ne balance pas 50 000 URLs à dalfox sans filtre. Garde celles avec paramètres.</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">grep</span> "=" urls.txt > params.txt</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Vérifie toujours manuellement</div>
+      <p>Un finding dalfox n’est pas automatiquement un rapport validé. Ouvre l’URL, teste le payload, confirme le contexte.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Combine avec qsreplace</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">cat</span> params.txt | <span class="cmd">qsreplace</span> '"><script>alert(1)</script>' | head</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Si WAF devant</div>
+      <ul>
+        <li>Baisse le parallélisme</li>
+        <li>Active <code>--waf-evasion</code></li>
+        <li>Teste moins d’URLs mais plus intelligemment</li>
+      </ul>
+    </div>
+
+    <div class="danger-box">
+      <strong style="color:var(--danger)">Rappel légal :</strong> utilise dalfox uniquement sur les cibles autorisées du concours / programme.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>dalfox Advanced Guide • Made for <span>NCRC</span> Cyber Arsenal</p>
+  <p style="margin-top:6px; font-size:0.8rem;">XSS • Bug Bounty • Hack ton lycée</p>
+</footer>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function copyCode(btn) {
+    const code = btn.nextElementSibling.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
